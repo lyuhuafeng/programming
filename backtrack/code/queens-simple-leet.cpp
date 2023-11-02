@@ -15,16 +15,9 @@ vector<vector<int>> res;
 bool is_valid(vector<int>& board, int col, int n) {
     int k = board.size();
     // 检查列是否有皇后互相冲突
-    for (int c : board) {
-        if (c == col) {
-            return false;
-        }
+    if (find(board.begin(), board.end(), col) != board.end()) {
+        return false;
     }
-    // 或用这种方法，略简单一点
-    // if (find(board.begin(), board.end(), col) != board.end()) {
-    //     return false;
-    // }
-
     // 检查右上方是否有皇后互相冲突。新来的是第k行、第col列。
     for (int i = k - 1, j = col + 1; i >= 0 && j < n; i--, j++) {
         if (board[i] == j) {
@@ -59,18 +52,24 @@ void backtrack(vector<int>& board, int n) {
     }
 }
 
-int main() {
-    int n = 5;
+vector<vector<string>> solveNQueens(int n) {
     vector<int> board; // 路径初始为空：一步都没走
     backtrack(board, n);
+    vector<vector<string>> result;
     for (vector<int> r : res) {
+        vector<string> r2;
         for (int col : r) {
             string row(n, '.');
             row[col] = 'Q';
-            cout << col << "  " << row << endl;
+            r2.push_back(row);
         }
-        cout << endl;
+        result.push_back(r2);
     }
+    return result;
+}
 
+int main() {
+    int n = 5;
+    vector<vector<string>> result = solveNQueens(n);
     return 0;
 }
