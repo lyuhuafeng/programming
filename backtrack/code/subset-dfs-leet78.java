@@ -1,3 +1,5 @@
+import java.util.*;
+
 class Solution {
     void dfs(int cur, int[] nums, List<Integer> t, List<List<Integer>> res) {
         if (cur == nums.length) {
@@ -14,5 +16,10 @@ class Solution {
         List<Integer> t = new ArrayList<>();
         dfs(0, nums, t, res);
         return res;
+    }
+    public static void main(String[] args) {
+        int[] nums = new int[]{1, 2, 3};
+        List<List<Integer>> res = new Solution().subsets(nums);
+        System.out.println(res);
     }
 }
