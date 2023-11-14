@@ -8,9 +8,9 @@ L4, U5
 L4, U6
 * [全排列]
 * [N 皇后](../backtrack/queens.md)
-* [数的划分]
+* [数的划分](../backtrack/数的划分.md)
 * [森林藏宝]
-* [和为T]
+* [和为T](../backtrack/和为T.md)
 
 ## 二叉树
 

@@ -68,6 +68,8 @@ https://www.geeksforgeeks.org/backtracking-introduction/
   * [数字数组的全排列，leetcode 46](https://leetcode.cn/problems/permutations) 通过的 Java 代码：[Permutation.java](code/Permutation.java)。注意，每遇到成功的 track，不能 `res.add(track)`，要 `res.add(new ArrayList<>(track))`。 
 
 * [n 皇后问题](queens.md)
+* [数的划分](数的划分.md)
+* [和为 T](和为T.md)
 
 ### 子集
 [leetcode 78: 子集](https://leetcode.cn/problems/subsets/) 无重复元素的数组，找出其所有子集。
