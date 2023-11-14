@@ -4,25 +4,39 @@
 ```python
 result = []
 路径 = [] # 初始路径为空：一步都没走
+cnt = 0
 backtrack(路径, 可选列表) # 递归调用
 
 def backtrack(路径, 可选列表):
    # 先判断是否结束，因为是在调用 backtrack() 之前修改的路径
    if 路径满足结束条件:
+      cnt += 1
       result.add(路径)
       return
 
    for 选择 in 可选列表:
-      路径 += 选择  # 往深里走一步：做选择，试一试
-      backtrack(路径, 可选列表)
-      路径 -= 选择  # 回溯一步：试完，撤销选择
+      路径 += 选择  # 往深里走一步：做选择，把“选择”加到“路径”中
+      backtrack(更新后的路径, 可选列表)
+      路径 -= 选择  # 回溯一步：试完，撤销选择，把“选择”从“更新后的路径”中去掉
 ```
 
 注意，backtrack() 代码中，首先要判断是否结束，然后再把“可选项”加入“路径”。
 
 但从逻辑顺序上看，其实是先把“可选项”加入“路径”，再在下一次 backtrack() 中判断这个“新路径”是否满足结束条件。
 
-在 backtrack() 代码中，判断是否结束时，要考虑到“路径”已经是“新路径”这个因素。
+首次调用 backtrack() 之前，无需“走一步”。也即，backtrack() 首次调用时，路径还是空的，cnt 也为 0。
+
+在 backtrack() 中，判断是否结束时，要考虑到“路径”已经是“新路径”这个因素。
+
+结束条件：
+* 路径长度 == n，已经走的步数 == n
+* sum == k
+* 等等
+
+对于路径长度，
+* 若用 vector 存储当前路径，则 v.size() 就是路径长度（已走步数）。
+* 若用数组存储当前路径，则还需一个变量记录其长度（已走步数）。
+  * 这个变量，如 backtrack(i) 中的 i，有时表示“正要处理第 i 个”较方便（路径长度是 i-1），有时表示“已经处理了 i 个（正要处理第 i+1 个）”较方便（路径长度是 i）。
 
 在 permutation 或 queens 中，判断 `track.size() == n` 或 `board.size() == n`，用容器存放当前路径，容器的 size() 本身就可以判断是否结束；
 
@@ -53,13 +67,7 @@ https://www.geeksforgeeks.org/backtracking-introduction/
   * 字符串的全排列：[permutation.cpp](code/permutation.cpp)
   * [数字数组的全排列，leetcode 46](https://leetcode.cn/problems/permutations) 通过的 Java 代码：[Permutation.java](code/Permutation.java)。注意，每遇到成功的 track，不能 `res.add(track)`，要 `res.add(new ArrayList<>(track))`。 
 
-### n皇后
-  * 用 `vector<string>` 存储棋盘：[queens.cpp](code/queens.cpp)
-  * 用 `vector<int>` 存储每行的皇后放在第几列，更简洁清晰：[queens-simple.cpp](code/queens-simple.cpp)
-  * [n皇后，leetcode 51](https://leetcode.cn/problems/n-queens/)，基于法2，最后把 `vector<int>` 转换成 `vector<string>`： [queens-simple-leet.cpp](code/queens-simple-leet.cpp)
-  * [n皇后 II，leetcode 52](https://leetcode.cn/problems/n-queens-ii)，只统计解决方案数量，Java 代码。
-    * 法一，total 是全局变量。[queens-leet52-cnt-only.java](code/queens-leet52-cnt-only.java)
-    * 法二，total 作为参数。因 Java 的限制，total 只能传值，不能传引用，故想修改其值，只能作为 backtrack() 的返回值并再赋给 total。[queens-leet52-cnt-only-II.java](code/queens-leet52-cnt-only-II.java)
+* [n 皇后问题](queens.md)
 
 ### 子集
 [leetcode 78: 子集](https://leetcode.cn/problems/subsets/) 无重复元素的数组，找出其所有子集。
