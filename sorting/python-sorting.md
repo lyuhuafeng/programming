@@ -145,6 +145,8 @@ res = sorted(student_objects)
 d = [(s.grade, i, s) for i, s in enumerate(student_objects)]
 d.sort()
 res = [s for grade, i, s in d]
+# 或
+res = [i[2] for i in d]
 ```
 
 先比较 grade，再比较序号。序号的作用：

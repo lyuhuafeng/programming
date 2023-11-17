@@ -1,11 +1,11 @@
-## 何时需要比较
+# 何时需要比较
 
-* 对类对象排序。Collections.sort(), Arrays.sort().
+* 对类对象排序。Collections.sort(), Arrays.sort()。
 * 对 Map 的 key 或 value 排序。TreeMap 构造函数，或 Collections.sort() 方法。
-* 用 PriorityQueue。PriorityQueue 的构造函数。
+* PriorityQueue 的构造函数。
 * 用 Stream API 对流中元素排序。sorted() 方法。
 
-## 比较的结果（返回值）
+# 比较的结果（返回值）
 
 两个对象 o1、o2 比较，返回值：
 
@@ -15,17 +15,22 @@
 
 “小于”关系，返回负值即可，不用必须是 -1。“大于”关系，类似。
 
-### 避免使用 subtraction trick
+## 避免使用 subtraction trick
 
 因为不用返回 -1, 0, +1，所以一个常见 trick 是直接返回二值相减的结果。
+
 ```java
+// 逻辑正确，但应避免
 Comparator<Player> comparator = (p1, p2) -> p1.getRanking() - p2.getRanking();
 ```
+
 此法逻辑上正确，但减法结果可能超出数据范围，导致出错，故应避免此法。
 
-## Comparable interface vs. Comparator interface
+# Comparable interface vs. Comparator interface
 
-首选 Comparable。定义了 natural ordering。不用额外参数。
+Java 不支持操作符重载，不能像 C++ 那样，定义单独的 `bool operator<(const T a, const T b)` 做比较。
+
+Comparable 和 Comparator 二者，首选 Comparable。定义了 natural ordering。不用额外参数。
 
 何时使用 comparator？
 * 无法修改被比较的类的代码，无法为其 implements Comparable
@@ -78,7 +83,7 @@ public class ByRanking implements Comparator<Player> {
 Collections.sort(footballTeam, new ByRanking());
 ```
 
-## Comparator
+# Comparator
 
 1. 基本 sort，不使用 lambda。 
 
@@ -278,4 +283,3 @@ humans.sort(Comparator.nullsLast(Comparator.comparing(Human::getName)));
 
 humans.sort(Comparator.nullsFirst(Comparator.comparing(Human::getName)));
 ```
-

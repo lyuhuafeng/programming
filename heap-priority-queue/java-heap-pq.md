@@ -39,7 +39,7 @@ pQueue.offer(20); // 若容量不够而不能入队，返回 false
 int p = pQueue.peek(); // 只取值，不弹出。若空，返回null。
 int b = pQueue.poll(); // 既取值，又弹出。若空，返回null。
 
-// 奇怪的方法
+// 为何提供这个奇怪的方法
 boolean b = pQueue.remove(8); // 删除某指定值。若值不存在或队已空，返回false。
 ```
 

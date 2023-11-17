@@ -18,7 +18,7 @@ heapq.heappush(li, 4)
 k = heapq.heappop(li)
 ```
 弹出堆头元素（最小元素），k 为 1。然后 li 自动调整，值为 [3, 5, 4, 7, 9]
-若只想访问堆头元素而不弹出它，用 li[0]。
+若只想访问堆头元素而不弹出它，用 `li[0]`。
 
 ```python
 heapq.heappushpop(li, item)
@@ -51,13 +51,19 @@ def heapsort(iterable):
         heappush(h, value)
     return [heappop(h) for i in range(len(h))]
 
+# 或简单一些
+def heapsort(iterable):
+    h = list(iterable)
+    heapq.heapify(h)
+    return [heappop(h) for i in range(len(h))]
+
 result = heapsort([1, 3, 5, 7, 9, 2, 4, 6, 8, 0])
 # result 结果为 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 ```
 
-从结果上看，相当于 `sorted(iterable)`，但 `sorted()`是稳定的，而堆排序是不稳定的。
+从结果上看，相当于 `sorted(iterable)`，但 `sorted()` 是稳定的，而堆排序是不稳定的。
 
-如何做到稳定？增加一个”顺序“字段，参与比较。
+如何做到稳定？增加一个“顺序”字段，参与比较。
 
 ## heapq 如何得到 max-heap
 
@@ -114,6 +120,8 @@ heapq.heapify(student_objects)
 ```
 
 ## 优先级队列 queue.PriorityQueue
+
+主要方法：put(), get(); qsize(), empty(); maxsize(), full()
 
 <font color="red">to add later</font>
 
