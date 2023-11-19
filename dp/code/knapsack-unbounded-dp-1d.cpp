@@ -1,6 +1,6 @@
-
 #include <cstdio>
-#include <cstring>
+#include <cstring> // memset()
+#include <algorithm> // max()
 using namespace std;
 
 void display(int i, int j, int dp[], int W) {
@@ -16,12 +16,11 @@ int opt1(int n, int w[], int v[], int W) {
     memset(dp, 0, sizeof dp);
 
     for (int i = 1; i <= n; i++) {
-        for (int j = W; j >= w[i]; j--) {
-            int t = dp[j - w[i]] + v[i];
-            if (t > dp[j]) {
-                dp[j] = t;
+        for (int j = W; j >= w[i]; j--) { // 逆序遍历
+            for (int k = 0; k * w[i] <= j; k++) {
+                dp[j] = max(dp[j], dp[j - k * w[i]] + k * v[i]);
             }
-            display(i, j, dp, W);
+            // display(i, j, dp, W);
         }
     }
     return dp[W];
