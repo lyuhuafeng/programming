@@ -4,20 +4,41 @@
 
 ![sub-sequence](pics/lis-sub-seq.png)
 
-# 法一，普通 dp，O(n^2)
+# 法一，朴素 dp，O(n^2)
 
-num[i]: 以第i个数结尾（从第0个到第i个）的LIS长度
-假设已经知道了 num[0], num[1], …, num[i]，如何计算 num[i + 1]？ 
+[leetcode 300: 最长递增子序列](https://leetcode.cn/problems/longest-increasing-subsequence)
+
+f[i]: 以第 i 个数结尾的 LIS 长度。i 从 0 开始。注意，不是 0~i 范围内的 LCS，必须是以 i 结尾的 LCS。
+
+假设已经知道了 f[0], f[1], …, f[i]，如何计算 f[i + 1]？
 
 分别看每个子序列
-0 ~ 0 里的LIS，再加上一个 i+1，是否构成了一个新的、更长的LIS？
-0 ~ 1 里的LIS，再加上一个 i+1，是否构成了一个新的、更长的LIS？
-0 ~ 2 里的LIS，再加上一个 i+1，是否构成了一个新的、更长的LIS？
-…
-0 ~ i 里的LIS，再加上一个 i+1，是否构成了一个新的、更长的LIS？
+* 0 ~ 0 里的LIS，再加上一个 i+1，是否构成了一个新的、更长的LIS？
+* 0 ~ 1 里的LIS，再加上一个 i+1，是否构成了一个新的、更长的LIS？
+* 0 ~ 2 里的LIS，再加上一个 i+1，是否构成了一个新的、更长的LIS？
+* …
+* 0 ~ i 里的LIS，再加上一个 i+1，是否构成了一个新的、更长的LIS？
 
-对某个k来说，假设这个LIS是 num[k1], num[k2], …, num[k]。最后一个元素肯定是第k个数num[k]。
-如果num[i+1] > num[k]，显然在原LIS后面再跟一个num[i+1]，就构成了一个新的、更长的LIS。
+```cpp
+int lengthOfLIS(vector<int>& nums) {
+    int n = nums.size();
+    // f[i]: 以第 i 个元素结尾的 LIS 长度。i 从 0 开始。
+    int f[n];
+    int ans = 0;
+    for (int i = 0; i < n; i++) {
+        f[i] = 1;
+        for (int j = 0; j < i; j++) {
+            if (nums[i] > nums[j] && f[i] <= f[j]) { // num 更大、LIS 更短，则更新
+                f[i] = f[j] + 1;
+            }
+        }
+        if (ans < f[i]) {
+            ans = f[i];
+        }
+    }
+    return ans;
+}
+```
 
 # 法二，优化 dp，贪心 + 二分搜索，O(nlogn)
 
