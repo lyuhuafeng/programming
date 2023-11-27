@@ -25,6 +25,7 @@ int main() {
         } else {
             int j = lower_bound(f.begin(), f.end(), a[i]) - f.begin(); // f[] 中第一个 >= a[i] 的
             f[j] = a[i];
+            // 或 *lower_bound(f.begin(), f.end(), a[i]) = a[i];
         }
     }
     int ans = f.size();

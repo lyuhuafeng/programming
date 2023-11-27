@@ -57,6 +57,30 @@ c++ 代码的两个实现
 * [lis-dp-greedy-bsearch.cpp](code/lis-dp-greedy-bsearch.cpp)。注意，f[] 用数组。按定义，f[i] 对应长度为 i 的 LIS，f[0] 无用，所以 lower_bound() 时查找的起点是 f+1。
 * [lis-dp-greedy-bsearch-vector.cpp](code/lis-dp-greedy-bsearch-vector.cpp)，f 用 vector，处理上稍微简单一点，不用维护 llen（到目前为止，发现的 LIS 最长长度），最后直接用 f.size() 就行。此时，f[i] 对应长度为 i+1 的 LIS，而不是长度为 i 的 LIS。
 
+lower_bound() 并更新 f[] 的几种写法
+
+```cpp
+//// 法一
+    int j = lower_bound(f + 1, f + llen + 1, a[i]) - f; // f[] 中第一个 >= a[i] 的
+    if (j > llen) {
+        f[++llen] = a[i];
+    } else {
+        f[j] = a[i];
+    }
+//// 法二
+    if (f.empty() || a[i] > f.back()) {
+        f.push_back(a[i]);
+    } else {
+        int j = lower_bound(f.begin(), f.end(), a[i]) - f.begin(); // f[] 中第一个 >= a[i] 的
+        f[j] = a[i];
+        // 或 *lower_bound(f.begin(), f.end(), a[i]) = a[i];
+    }
+//// 法三
+    int j = lower_bound(f, f + llen + 1, a[i]) - f;
+    f[j] = a[i];
+    llen = max(llen, j);
+```
+
 ```cpp
 // f[] 用数组。f[0] 无用。用 lower_bound() 涵盖 a[i] > f[last] 的情况。
     char f[n + 1]; // f[i]: 长度为i的LIS，其最后一个元素值。f[0] 无用
@@ -82,6 +106,7 @@ c++ 代码的两个实现
         } else {
             int j = lower_bound(f.begin(), f.end(), a[i]) - f.begin(); // f[] 中第一个 >= a[i] 的
             f[j] = a[i];
+            // 或 *lower_bound(f.begin(), f.end(), a[i]) = a[i];
         }
     }
     int ans = f.size();

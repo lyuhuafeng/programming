@@ -1,27 +1,28 @@
 #include <cstdio>
 #include <unordered_map>
 #include <algorithm> // lower_bound()
+#include <cstring> // memset()
 using namespace std;
 
 int main() {
     int n;
     scanf("%d", &n);
     int p[n], q[n]; // 可以是其他类型
-    unordered_map<int, int> mp; // 第一个是 p、q 的类型，第二个是 int 类型，存放下标
+    int mp[(int) 1e6 + 1]; // int 类型，存放下标
     int b[n]; // 必须是 int 类型，存放的是下标
-
     for (int i = 0; i < n; i++) {
         scanf("%d", &p[i]);
     }
     for (int i = 0; i < n; i++) {
         scanf("%d", &q[i]);
     }
+    memset(mp, -1, sizeof mp); // mp[i] < 0，表示 p 序列中不存在元素 i
     for (int i = 0; i < n; i++) {
         mp[p[i]] = i;
     }
     int m = 0; // 记录 b 的长度。去掉 p 中不存在的元素。
     for (int c : q) {
-        if (mp.count(c) != 0) {
+        if (mp[c] > 0) {
             b[m++] = mp[c];
         }
     }
