@@ -42,6 +42,34 @@ dp[i][j]: 合并区间 [i, j] 的 cost。所求解答为 dp[0][n-1]。
 
 # [NOI1995]石子合并；环形，每次合并两堆
 
+完整代码：[merge-stones-circle-2.cpp](code/merge-stones-circle-2.cpp)。
+
+关键代码。注意 h、i、j 的循环起点、终点的变化。
+
+```cpp
+    //// 前缀和计算，略。请注意看代码及注释。
+    int dmax[2 * n][2 * n], dmin[2 * n][2 * n];
+    for (int h = 0; h <= n - 1; h++) { // h: 起点
+        for (int i = n - 1 + h; i >= 0 + h; i--) { // 与上题相比，i 的起点、终点都 +=h
+            dmax[i][i] = 0, dmin[i][i] = 0;
+            for (int j = i + 1; j <= n - 1 + h; j++) { // j 的起点从 n-1 编程 n-1+h
+                dmax[i][j] = INT_MIN, dmin[i][j] = INT_MAX;
+                for (int k = i; k < j; k++) {
+                    dmax[i][j] = max(dmax[i][j], dmax[i][k] + dmax[k + 1][j] + ps[j + 1] - ps[i]);
+                    dmin[i][j] = min(dmin[i][j], dmin[i][k] + dmin[k + 1][j] + ps[j + 1] - ps[i]);
+                }
+            }
+        }
+    }
+    int ansmax = INT_MIN, ansmin = INT_MAX;
+    for (int i = 0; i < n; i++) {
+        ansmax = max(ansmax, dmax[i][i + n - 1]);
+        ansmin = min(ansmin, dmin[i][i + n - 1]);
+    }
+
+```
+
+另一种思路，合并次数之类的。to check later.
 
 # 更优算法
 
