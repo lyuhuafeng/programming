@@ -5,8 +5,8 @@
 using namespace std;
 
 const int MAXN = 100005;
-vector<int> v[MAXN];
-long long dp[MAXN], a[MAXN];
+long long dp[MAXN], a[MAXN]; // a[i]: 顶点 i 的权重; dp[i]: 顶点 i 为起点的最大路径和
+vector<int> v[MAXN]; // v[i]: 顶点 i 出发能达到的顶点列表
 
 long long dfs(long long x) {
     if (dp[x] > INT_MIN) {
