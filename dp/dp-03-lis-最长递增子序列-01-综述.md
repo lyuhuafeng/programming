@@ -47,9 +47,9 @@ f[] 数组，f[i] 表示：长度为 i 的 LIS 的结尾元素的最小值。对
 f[] 是单调的。（证明略）
 
 如何维护 f[] 数组
-* llen: 表示当前最长的 LIS 长度。
-* 若 `a[i] > f[llen]`，也就是 `a[i] > 当前最长LIS的结尾元素`，则 a[i] 可直接接在当前 LIS 结尾后，得到更长的 LIS，即 `f[++llen] = a[i]`。
-* 否则，a[i] 不能接到当前最长 LIS 之后。在 f[] 里找第一个大于等于 (或“大于”，若非严格递增) a[i] 的 f[j]。用 a[i] 更新 f[j]。因为 f[j-1] < a[i], f[j] > a[i]。找的过程，因为 f[] 单调，故可用二分查找。若 LIS 是严格上升，用 lower_bound()；若 LIS 不是严格上升，而是可以有相等元素，则用 upper_bound()。
+* `llen`: 表示当前最长的 LIS 长度。
+* 若 `a[i] > f[llen]`，也就是 `a[i] > 当前最长 LIS 的结尾元素`，则 a[i] 可直接接在当前 LIS 结尾后，得到更长的 LIS，即 `f[++llen] = a[i]`。
+* 否则，a[i] 不能接到当前最长 LIS 之后。在 f[] 里找第一个大于等于 (或“大于”，若所求 LIS 非严格递增) a[i] 的 f[j]。用 a[i] 更新 f[j]。（当然，若 f[j] == a[i]，相当于什么都没做）因为 f[j-1] < a[i], f[j] >= a[i]。找的过程，因为 f[] 单调，故可用二分查找。若所求 LIS 是严格上升的，用 lower_bound()；若所求 LIS 不是严格上升的，而是可以有相等元素，则用 upper_bound()。
 
 为何严格上升用 lower_bound()？
 
@@ -63,9 +63,11 @@ a[2]:3, lower_bound() 找到的是与 a[2] 相等的，f[] 的第一个 3，f[j]
 
 f[] 中的序列并不一定是正确的 LIS！只能得到长度，无法倒推得到序列！
 
+```
 例：3, 1, 2, 5, 4, 5, 10, 7。f[] = {1,2,4,5,7}。f[] 恰好是LIS。
 
 例：1, 4, 7, 2, 5, 9, 10, 3。f[] = {1,2,3,9,10}。f[] 不是 LIS。前面的可能已经被更新过了，不是当时决定后面的时的数据了。
+```
 
 to add pic
 
@@ -97,11 +99,12 @@ lower_bound() 并更新 f[] 的几种写法
         // 或 *lower_bound(f.begin(), f.end(), a[i]) = a[i];
     }
 //// 法三
-    int j = lower_bound(f, f + llen + 1, a[i]) - f;
+    int j = lower_bound(f + 1, f + llen + 1, a[i]) - f;
     f[j] = a[i];
     llen = max(llen, j);
 ```
 
+关键代码两种：
 ```cpp
 // f[] 用数组。f[0] 无用。用 lower_bound() 涵盖 a[i] > f[last] 的情况。
     char f[n + 1]; // f[i]: 长度为i的LIS，其最后一个元素值。f[0] 无用
@@ -114,7 +117,6 @@ lower_bound() 并更新 f[] 的几种写法
         } else {
             f[j] = a[i];
         }
-        display(i, a[i], j, f, llen);
     }
     int ans = llen;
 
@@ -131,7 +133,6 @@ lower_bound() 并更新 f[] 的几种写法
         }
     }
     int ans = f.size();
-
 ```
 
 # 法三，树状数组维护
