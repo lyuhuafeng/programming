@@ -51,6 +51,9 @@ float do_query(int l, int r, float tree[], float lazy[], int s, int t, int index
 
 // 更新：a[l, r] 范围，每个元素增加 x。线段树的当前节点为 index，对应范围 [s, t]
 void do_add(int l, int r, float x, float tree[], float lazy[], int s, int t, int index) {
+    if (x == 0.0) {
+        return;
+    }
     if (l <= s && t <= r) {
         tree[index] += (t - s + 1) * x;
         if (s != t) {
