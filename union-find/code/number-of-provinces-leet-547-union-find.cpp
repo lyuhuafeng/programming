@@ -41,11 +41,11 @@ private:
                 // rank 小的，挂到另外一棵树的 root 上
                 if (rank[ir] <= rank[jr]) {
                     parents[ir] = jr;
+                    if (rank[ir] == rank[jr]) {
+                        rank[jr]++; // 只有两树 rank 相等时，合并后新树 rank++
+                    }
                 } else {
                     parents[jr] = ir;
-                }
-                if (rank[ir] == rank[jr]) {
-                    rank[ir]++;
                 }
             }
         }
