@@ -11,14 +11,14 @@ int main() {
         a[i + n] = a[i];
     }
 
-    int f[2 * n][2 * n]; // f[i,j] 表示合并 [i,j] 得到的能量最大值。初始化为全 0。需要更精确的初始化。
-    fill_n((int *)f, sizeof f / sizeof(int), 0);
-    for (int len = 2; len <= n + 1; len++) { //区间长度
-        for (int l = 0, r; (r = l + len - 1) <= n * 2 - 1; l++) { //区间起点
+    int f[2 * n][2 * n]; // f[i,j] 表示合并 [i,j] 得到的能量最大值。
+    fill_n((int *)f, sizeof f / sizeof(int), 0); // 初始化为全 0。需要更精确的初始化。
+    for (int len = 2; len <= n + 1; len++) { // 遍历区间长度
+        for (int l = 0, r; (r = l + len - 1) <= n * 2 - 1; l++) { // 遍历区间起点
             if (len == 2) {
                 f[l][r] = 0; // 初始化
             } else {
-                for (int k = l + 1; k < r; k++) { //区间分割点
+                for (int k = l + 1; k < r; k++) { // 遍历区间分割点
                     f[l][r] = max(f[l][r], f[l][k] + f[k][r] + a[l] * a[k] * a[r]);
                 }
             }
