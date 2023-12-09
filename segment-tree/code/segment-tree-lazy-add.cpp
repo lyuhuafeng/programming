@@ -56,7 +56,7 @@ void do_add(int l, int r, float x, float tree[], float lazy[], int s, int t, int
     }
     if (l <= s && t <= r) {
         tree[index] += (t - s + 1) * x;
-        if (s != t) {
+        if (s != t) { // 我有子区间，才需标记 lazy
             lazy[index] += x;
         }
         return;
