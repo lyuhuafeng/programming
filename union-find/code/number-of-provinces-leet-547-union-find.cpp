@@ -42,7 +42,7 @@ private:
                 if (rank[ir] <= rank[jr]) {
                     parents[ir] = jr;
                     if (rank[ir] == rank[jr]) {
-                        rank[jr]++; // 只有两树 rank 相等时，合并后新树 rank++
+                        rank[jr]++; // 只有当两树 rank 相等时，合并后新树 rank++
                     }
                 } else {
                     parents[jr] = ir;
