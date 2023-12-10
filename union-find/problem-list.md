@@ -7,6 +7,12 @@
 - 标准并查集方法 [number-of-provinces-leet-547-union-find.cpp](code/number-of-provinces-leet-547-union-find.cpp)
 - 我的 bfs 方法 [number-of-provinces-leet-547-bfs.cpp](code/number-of-provinces-leet-547-bfs.cpp)
 
+## [leetcode 839. 相似字符串组](https://leetcode.cn/problems/similar-string-groups/)
+
+标准模版，不多说。
+
+- 标准并查集方法 [similar-str-groups-leet-839.cpp](code/similar-str-groups-leet-839.cpp)
+
 ## [leetcode 684. 冗余连接](https://leetcode.cn/problems/redundant-connection/)
 
 用 bfs 略有麻烦，因为找某个 vertice 相邻的顶点不太方便。（当然也可以预处理输入的各 edge，形成邻接表，再用 bfs 方式）
@@ -25,3 +31,21 @@
 - 我的并查集方法 [eval-division-leet-399.cpp](code/eval-division-leet-399.cpp)
 - [yukiyama 的解法](https://leetcode.cn/problems/evaluate-division/solutions/1536352/yukiyama-by-yukiyama-geql/)
 
+## [leetcode 1631. 最小体力消耗路径](https://leetcode.cn/problems/path-with-minimum-effort/)
+
+每个 edge，定义其“耗体力值”为：两个节点的“高度差绝对值”。
+
+按 edge “耗体力值”从小到大，依次把 edge 的两个顶点加入 union-find。
+
+当加入某 edge 后，发现起点和终点连通了（find结果相同）。此时，最后加入的这条 edge，就是所求路径上“耗体力值”最大的 edge，即为所求。
+
+- 并查集方法 [path-with-min-effort-leet-1631.cpp](code/path-with-min-effort-leet-1631.cpp)
+- [yukiyama 的解法](https://leetcode.cn/problems/path-with-minimum-effort/solutions/1536361/yukiyama-by-yukiyama-qboz/)
+
+## 用 bfs 方法更简便
+
+- [200. 岛屿数量](https://leetcode.cn/problems/number-of-islands/)
+- [695. 岛屿的最大面积](https://leetcode.cn/problems/max-area-of-island/)
+- [785. 判断二分图](https://leetcode.cn/problems/is-graph-bipartite/) 看我代码注释
+- [128. 最长连续序列](https://leetcode.cn/problems/longest-consecutive-sequence/) 看我代码
+  - [yukiyama 并查集解法](https://leetcode.cn/problems/longest-consecutive-sequence/solutions/1375510/by-yukiyama-e3th/)
