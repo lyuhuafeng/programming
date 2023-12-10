@@ -25,7 +25,7 @@ dp[i][j]: 合并区间 [i, j] 的 cost。所求解答为 dp[0][n-1]。
 
 核心代码：注意其初始化部分，只有两句，没有做多余的全面初始化。
 
-```cpp
+```c++
     //// 前缀和计算，略。请注意看代码及注释。
     int dp[n][n];
     for (int i = n - 1; i >= 0; i--) {
@@ -40,7 +40,7 @@ dp[i][j]: 合并区间 [i, j] 的 cost。所求解答为 dp[0][n-1]。
     int ans = dp[0][n - 1];
 ```
 
-# [NOI1995]石子合并；环形，每次合并两堆
+# [NOI1995] 石子合并；环形，每次合并两堆
 
 完整代码：[merge-stones-circle-2.cpp](code/merge-stones-circle-2.cpp)。
 
