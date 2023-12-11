@@ -1,7 +1,7 @@
-## [leetcode 918: 环形子数组的最大和](https://leetcode.cn/problems/maximum-sum-circular-subarray/description/)
+# [leetcode 918: 环形子数组的最大和](https://leetcode.cn/problems/maximum-sum-circular-subarray/description/)
 
 
-## 解法
+# 解法
 
 扩展数组，在原数组 `[0 ... n-1]` 后增加 `[0 ... n-2]`，得到新数组，其总长度为 `n+(n-1) = 2n-1`。
 
