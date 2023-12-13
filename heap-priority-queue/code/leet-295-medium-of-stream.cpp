@@ -16,6 +16,12 @@ public:
 
     MedianFinder() {}
     
+    // 比较 num 和两个 pq 的 top 的值，分三种情况。
+    // 1. num 在 left, right 之间：根据两个 pq 的 size，决定放到哪个 pq 里。
+    // 2. num 应该在 left 里
+    // 3. num 应该在 right 里
+    //   2, 3 两种情况，往 pq 里放时，如果 pq 的 size 超了，需要把 pq 的 top 挪到另一个 pq，再放入 num。
+    // 另外还要单独处理一个某个 pq 为空的情况。
     void addNum(int num) {
         if (ql.empty()) {
             ql.push(num);
@@ -50,7 +56,6 @@ public:
             ql.push(num);
         }
         // printf("num:%d, queues: %d -> %d\n", num, ql.top(), qr.top());
-
     }
     
     double findMedian() {
