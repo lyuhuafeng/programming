@@ -13,7 +13,7 @@ class Solution {
         Stack<Integer> st = new Stack<>();
         for (int i = 0; i < height.length; i++) {
             while (!st.isEmpty() && height[i] > height[st.peek()]) {
-                int h0 = height[st.pop()]; // top
+                int h0 = height[st.pop()]; // top, 凹槽底部
                 if (st.isEmpty()) {
                     break;
                 }
@@ -27,11 +27,22 @@ class Solution {
         return ans;
     }
 
+// 只看代码、不管逻辑，是把代码
+// while (!st.isEmpty() && height[i] > height[st.peek()]) {
+//     // do something
+// }
+// st.push(i);
+
+// 拆成了
+// if (st.push) { st.push(i); }
+// else if (h[i] < h[st.peek()]) { st.push(i); }
+// else if (h[i] == h[st.peek()]) { st.push(i); }
+// else if (h[i] > h[st.peek()]) { do_something; st.push(i); }
 
     public int trap(int[] height) {
         if (height.length <= 2) return 0; // 只有两根柱子，无法形成凹槽
-        Stack<Integer> st = new Stack<>();
         int ans = 0;
+        Stack<Integer> st = new Stack<>();
         for (int i = 0; i < height.length; i++) {
             if (st.isEmpty()) {
                 st.push(i); // 如果栈为空，那么直接把当前索引加入到栈中
@@ -50,12 +61,11 @@ class Solution {
                 // 此时的元素依旧大于栈顶元素时，我们去计算此时的凹槽面积
                 // 借助 while 循环来实现这个操作
                 while (!st.empty() && height[i] > height[st.peek()]) {
-                    int bottom = st.peek(); // 1、获取栈顶的下标，bottom 为凹槽的底部位置
-                    st.pop(); // 将栈顶元素推出，去判断栈顶之前的元素是否存在，即凹槽的左侧是否存在
-                    if (!st.empty()) {
-                        // 2、如果栈不为空，即栈中有元素，即凹槽的左侧存在
-                        int h = Math.min(height[st.peek()], height[i]) - height[bottom];
-                        int w = i - st.peek() - 1; // 凹槽的宽度等于凹槽右侧的下标值 i 减去凹槽左侧的下标值 st.peek 再减去 1
+                    int h0 = height[st.pop()]; // top, 凹槽底部
+                    if (!st.empty()) { // 2、如果栈不为空，即栈中有元素，即凹槽的左侧存在
+                        int left = st.peek(); // top-1, left of top
+                        int h = Math.min(height[left], height[i]) - h0;
+                        int w = i - left - 1; // 凹槽的宽度等于凹槽右侧的下标值 i 减去凹槽左侧的下标值 st.peek 再减去 1
                         ans += h * w; // 将计算的结果累加到最终的结果上去
                     }
                 }
