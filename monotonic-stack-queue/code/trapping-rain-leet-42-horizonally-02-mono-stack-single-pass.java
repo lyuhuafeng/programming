@@ -1,3 +1,7 @@
+import java.util.Stack;
+import java.lang.Integer;
+import java.lang.System;
+
 class Solution {
 
 // 单调下降栈。
@@ -12,19 +16,31 @@ class Solution {
         int ans = 0;
         Stack<Integer> st = new Stack<>();
         for (int i = 0; i < height.length; i++) {
-            while (!st.isEmpty() && height[i] > height[st.peek()]) {
+            while (!st.isEmpty() && height[i] >= height[st.peek()]) { // 栈内是否有相等的：均可。这里用 >= 或 > 均可
+                int i0 = st.peek();
                 int h0 = height[st.pop()]; // top, 凹槽底部
+                System.out.printf("stack poped: idx: %d, val:%d%n", i0, h0);
                 if (st.isEmpty()) {
                     break;
                 }
                 int left = st.peek(); // top-1, left of top
                 int h = Math.min(height[i], height[left]) - h0;
                 int w = i - left - 1;
+                System.out.printf("(%d, %d) - (%d, %d) - (%d, %d). h:%d, w:%d%n",
+                        i, height[i], i0, h0, left, height[left], h, w);
                 ans += h * w;
             }
             st.push(i);
+            System.out.printf("stack pushed: idx:%d, val:%d%n", i, height[i]);
         }
         return ans;
+    }
+
+    public static void main(String[] args) {
+        int[] height = {0,1,0,2,1,0,1,3,2,1,2,1};
+        System.out.println(height.toString());
+        int ans = new Solution().trap(height);
+        System.out.printf("ans:%d%n", ans);
     }
 
 // 只看代码、不管逻辑，是把代码
@@ -38,8 +54,7 @@ class Solution {
 // else if (h[i] < h[st.peek()]) { st.push(i); }
 // else if (h[i] == h[st.peek()]) { st.push(i); }
 // else if (h[i] > h[st.peek()]) { do_something; st.push(i); }
-
-    public int trap(int[] height) {
+    public int trap2(int[] height) {
         if (height.length <= 2) return 0; // 只有两根柱子，无法形成凹槽
         int ans = 0;
         Stack<Integer> st = new Stack<>();

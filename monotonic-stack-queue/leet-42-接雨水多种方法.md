@@ -54,11 +54,26 @@
     }
 ```
 
+解决方法：貌似得搞个 set 去重？感觉不优雅。<font color="red">to think more</font>
+
 优化：考虑到 “top 的 previous greater 就是 top-1”这个性质。
 每次 new 来，
 若 new > top，则 top-1, top, new 构成一个凹槽；若 new > top 多个，则每次弹出 top 后，新的 top-1, top, new 都构成凹槽。弹完 top 后，new 入栈。
 否则，这个 new 不构成凹槽，直接入栈即可。
 这样，以 new 为抓手，依次遍历所有凹槽，不重复，不遗漏。就是官方解法。
+
+单调下降栈。
+直观：高-低-高，才能盛水。前面的“高-低”是栈内，说明要单调下降，后面的“高”是新来的、尚未入栈的。
+栈顶有等高元素怎么办？等会再看。
+每来一根新柱子，就看它是否能构成一个“高-低-高”结构。
+若新柱子比 top 低或相等，无法盛水。直接push进栈。（画图可见）也解决了上面的问题：相等怎么办？
+
+若新柱子比 top 高（while判断时用 h[i] > h[st.top])，则 top-1, top, new 三者构成下凹，可盛水。
+容量公式，见官方题解。注意，盛水量是水平分层计算的，自己画图可直观理解。
+
+（2023.12.17 感悟：按这个思路，主要看栈里是否允许相同值的，而不是从 next-greater 或 next-greater-or-equal 的角度出发。经观察，栈里是否允许相同值，都可以；若有相同值，有时会出现 h = 0 的情况，对结果无影响。
+
+但总感觉这个思路不是太直观。）
 
 代码：[trapping-rain-leet-42-horizonally-02-mono-stack-single-pass.java](code/trapping-rain-leet-42-horizonally-02-mono-stack-single-pass.java)
 
