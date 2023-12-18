@@ -16,8 +16,8 @@ class Solution {
         int ans = 0;
         Stack<Integer> st = new Stack<>();
         for (int i = 0; i < height.length; i++) {
-            while (!st.isEmpty() && height[i] >= height[st.peek()]) { // 栈内是否有相等的：均可。这里用 >= 或 > 均可
-                int i0 = st.peek();
+            while (!st.isEmpty() && height[i] > height[st.peek()]) { // 栈内是否有相等的：均可。这里用 >= 或 > 均可
+                int i0 = st.peek(); // 调试打 log 用
                 int h0 = height[st.pop()]; // top, 凹槽底部
                 System.out.printf("stack poped: idx: %d, val:%d%n", i0, h0);
                 if (st.isEmpty()) {

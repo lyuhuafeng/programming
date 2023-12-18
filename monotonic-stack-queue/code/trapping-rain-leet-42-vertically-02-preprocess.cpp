@@ -1,3 +1,6 @@
+#include <vector>
+using namespace std;
+
     int trap_working(vector<int>& height) {
         int n = height.size();
         if (n == 0) {

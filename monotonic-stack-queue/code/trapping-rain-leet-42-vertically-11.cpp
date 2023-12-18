@@ -1,5 +1,9 @@
-    // https://mp.weixin.qq.com/s/XyiYcDwEv3VW5Zs-WmRbDQ 的方法4，整个的思路 3
-    int trap_sol3(vector<int>& height) {
+#include <vector>
+using namespace std;
+
+// https://mp.weixin.qq.com/s/XyiYcDwEv3VW5Zs-WmRbDQ 的方法4。把问题搞复杂了。
+
+    int trap(vector<int>& height) {
         int n = height.size();
 
         int sum = 0, maxh = 0;
