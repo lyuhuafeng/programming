@@ -52,6 +52,16 @@
 
 - [200. 岛屿数量](https://leetcode.cn/problems/number-of-islands/)
 - [695. 岛屿的最大面积](https://leetcode.cn/problems/max-area-of-island/)
+  - 并查集解法 [max-area-of-islands-leet-695.java](code/max-area-of-islands-leet-695.java) 把二维坐标 (i,j) 转成一维坐标 k，用 k 做并查集。rank[] 改为 area[] 记录每个连通区域的面积
 - [785. 判断二分图](https://leetcode.cn/problems/is-graph-bipartite/) 看我代码注释
-- [128. 最长连续序列](https://leetcode.cn/problems/longest-consecutive-sequence/) 看我代码
-  - [yukiyama 并查集解法](https://leetcode.cn/problems/longest-consecutive-sequence/solutions/1375510/by-yukiyama-e3th/)
+```cpp
+// color: 0: 未染色; 1,2: 两种颜色
+// 遍历每个节点。若该节点已染色，说明以前处理过，skip。
+// 若还未染色，则先任意染一种色，再从它开始 bfs，把整个连通分量都染。
+//     每次遇到节点 j: 未染色，则染色，并放入 q 待扩展；已染色，看颜色对否，对则skip，不对则返回 false
+// 若有多个连通分量，只要每个分量的染色不冲突即可。(that's why 任意染一种色)
+```
+
+- [128. 最长连续序列](https://leetcode.cn/problems/longest-consecutive-sequence/) 注意，这里说的“序列”可以是乱序的；我开始还以为是不能打乱原顺序的。
+  - 官方题解代码、精选题解评论代码、以及错误的dp代码：[longest-consecutive-sequence-leet-128.cpp](code/longest-consecutive-sequence-leet-128.cpp)
+  - [yukiyama 并查集解法](https://leetcode.cn/problems/longest-consecutive-sequence/solutions/1375510/by-yukiyama-e3th/)。代码同上。
