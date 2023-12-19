@@ -10,16 +10,16 @@ void display(unordered_map<string, double>& val, const unordered_map<string, str
 }
 
 vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& values, vector<vector<string>>& queries) {
-    unordered_map<string, double> val;
-    unordered_map<string, string> parents;
+    unordered_map<string, double> val;     // map<i, value_of_i>
+    unordered_map<string, string> parents; // map<i, parent_of_i>
 
     for (int i = 0; i < equations.size(); i++) {
-        string u = equations[i][0];
-        string v = equations[i][1];
-        if (parents.count(u) == 0 && parents.count(v) == 0) { // u, v 均未处理过：以 v 为 root
+        string u = equations[i][0]; // 分子
+        string v = equations[i][1]; // 分母
+        if (parents.count(u) == 0 && parents.count(v) == 0) { // u, v 均未处理过：以分母 v 为 root
             parents[v] = v;
             parents[u] = v;
-            val[v] = 1.0;
+            val[v] = 1.0; // 分母值为 1.0
             val[u] = values[i];
         } else if (parents.count(u) == 0) { // 只有 u (分子) 未处理过
             parents[u] = parents[v];
@@ -27,7 +27,7 @@ vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& v
         } else if (parents.count(v) == 0) { // 只有 v (分母) 未处理过
             parents[v] = parents[u];
             val[v] = val[u] / values[i];
-        } else {
+        } else { // u, v 均处理过
             string ur = parents[u], vr = parents[v];
             if (ur != vr) { // u,v 均处理过，且在不同的树
                 double factor = val[u] / values[i] / val[v];
@@ -38,7 +38,7 @@ vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& v
                         parents[e.first] = ur;
                     }
                 }
-            } else { // ur == vr: u, v 均处理过，且在同一棵树：不应该
+            } else { // ur == vr: u, v 均处理过，且在同一棵树：不应该出现这种情况
                 // does nothing.
             }
         }

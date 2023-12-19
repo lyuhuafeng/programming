@@ -1,3 +1,7 @@
+#include <vector>
+#include <string>
+using namespace std;
+
 class Solution {
 public:
     bool is_similar(const string &a, const string &b, int len) {

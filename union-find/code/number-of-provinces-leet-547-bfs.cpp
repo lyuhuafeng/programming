@@ -1,3 +1,8 @@
+#include <vector>
+#include <unordered_set>
+#include <queue>
+using namespace std;
+
 // 改进方法 1
 // 每个连通分量用一个 set 存储。多个 set 放在一个 vector 里。
 // visited[i] 表示 i 是否已访问过，true/false，用在 bfs 中。
