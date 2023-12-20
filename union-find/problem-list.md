@@ -23,10 +23,26 @@
 
 用 bfs 略有麻烦，因为找某个 vertice 相邻的顶点不太方便。（当然也可以预处理输入的各 edge，形成邻接表，再用 bfs 方式）所以用标准并查集方法。
 
-每次输入一条 edge。`parent[i]` 先初始化为 0（无 root）而不是 i（自己是 root）。每次来一条 edge，直接处理两个顶点，parent。find()、union() 都有所改动。
+每次输入一条 edge。`parent[i]` 先初始化为 0（无 root）而不是 i（自己是 root）。每次来一条 edge，直接处理两个顶点，parent 定义、find()、union() 都有所改动。
 
 - 我的并查集方法 [redundant-edge-leet-684.cpp](code/redundant-edge-leet-684.cpp)
 - [多种方法 by yukiyama](https://leetcode.cn/problems/redundant-connection/solutions/1594870/-by-yukiyama-mlqi/)
+
+## [leetcode 685. 冗余连接 II](https://leetcode.cn/problems/redundant-connection-ii/)
+
+跟上一题的区别：本题的 edge 是有向的。注意，题目描述，每个 edge [ui, vi] 表示有向图中 ui 是 vi 的一个父节点。<font color="red">从图的角度，u -> v，u 是父节点。但从树的角度来看，v 才是父节点。代码中 parent[] 中采用树的角度。</font>
+
+如图，可能是有 in-degree 为 2 的节点（有两个父节点），也可能是有有向环。（为何不看 out-degree？因任何一个父节点都可能 out-degree > 1）。
+
+![bad case](pics/redundancy-edge-ii.jpeg)
+
+先统计各节点的 in-degree。若某个节点入度为 2，它对应两条边，则必定要删除这两条边之一。若删了一条，图变成合法的树，则这条 edge 就是答案。
+
+若不存在入度为 2 的节点，则必定存在有向环。依次把各 edge 加入，若不是树了，则刚加入的 edge 就是答案。
+
+并查集用来在上面两种情况下判断是否是树。新来一个 edge，其两个顶点已经在并查集中，且 root 相同，则添加这个新 edge 一定会构成环，不再是树了。
+
+代码：[redundant-edge-ii-leet-685.cpp](code/redundant-edge-ii-leet-685.cpp) 注意，初始化并查集的过程，不像前一题那样，依次加入每条 edge 对应的两个顶点，而是一开始就把所有 node 都加入并查集并设置其 parent 为自己。
 
 ## [leetcode 399. 除法求值](https://leetcode.cn/problems/evaluate-division/)
 
