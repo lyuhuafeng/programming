@@ -1,4 +1,4 @@
-# CPP stl: heap、priority_queue
+# C++ stl: heap、priority_queue
 
 # stl heap 堆
 
@@ -114,14 +114,15 @@ int main() {
 注意：max-heap，每次 pop() 出来的是最大的，则堆排序的结果恰好是从小到大。
 
 概述：
+
 方法 | 是否需改对象数据结构 | 创建 pq 时是否需提供comparator 参数
----- | ---- | ----
-1. 定义独立的 `operator<(T a, T b)` | N | N
-2. 定义独立的比较函数 `my_cmp(T a, T b)` | N | Y. `my_cmp`
-3. 定义独立的 lambda 做比较函数 | N | Y. `decltype(my_cmp)`
-4. 定义独立的 functor (struct/class)，其中重载 `operator(T a, T b)` | N | Y. `functor_name`
-5. 对象 struct/class 内重载 `operator<(T other)` | Y | N
-6. 对象 class 内重载 `friend operator<(T a, T b)` | Y | N
+----|----|----
+1, 定义独立的 `operator<(T a, T b)` | N | N
+2, 定义独立的比较函数 `my_cmp(T a, T b)` | N | Y. `my_cmp`
+3, 定义独立的 lambda 做比较函数 | N | Y. `decltype(my_cmp)`
+4, 定义独立的 functor (struct/class)，其中重载 `operator(T a, T b)` | N | Y. `functor_name`
+5, 对象 struct/class 内重载 `operator<(T other)` | Y | N
+6, 对象 class 内重载 `friend operator<(T a, T b)` | Y | N
 
 ### 1. 定义独立的 `bool operator<(const T& a, const T& b)`
 
