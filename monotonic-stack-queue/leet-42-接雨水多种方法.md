@@ -68,7 +68,7 @@ references:
 
 # solution 3. 按行
 
-## 直观、但错误的解法
+## 直观解法
 
 每根柱子，与其 previous greater 和 next greater，构成一个凹槽，水平方向，分层（见图），能存多少水。
 
@@ -77,9 +77,11 @@ references:
 两个方向都是严格 greater，一遍遍历不能得到，得两遍。运行时，发现不能处理途中第 4、6 个的情况。4、6 重复计算了。
 ![failure](pics/trap-rain-failure.png)
 
-代码：[trapping-rain-leet-42-horizonally-01-mono-stack-2pass-wrong.cpp](code/trapping-rain-leet-42-horizonally-01-mono-stack-2pass-wrong.cpp)
+代码：[trapping-rain-leet-42-horizonally-01-mono-stack-intuitive-wrong.cpp](code/trapping-rain-leet-42-horizonally-01-mono-stack-intuitive-wrong.cpp)
 
-解决方法：貌似得搞个 set 去重？感觉不优雅。<font color="red">to think more</font>
+怎么办？搞个 set 去重？感觉不优雅。
+
+2023.12.21 感悟：受[「leet-795-区间子数组个数」的直接了当解法](leet-795-区间子数组个数.md)启发，「两端都是 greater」不行，则<font color="green">改成「一端 greater、另一端 greater-or-equal」，就可以把等高的两根柱子分割在不同的区间里，就可以了</font>。改哪端都可以。若从上面的错误代码改，两处 while 条件里，都改成 `>` ，或都改成 `>=`，都可以。当然，最好还是改成遍历一遍，同时求出 next greater 和 previous greater or equal。代码：[trapping-rain-leet-42-horizonally-01-mono-stack-intuitive.cpp](code/trapping-rain-leet-42-horizonally-01-mono-stack-intuitive.cpp)
 
 ## 正确、但不直观的解法，也是 leetcode 官方解法
 
@@ -105,7 +107,7 @@ references:
 
 <font color="red">但总感觉这个思路不是太直观。</font>
 
-代码：[trapping-rain-leet-42-horizonally-02-mono-stack-single-pass.java](code/trapping-rain-leet-42-horizonally-02-mono-stack-single-pass.java)
+代码：[trapping-rain-leet-42-horizonally-02-mono-stack-official.java](code/trapping-rain-leet-42-horizonally-02-mono-stack-official.java)
 
 ```java
     public int trap(int[] height) {

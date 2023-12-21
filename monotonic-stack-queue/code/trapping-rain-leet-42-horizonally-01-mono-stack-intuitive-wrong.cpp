@@ -1,3 +1,8 @@
+#include <vector>
+#include <stack>
+#include <algorithm> // min()
+using namespace std;
+
     int trap(vector<int>& height) {
         int n = height.size();
         vector<int> ng(n, -1), pg(n);
