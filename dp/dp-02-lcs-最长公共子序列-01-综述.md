@@ -12,10 +12,10 @@
 设 `dp[i][j]` 表示 `s[1..i]` 和 `t[1..j]` 的最长公共子序列（从 1 算起；下标 0 作为初值），则答案为 `dp[s.size()][t.size()]`。
 
 三种情况：
-* 若 s[i] != t[j]，则 s[i]、t[j] 两者不可能同时出现在公共子序列中，取下面两种中较大的
-  * 若 s[i] 不在公共子序列中，则 `dp[i][j] = dp[i-1][j]`
-  * 若 t[j] 不在公共子序列中，则 `dp[i][j] = dp[i][j-1]`
-* 若 s[i] == t[j]，则 s[i]、d[j] 是公共子序列的最后一个元素，`dp[i][j] = dp[i-1][j-1] + 1`
+* 若 `s[i] != t[j]`，则 `s[i]`、`t[j]` 两者不可能同时出现在公共子序列中，取下面两种中较大的
+  * 若 `s[i]` 不在公共子序列中，则 `dp[i][j] = dp[i-1][j]`
+  * 若 `t[j]` 不在公共子序列中，则 `dp[i][j] = dp[i][j-1]`
+* 若 `s[i] == t[j]`，则 `s[i]`、`d[j]` 是公共子序列的最后一个元素，`dp[i][j] = dp[i-1][j-1] + 1`
   * <font color="red">存疑：若 s[i] 或 t[j] 不在公共子序列中呢？换言之，`dp[i][j]` 是否是上面三个的最大值？</font>
 
 初值：`dp[0][j] = 0`，`dp[i][0] = 0`。
@@ -24,13 +24,15 @@
 
 显然时间复杂度为 O(n^2)。
 
+完整代码，既求出了 lcs 长度，又找出了 lcs 字符串及每个字符在原字符串中的位置：[longest-common-sub-sequence-leet-1143.cpp](code/longest-common-sub-sequence-leet-1143.cpp)
+
 ```cpp
     int longestCommonSubsequence(string text1, string text2) {
         int m = text1.length(), n = text2.length();
         int dp[m + 1][n + 1];
         for (int i = 0; i <= n; i++) {
             dp[0][i] = 0;
-        }
+        } // 初始化首行
 
         for (int i = 1; i <= m; i++) {
             dp[i][0] = 0; // 初始化首列
@@ -42,6 +44,35 @@
                 }
             }
         }
+        //// 以上代码，找出 lcs 串的长度。通常 lcs 问题，就到此为止了。
+
+        //// 以下代码，用于输出 lcs 串
+        int len = dp[m][n]; // lcs 串长度
+        int idx1[len], idx2[len];  // 记录 lcs 串中每个字符在 text1 和 text2 中的下标
+        char lcs[len + 1]; // 存储 lcs 串
+        lcs[len] = '\0';
+
+        // 从 dp[][] 最右下角开始，按 dp 成员变化的方向，逆序遍历 dp 数组，找到 lcs 串
+        int i = m, j = n, idx = len - 1;
+        while (i > 0 && j > 0) {
+            if (text1[i - 1] == text2[j - 1]) {
+                lcs[idx] = text1[i - 1];
+                idx1[idx] = i - 1;
+                idx2[idx] = j - 1;
+                i--, j--, idx--;
+            } else if (dp[i - 1][j] > dp[i][j - 1]) {
+                i--;
+            } else {
+                j--;
+            }
+        }
+        // 输出 lcs 串，及每个字符在 text1 和 text2 中的下标
+        printf("lcs:_%s_\n", lcs);
+        for (int i = 0; i < len; i++) {
+            printf("(%d, %d)\n", idx1[i], idx2[i]);
+        }
+        //// 结束输出 lcs 串
+
         return dp[m][n];
     }
 ```
@@ -53,7 +84,7 @@
 
 上述朴素 dp 解法，是 O(n^2) 的，会被 10^5 卡死。本改进可以做到 O(nlogn)。
 
-<font color="brown">前提：两个序列中，至少有一个是没有重复元素的。</font>
+<font color="brown">重要！前提：两个序列中，至少有一个是没有重复元素的。</font>
 
 - 步骤1. 用 map，转换，把 LCS 问题转成 LIS 问题
 - 步骤2. 使用优化的 LIS 问题解法（贪心 + 二分）
