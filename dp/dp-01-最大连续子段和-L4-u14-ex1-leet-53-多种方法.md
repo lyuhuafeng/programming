@@ -13,7 +13,7 @@
 
 f[i] 表示以第 i 个元素 ai 结尾的最大子段和。
 
-如果 f[0], …, f[i-1] 已有，如何计算 f[i]? 
+如果 f[0], …, f[i-1] 已有，如何计算 f[i]?
 
 新增一个数 ai：
 * 若 `f[i-1] > 0`，则把 ai 添加到当前子段里，`f[i] = f[i-1] + ai` 可得最大值
@@ -165,7 +165,7 @@ f[i] 表示以第 i 个元素 ai 结尾的最大子段和。
     begin_curr = 0, end_curr = 0;
     max_so_far = a[0];
     begin_so_far = 0, end_so_far = 0;
-    
+
     for (int i = 1; i < n; i++) {
         max_curr = (max_curr < 0) ? a[i] : (max_curr + a[i]);
         if (max_curr > max_so_far) {
