@@ -9,6 +9,8 @@
 
 注意，2 中，窗口满足条件时，更新结果其实是在 3 中的 while 循环中，先更新结果，再移动 `l`。
 
+注意，不同题目，窗口满足条件的方式可能不同。有的是窗口长度满足某个条件，有的是窗口中字符出现次数满足某个条件。
+
 ```java
 //// 滑动窗口算法框架
 void slidingWindow(string s, string t) {
@@ -83,16 +85,19 @@ void slidingWindow(string s, string t) {
 # 题目
 
 - [209. 长度最小的子数组](https://leetcode.cn/problems/minimum-size-subarray-sum)
-  - 代码: [shortest-subarray-with-sum-greater-leet-209.cpp](code/shortest-subarray-with-sum-greater-leet-209.cpp)
+  - 标准模板代码，但更简单些: [shortest-subarray-with-sum-greater-leet-209.cpp](code/shortest-subarray-with-sum-greater-leet-209.cpp)
 - [3. 无重复字符的最长子串](https://leetcode.cn/problems/longest-substring-without-repeating-characters)
   - 代码: [longest-substr-without-dups-leet-3.cpp](code/longest-substr-without-dups-leet-3.cpp)
+  - 标准模板代码，因字符不重复，不用统计出现多少次，所以用 set 而不用 map [longest-substr-without-dups-leet-3-template.cpp](code/longest-substr-without-dups-leet-3-template.cpp)
 - hard: [76. 最小覆盖子串](https://leetcode.cn/problems/minimum-window-substring)
   - 代码: [min-window-substr-leet-76.cpp](code/min-window-substr-leet-76.cpp)
+  - 模板代码: [min-window-substr-leet-76-template.cpp](code/min-window-substr-leet-76-template.cpp) <font color="red">to check on leet</font>
 - hard: [438. 字符串中所有字母异位词](https://leetcode.cn/problems/find-all-anagrams-in-a-string)
   - 标准模板代码: [all-anagrams-in-string-leet-438-sol2-template.cpp](code/all-anagrams-in-string-leet-438-sol2-template.cpp)
   - 另一代码: [all-anagrams-in-string-leet-438-sol1.cpp](code/all-anagrams-in-string-leet-438-sol1.cpp)
 - hard: 438的进阶：[30. 串联所有单词的子串](https://leetcode.cn/problems/substring-with-concatenation-of-all-words) 窗口大小固定，但每次移动若干字符
-  - 代码: [substr-with-concating-words-leet-30.cpp](code/substr-with-concating-words-leet-30.cpp)
+  - 代码（for循环，分两段）: [substr-with-concating-words-leet-30.cpp](code/substr-with-concating-words-leet-30.cpp)
+  - 模板代码: [substr-with-concating-words-leet-30-template.cpp](code/substr-with-concating-words-leet-30-template.cpp) <font color="red">to check on leet</font>
 - [239. 滑动窗口最大值](https://leetcode.cn/problems/sliding-window-maximum) 单调队列+滑动窗口，代码: []()
 - [567. 字符串的排列](https://leetcode.cn/problems/permutation-in-string) 窗口大小固定
   - 代码 for 循环: [permutation-in-str-leet-567.cpp](code/permutation-in-str-leet-567.cpp)
