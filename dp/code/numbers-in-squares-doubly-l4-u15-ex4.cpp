@@ -2,7 +2,7 @@
 #include <algorithm> // max()
 using namespace std;
 
-int a[15][15];
+int a[15][15]; // 棋盘，下标从 1 开始
 int f[15][15][15][15];
 
 int main() {

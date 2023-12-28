@@ -1,7 +1,7 @@
 
-- 最小生成树:Prim 和 Kruskal 等算法
+- 最小生成树: Prim 和 Kruskal 等算法
 - 7. 次小生成树
-- 单源最短路:Bellman-Ford、Dijkstra、SPFA 等算法
+- 单源最短路: Bellman-Ford、Dijkstra、SPFA 等算法
 - 7. 单源次短路
 - Floyd-Warshall 算法
 - 有向无环图的拓扑排序
