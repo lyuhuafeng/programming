@@ -1,7 +1,9 @@
 #include <vector>
+#include <algorithm> // max()
 using namespace std;
 
 // 受 https://mp.weixin.qq.com/s/XyiYcDwEv3VW5Zs-WmRbDQ 启发，但是我自行想出，感觉很妙。可能是最佳解法。
+
     int trap(vector<int>& height) {
         int n = height.size();
         int maxh = 0; // 全局最高
