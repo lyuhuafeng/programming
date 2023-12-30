@@ -14,7 +14,9 @@ references:
 - 优化一下，预处理。[trapping-rain-leet-42-vertically-02-preprocess.cpp](code/trapping-rain-leet-42-vertically-02-preprocess.cpp)
 - 变形的单调栈，求 prev greatest 和 next greatest（注意是 greatest 不是 greater）。但有些硬套公式、为了使用单调栈而使用的感觉。[trapping-rain-leet-42-vertically-03-mono-stack.cpp](code/trapping-rain-leet-42-vertically-03-mono-stack.cpp)
 
-# solution 2. 与 1 基本相同，按列（竖直方向），每个柱子顶上竖直方向能存多少水。但求左最高、右最高的方法不同。
+# solution 2. 最佳解法，1 的改进
+
+与 1 基本相同，按列（竖直方向），每个柱子顶上竖直方向能存多少水。但求左最高、右最高的方法不同。
 
 先找出最高的柱子高度 `maxh`。最高的可能有多个，其中最左边（第一个）的下标为 l，最右边（最后一个）的下标为 r。
 
