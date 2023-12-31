@@ -96,7 +96,7 @@ L3, u5, 我的果汁分你一半
 
 L3, u6, 二分天下必得其一
 
-- [1. 神奇的编号对](https://oj.youdao.com/course/12/54/1#/1/8253): [题解](../binary-search/)
+- [1. 神奇的编号对](https://oj.youdao.com/course/12/54/1#/1/8253): [题解用 stl](../binary-search/code/index-pairs-l3-u6-ex1.cpp)
 - [2. 木材加工](https://oj.youdao.com/course/12/54/1#/1/8254): [题解](../binary-search/二分搜索最佳例题-L3-06-木材加工.md)
 - [3. 伐木工](https://oj.youdao.com/course/12/54/1#/1/8255): [题解](../binary-search/)
 - [4. 萝卜好借不好还](https://oj.youdao.com/course/12/54/1#/1/8256): [题解](../binary-search/)
@@ -115,7 +115,7 @@ L3, u8, 第二次小测
 L3, u11, 吃得好还要吃得巧
 - [1. 数列分段1](https://oj.youdao.com/course/12/59/1#/1/8192)
 - [2. 数列分段2](https://oj.youdao.com/course/12/59/1#/1/8193)
-- [3. 进击的奶牛](https://oj.youdao.com/course/12/59/1#/1/8194)
+- [3. 进击的奶牛](https://oj.youdao.com/course/12/59/1#/1/8194) : [题解](../binary-search/code/cows-max-safe-interval-luogu-p1824.cpp)
 - [4. 河中跳房子](https://oj.youdao.com/course/12/59/1#/1/8195)
 - [5. 安全距离](https://oj.youdao.com/course/12/59/1#/1/8196): [题解](../binary-search/二分搜索最佳例题-L3-11-奶牛安全距离.md)
 - [作业1. 中位数](https://oj.youdao.com/course/12/59/2#/1/8197)
