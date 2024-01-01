@@ -8,7 +8,7 @@
   - 若用一遍循环，经观察，若有多个相邻、相同的，尽管中间的 i 的结果不对，但最靠边的两个 i 中的一个，结果是对的，也算歪打正着。
 - [leetcode 739. 每日温度](https://leetcode.cn/problems/daily-temperatures/) next greater 标准模版
 - [leetcode 1673. 最具竞争力的子序列](https://leetcode.cn/problems/find-the-most-competitive-subsequence/)
-  - 只用到 stack 本身，不用求 next greater 之类的。看我最新解法，有注释。旧解法思路已忘。
+  - [两种解法](单调队列-leet1673-竞争力子序列.md)，分别用单调栈和单调队列。前者简单得多，且只用到 stack 本身，不用求 next greater 之类的
 - [leetcode 402. 移掉K位数字](https://leetcode.cn/problems/remove-k-digits/) 跟上题一样
 - [leetcode 42. 接雨水](https://leetcode.cn/problems/trapping-rain-water/) [我的解法笔记](leet-42-接雨水多种方法.md)
 - [407. 接雨水 II](https://leetcode.cn/problems/trapping-rain-water-ii/) 二维方格上接
