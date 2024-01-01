@@ -18,7 +18,7 @@
         dist[v][v] = 0 // 自己到自己，距离为0
     for each edge (u,v):
         dist[u][v] = w(u, v)  // weight of edge (u,v)
-    
+
     for (int k = 0; k < n; k++) {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
