@@ -17,7 +17,7 @@
 - 全为 0。（<font color="red">感觉有问题？</font>）
 - `dp[i][i] = v[i-1] * v[i] * v[i+1]`，但似无必要单独处理。
 
-代码
+c++ 代码
 
 ```cpp
     int maxCoins(vector<int>& nums) {
@@ -39,4 +39,32 @@
         }
         return dp[1][n];
     }
+```
+
+go 代码：[stab-ballons-leet-312.go)](code/stab-ballons-leet-312.go)
+
+```go
+func maxCoins(nums []int) int {
+    var n int = len(nums)
+    var v []int = make([]int, n + 2)
+    for i := 0; i < n; i++ {
+        v[i + 1] = nums[i]
+    }
+    v[0], v[n + 1] = 1, 1
+
+    dp := make([][]int, n + 2)
+    for i := 0; i < n + 2; i++ {
+        dp[i] = make([]int, n + 2)
+    } // 初始化全为 0，不用显式赋值为 0
+
+    for i := n; i >= 1; i-- {
+        for j := i; j <= n; j++ {
+            for k := i; k <= j; k++ {
+                sum := dp[i][k - 1] + dp[k + 1][j] + v[i - 1] * v[k] * v[j + 1]
+                dp[i][j] = max(dp[i][j], sum) // max() built-in since 1.21 (2023.08.08)
+            }
+        }
+    }
+    return dp[1][n]
+}
 ```

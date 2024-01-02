@@ -17,6 +17,20 @@ func lower_bound(array []int64, to_search int64) int {
     return l
 }
 
+func upper_bound(array []int64, to_search int64) int {
+    l := 0
+    r := len(array)
+    for l < r {
+        m := (l + r) / 2
+        if array[m] >= to_search {
+            r = m
+        } else {
+            l = m + 1
+        }
+    }
+    fmt.Printf("to_search: %d, result: %d\n", to_search, l)
+    return l
+}
 // Test
 func Test_lower_bound(t int64) {    
     array := []int64{1, 3, 4, 5}
@@ -32,6 +46,7 @@ func Test_lower_bound(t int64) {
     if lower_bound(array, int64(to_search3)) != 3 {
 		fmt.Println("test case failed")
     }
+	fmt.Printf("key:%d, upper_bound:%d\n", 2, upper_bound(array, 2))
 }
 
 func main() {
