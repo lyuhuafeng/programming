@@ -35,14 +35,14 @@ public:
         printf("\n\n");
         for (int i = 0; i < nums2.size(); i++) {
             // printf("____ i = %d, nums2[%d] = %d\n", i, i, nums[i]);
-            while (!st.empty() && nums2[i] < st.top() < nums2[i]) {
+            while (!st.empty() && nums2[st.top()] < nums2[i]) {
                 // printf("     st.top() = %d; set ng[%d] = %d\n", st.top()st.top(), i);
                 ng[st.top()] = i;
                 st.pop();
             }
             st.push(i);
         }
-        return ng;
+
         map<int, int> ng_map;
         for (int i = 0; i < nums2.size(); i++) {
             ng_map[nums2[i]] = (ng[i] == -1 ? -1 : nums2[ng[i]]);
