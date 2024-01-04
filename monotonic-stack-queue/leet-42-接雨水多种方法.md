@@ -102,10 +102,33 @@ func trap(height []int) int {
 }
 ```
 
+该思路甚至可以再简化些。对某个位置 `i`，其实就是找「`i` 往左最高的」和「`i` 往右最高的」。换个方向，就是「从左起点往右，直到 `i`，最高的」和「从右终点往左，直到 `i`，最高的」。上个思路，要统计全局最高的，这样一个或两个方向的最高的就不用显式统计了，但代码逻辑较多。现在再简化一下，分别用两个数组记录所有的，代码能少很多。go 代码：[`trapping-rain-leet-42-vertically-12-perfect-more.go`](code/trapping-rain-leet-42-vertically-12-perfect-more.go)
+
+```go
+// hl[i]: 从左边界统计，到 i 为止，最大的。max{ height[i] }, ∀ i ∈ [0, i]
+// hr[i]: 从右边界统计，到 i 为止，最大的。max{ height[i] }, ∀ i ∈ [i, n-1]
+func trap(height []int) int {
+    n := len(height)
+    hl, hr := make([]int, n), make([]int, n)
+    maxhl, maxhr := -1, -1
+    for i, h := range height {
+        j := n - 1 - i
+        maxhl, maxhr = max(maxhl, h), max(maxhr, height[j])
+        hl[i], hr[j] = maxhl, maxhr
+    }
+    sum := 0
+    // 去掉头尾，因头尾两柱肯定无法盛水
+    for i := 1; i <= n - 1 - 1; i++ {
+        sum += (min(hl[i], hr[i]) - height[i]) * 1
+    }
+    return sum
+}
+```
+
 ## 类似思路
 
 来自 https://mp.weixin.qq.com/s/XyiYcDwEv3VW5Zs-WmRbDQ 方法 4，但把简单问题复杂化了。
-- [trapping-rain-leet-42-vertically-11.cpp](code/trapping-rain-leet-42-vertically-11.cpp)
+- [`trapping-rain-leet-42-vertically-11.cpp`](code/trapping-rain-leet-42-vertically-11.cpp)
 
 # solution 3. 按行
 
@@ -118,11 +141,11 @@ func trap(height []int) int {
 两个方向都是严格 greater，一遍遍历不能得到，得两遍。运行时，发现不能处理途中第 4、6 个的情况。4、6 重复计算了。
 ![failure](pics/trap-rain-failure.png)
 
-代码：[trapping-rain-leet-42-horizonally-01-mono-stack-intuitive-wrong.cpp](code/trapping-rain-leet-42-horizonally-01-mono-stack-intuitive-wrong.cpp)
+代码：[`trapping-rain-leet-42-horizonally-01-mono-stack-intuitive-wrong.cpp`](code/trapping-rain-leet-42-horizonally-01-mono-stack-intuitive-wrong.cpp)
 
 怎么办？搞个 set 去重？感觉不优雅。
 
-2023.12.21 感悟：受[「leet-795-区间子数组个数」的直接了当解法](leet-795-区间子数组个数.md)启发，「两端都是 greater」不行，则<font color="green">改成「一端 greater、另一端 greater-or-equal」，就可以把等高的两根柱子分割在不同的区间里，就可以了</font>。改哪端都可以。若从上面的错误代码改，两处 while 条件里，都改成 `>` ，或都改成 `>=`，都可以。当然，最好还是改成遍历一遍，同时求出 next greater 和 previous greater or equal。代码：[trapping-rain-leet-42-horizonally-01-mono-stack-intuitive.cpp](code/trapping-rain-leet-42-horizonally-01-mono-stack-intuitive.cpp)
+2023.12.21 感悟：受[「leet-795-区间子数组个数」的直接了当解法](leet-795-区间子数组个数.md)启发，「两端都是 greater」不行，则<font color="green">改成「一端 greater、另一端 greater-or-equal」，就可以把等高的两根柱子分割在不同的区间里，就可以了</font>。改哪端都可以。若从上面的错误代码改，两处 while 条件里，都改成 `>` ，或都改成 `>=`，都可以。当然，最好还是改成遍历一遍，同时求出 next greater 和 previous greater or equal。代码：[`trapping-rain-leet-42-horizonally-01-mono-stack-intuitive.cpp`](code/trapping-rain-leet-42-horizonally-01-mono-stack-intuitive.cpp)
 
 ## 正确、但不直观的解法，也是 leetcode 官方解法
 
@@ -148,7 +171,7 @@ func trap(height []int) int {
 
 <font color="red">但总感觉这个思路不是太直观。</font>
 
-代码：[trapping-rain-leet-42-horizonally-02-mono-stack-official.java](code/trapping-rain-leet-42-horizonally-02-mono-stack-official.java)
+代码：[`trapping-rain-leet-42-horizonally-02-mono-stack-official.java`](code/trapping-rain-leet-42-horizonally-02-mono-stack-official.java)
 
 ```java
     public int trap(int[] height) {
