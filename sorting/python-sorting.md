@@ -1,16 +1,16 @@
 # python 排序
 
-内置 list.sort() 和 sorted()。二者都是稳定的。
+内置 `list.sort()` 和 `sorted()`。二者都是稳定的。
 
 区别：
-* list.sort() 只能用于 list；后者可用于任何 iterable。
-* list.sort() 直接改 list 并返回 None；后者返回一个新的 list（不是原来的 iterable 类型！），应该是 key？
+* `list.sort()` 只能用于 list；后者可用于任何 iterable。
+* `list.sort()` 直接改 list 并返回 `None`；后者返回一个新的 list（不是原来的 iterable 类型！），应该是 key？
 
-## key functions
+# key functions
 
 二者都有一个 key 参数，指定一个 function 或 callable，用在每个 item 上，结果用于比较。
 
-### 用已有的函数作 key。例如 `key=str.lower`
+## 用已有的函数作 key。例如 `key=str.lower`
 
 ```python
 sorted("This is a test string from Andrew".split(), key=str.lower)
@@ -18,7 +18,7 @@ sorted("This is a test string from Andrew".split(), key=str.lower)
 # 输出：['a', 'Andrew', 'from', 'is', 'string', 'test', 'This']
 ```
 
-### 复杂 tuple，通常取其某个字段作比较，`key=lambda student: student[2]`
+## 复杂 tuple，通常取其某个字段作比较，`key=lambda student: student[2]`
 
 ```python
 student_tuples = [
@@ -31,7 +31,7 @@ sorted(student_tuples, key=lambda student: student[2])
 # 输出：[('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
 ```
 
-### 类对象，取其某个字段作比较，`key=lambda student: student.age`
+## 类对象，取其某个字段作比较，`key=lambda student: student.age`
 
 ```python
 class Student:
@@ -52,7 +52,7 @@ sorted(student_objects, key=lambda student: student.age)   # sort by age
 # 输出：[('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
 ```
 
-### 用 operator module 的 itemgetter、attrgetter，方便取某个或某些字段
+## 用 operator module 的 itemgetter、attrgetter，方便取某个或某些字段
 
 ```python
 from operator import itemgetter, attrgetter
@@ -67,7 +67,7 @@ sorted(student_objects, key=attrgetter('age'))
 sorted(student_objects, key=attrgetter('grade', 'age'))
 ```
 
-### 多次排序：先根据 age 排序，再根据 grade 逆序排序
+## 多次排序：先根据 age 排序，再根据 grade 逆序排序
 
 因为是稳定的，排多次也不会出错。
 
@@ -84,7 +84,7 @@ def multisort(xs, specs):
 res = multisort(list(student_objects), (('grade', True), ('age', False)))
 ```
 
-### key function 里使用外部属性
+## key function 里使用外部属性
 
 例如，用于比较的分数存在另外一个 dict 里：
 
@@ -94,7 +94,7 @@ newgrades = {'john': 'F', 'jane':'A', 'dave': 'C'}
 res = sorted(students, key=newgrades.__getitem__)
 ```
 
-### comparation function 转成 key function
+## comparation function 转成 key function
 
 key vs. comparation
 * key function: 返回某 item 的一个绝对值，用于比较。
@@ -118,7 +118,7 @@ data = [(8, 'igor'), (7, 'andy'), (5, 'alexy'), (4, 'jerry')]
 res = sorted(data, key=functools.cmp_to_key(compare_func)) # python3 中正确用法
 ```
 
-## 直接排序：给对象增加 `__lt__()` 方法，使对象可直接比较
+# 直接排序：给对象增加 `__lt__()` 方法，使对象可直接比较
 
 list.sort() 和 sorted() 比较两个对象时，使用 `<`。所以，给待排序的类增加 `__lt__()` 方法，就可直接比较，不用指定 key function。
 
@@ -130,7 +130,7 @@ res = sorted(student_objects)
 
 若 `__lt__()` 没定义，则使用 `__gt__()`。<font color="red">to add later</font>
 
-## 直接排序：Decorate-Sort-Undecorate (DSU) idiom
+# 直接排序：Decorate-Sort-Undecorate (DSU) idiom
 
 又称作 Schwartzian transform。
 
