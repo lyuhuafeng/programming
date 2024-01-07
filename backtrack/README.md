@@ -68,7 +68,8 @@ https://www.geeksforgeeks.org/backtracking-introduction/
 - 字符串的全排列：c++ 代码：[`permutation.cpp`](code/permutation.cpp)
 - [leetcode 46. 数字数组的全排列](https://leetcode.cn/problems/permutations) 
   - 通过的 Java 代码：[`permutation-leet46.java`](code/permutation-leet46.java)。注意，每遇到成功的 track，不能 `res.add(track)`，要 `res.add(new ArrayList<>(track))`。
-  - go 代码，回溯法，同上面的 Java 代码：[`permutation-leet46-go-sol1.go`](code/permutation-leet46-go-sol1.go) 
+  - go 代码，回溯法，同上面的 Java 代码：[`permutation-leet46-go-sol1.go`](code/permutation-leet46-go-sol1.go)
+  - go 代码，回溯法，little Turing 思路，用 `used[]` 和 `now`：[`permutation-leet46-go-sol1-used.go`](code/permutation-leet46-go-sol1-used.go)
   - go 代码，递归但似无回溯：[`permutation-leet46-go-sol2.go`](code/permutation-leet46-go-sol2.go) 
 
 * [n 皇后问题](queens.md)
