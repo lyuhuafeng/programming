@@ -10,7 +10,7 @@ int C[20], D[50], E[50];
 // r: 当前正在处理哪一行
 void dfs(int r) {
   if (r == n + 1) {
-    if (++cnt == k) {
+    if (++cnt == k) { // 只输出第 k 种解法
       for (int i = 1; i <= n; i++) {
         printf("%d ", a[i]);
       }

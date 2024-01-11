@@ -63,33 +63,24 @@ https://www.geeksforgeeks.org/backtracking-introduction/
 
 # 题目
 
-## 全排列
-
 - 字符串的全排列：c++ 代码：[`permutation.cpp`](code/permutation.cpp)
-- [leetcode 46. 数字数组的全排列](https://leetcode.cn/problems/permutations) 
+- [leet 46. 数字数组的全排列](https://leetcode.cn/problems/permutations) 
   - 通过的 Java 代码：[`permutation-leet46.java`](code/permutation-leet46.java)。注意，每遇到成功的 track，不能 `res.add(track)`，要 `res.add(new ArrayList<>(track))`。
   - go 代码，回溯法，同上面的 Java 代码：[`permutation-leet46-go-sol1.go`](code/permutation-leet46-go-sol1.go)
   - go 代码，回溯法，little Turing 思路，用 `used[]` 和 `now`：[`permutation-leet46-go-sol1-used.go`](code/permutation-leet46-go-sol1-used.go)
   - go 代码，递归但似无回溯：[`permutation-leet46-go-sol2.go`](code/permutation-leet46-go-sol2.go) 
 
-* [n 皇后问题](queens.md)
-* [数的划分](数的划分.md)
-* [和为 T](和为T.md)
+- [n 皇后问题](queens.md)
+- [数的划分](数的划分.md)
+- [和为 T](和为T.md)
 
-### 子集
-[leetcode 78. 子集](https://leetcode.cn/problems/subsets/) 无重复元素的数组，找出其所有子集。
+- [leet 78. 子集](https://leetcode.cn/problems/subsets/) 无重复元素的数组，找出其所有子集。
+  - dfs 代码：[`subset-dfs-leet78.java`](code/subset-dfs-leet78.java) 可选项是两个：「选自己」、「不选自己」。不像其他题目，用循环遍历所有可选项。Again，Java 代码，不能直接 `res.add(t)`，而要复制一个新的再加入 `res.add(new ArrayList<>(t))`。
+  - 还有一种方法，利用二进制，代码可见我的 C++ 题解。
 
-dfs 代码：[subset-dfs-leet78.java](code/subset-dfs-leet78.java)
-
-可选项是两个：「选自己」、「不选自己」。不像其他题目，用循环遍历所有可选项。
-
-Again，Java 代码，不能直接 `res.add(t)`，而要复制一个新的再加入 `res.add(new ArrayList<>(t))`。
-
-还有一种方法，利用二进制，代码可见我的 C++ 题解。
-
-1. [0-1 背包问题的 dfs 解法](01背包问题的dfs解法.md)
+## [0-1 背包问题的 dfs 解法](01背包问题的dfs解法.md)
 
 ## dfs 但不需回溯
 
-1. [道路修建，NOI 2011](道路修建-noi2011.md)
+- [道路修建，NOI 2011](道路修建-noi2011.md)
 
