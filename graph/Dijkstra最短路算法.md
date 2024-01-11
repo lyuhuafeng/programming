@@ -1,6 +1,6 @@
 # Dijkstra shortest path 算法
 
-解决的是「单源最短路」问题：给定一个起点，求其到其他多个顶点的最短路径。
+解决的是「单源最短路」问题：给定一个起点，求它到其他多个顶点的最短路径。
 
 ## 伪代码
 
@@ -72,46 +72,46 @@ Workaround 是，不更新 `(v1, d1)`，而是再增加一个 `(v1, d2)` 元素�
 
 ## C++ 代码
 
-[dijkstra-huafeng.cpp](code/dijkstra-huafeng.cpp)
+[`dijkstra-huafeng.cpp`](code/dijkstra-huafeng.cpp)
 
 priority queue 里用的是自定义的结构体，和自定义的比较函数。
 
 ```cpp
-struct my_cmp {
-    bool operator()(const vertex_dist& v1, const vertex_dist& v2) const {
-        return v1.dist > v2.dist;
-    }
-};
+    struct my_cmp {
+        bool operator()(const vertex_dist& v1, const vertex_dist& v2) const {
+            return v1.dist > v2.dist;
+        }
+    };
 
-priority_queue<vertex_dist, vector<vertex_dist>, my_cmp> pq;
+    priority_queue<vertex_dist, vector<vertex_dist>, my_cmp> pq;
 ```
 
 也可以用 pair 类型，就不用自定义比较函数了。
 
 ```cpp
-#include <utility> // pair
+    #include <utility> // pair
 
-priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> q;
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> q;
 ```
 
 这个用法看起来甚是臃肿，可以如下美化一下：
 
 ```cpp
-#include <utility> // pair
+    #include <utility> // pair
 
-typedef pair<int, int> vertex_dist;
-priority_queue<vertex_dist, vector<vertex_dist>, greater<vertex_dist>> pq;
+    typedef pair<int, int> vertex_dist;
+    priority_queue<vertex_dist, vector<vertex_dist>, greater<vertex_dist>> pq;
 ```
 
 注意，pair 默认根据 first 来排序，故要把 dist 作为 first，vertex 作为 second。与原来自定义的结构体顺序相反。
 
-用 pair 的代码：[dijkstra-huafeng-using-pair.cpp](code/dijkstra-huafeng-using-pair.cpp)
+用 pair 的代码：[`dijkstra-huafeng-using-pair.cpp`](code/dijkstra-huafeng-using-pair.cpp)
 
-小图灵的标程：[dijkstra-youdao.cpp](code/dijkstra-youdao.cpp)，用了链式前向星而不是 vector 来存储邻接表；重载了 `'<'` 操作符而不是自定义比较函数，使 priority queue 的定义更简捷。
+小图灵的标程：[`dijkstra-little-turing.cpp`](code/dijkstra-little-turing.cpp)，用了链式前向星而不是 vector 来存储邻接表；重载了 `'<'` 操作符而不是自定义比较函数，使 priority queue 的定义更简捷。
 
 ## Java code
 
-[dijkstra-huafeng.java](code/dijkstra-huafeng.java)
+[`dijkstra-huafeng.java`](code/dijkstra-huafeng.java)
 
 ## 松弛，edge relaxation
 
