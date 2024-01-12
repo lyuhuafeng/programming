@@ -1,6 +1,12 @@
 # 滑动窗口
 
-框架
+双指针 vs. 滑动窗口：
+- 双指针：主要用来遍历数组，两个指针指向不同的元素，从而协同完成任务。
+- 滑动窗口：如果两个指针指向同一个数组，遍历的方向相同且不相交，也称为滑动窗口。
+
+# 框架
+
+步骤：
 0. 窗口左闭右开 `[l, r)`。
 1. 初始，`l = r = 0`，窗口为空。
 2. 先不断向右移动 `r`，扩大窗口，直到窗口满足条件。
@@ -18,9 +24,9 @@ void slidingWindow(string s, string t) {
     for (char c : t.toCharArray()) {
         need.put(c,need.getOrDefault(c,0)+1);
     }
-    Map<Character, Integer> window = new HashMap<>(); // 窗口中各字符「实际」出现的次数
+    Map<Character, Integer> window = new HashMap<>(); // 窗口中各字符「实际」已出现的次数
     int left = 0, right = 0;
-    int valid = 0; // 窗口中已「完全包含」多少所需字符。免得每次都要遍历 need 和 win 比较是否满足要求。
+    int valid = 0; // 窗口中「已完全包含」多少所需字符。免得每次都要遍历 need 和 win 比较是否满足要求。
     while (right < s.size()) {
         char c = s.charAt(right); // 将从右边进入窗口的字符
         right++; // 右扩窗口
@@ -40,7 +46,12 @@ void slidingWindow(string s, string t) {
 
 # 标准模板 C++ 实现：[438. 字符串中所有字母异位词](https://leetcode.cn/problems/find-all-anagrams-in-a-string)
 
-标准模板代码: [all-anagrams-in-string-leet-438-sol2-template.cpp](code/all-anagrams-in-string-leet-438-sol2-template.cpp)
+标准模板代码: [`all-anagrams-in-string-leet-438-sol2-template.cpp`](code/all-anagrams-in-string-leet-438-sol2-template.cpp)
+
+重要变量：
+- `map<char, int> need`: 窗口中各字符「需要」出现的次数。预处理好了就不用改变。
+- `map<char, int> win`: 窗口中各字符「实际」已出现的次数。随窗口移动，不断更新。
+- `int valid`: 窗口中「已完全包含」多少所需字符。随窗口移动，不断更新。免得每次都要遍历 need 和 win 比较是否满足要求。
 
 ```cpp
     vector<int> findAnagrams(string s, string p) {
@@ -50,7 +61,7 @@ void slidingWindow(string s, string t) {
         }
         unordered_map<char, int> win; // 窗口中各字符「实际」出现的次数
         int l = 0, r = 0;
-        int valid = 0; // 窗口中已「完全包含」多少所需字符。免得每次都要遍历 need 和 win 比较是否满足要求。
+        int valid = 0; // 窗口中「已完全包含」多少所需字符。免得每次都要遍历 need 和 win 比较是否满足要求。
         vector<int> res; // 结果
         while (r < s.length()) {
             char c = s[r]; // 将要从右边进入窗口的字符
@@ -63,7 +74,7 @@ void slidingWindow(string s, string t) {
                 }
             }
             while (r - l >= p.size()) {
-                // 若窗口满足条件（窗口中已「完全包含」所有所需字符），则将起始索引放入 res
+                // 若窗口满足条件（窗口中「已完全包含」所有所需字符），则将起始索引放入 res
                 if (valid == need.size()) {
                     res.push_back(l);
                 }
@@ -91,7 +102,7 @@ void slidingWindow(string s, string t) {
   - 标准模板代码，因字符不重复，不用统计出现多少次，所以用 set 而不用 map [longest-substr-without-dups-leet-3-template.cpp](code/longest-substr-without-dups-leet-3-template.cpp)
 - hard: [76. 最小覆盖子串](https://leetcode.cn/problems/minimum-window-substring)
   - 代码: [min-window-substr-leet-76.cpp](code/min-window-substr-leet-76.cpp)
-  - 模板代码: [min-window-substr-leet-76-template.cpp](code/min-window-substr-leet-76-template.cpp) <font color="red">to check on leet</font>
+  - 模板代码: [min-window-substr-leet-76-template.cpp](code/min-window-substr-leet-76-template.cpp)
 - hard: [438. 字符串中所有字母异位词](https://leetcode.cn/problems/find-all-anagrams-in-a-string)
   - 标准模板代码: [all-anagrams-in-string-leet-438-sol2-template.cpp](code/all-anagrams-in-string-leet-438-sol2-template.cpp)
   - 另一代码: [all-anagrams-in-string-leet-438-sol1.cpp](code/all-anagrams-in-string-leet-438-sol1.cpp)
