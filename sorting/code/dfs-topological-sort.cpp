@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm> // fill_n()
 using namespace std;
 
 void add_edge(vector<int> adj[], int u, int v) {
@@ -26,7 +27,7 @@ void visit_vertex(int v, const vector<int> adj[], bool visited[], vector<int>& r
 // 传入 n 是节点数，不是 adj 数组大小
 vector<int> topological_sort(int n, const vector<int> adj[]) {
     bool visited[n + 1]; // 顶点是否访问过
-    memset(visited, 0, sizeof visited); // 初始化为 全false
+    fill_n(visited, n + 1, false); // 初始化为 全false
 
     vector<int> res;
     for (int i = 1; i <= n; i++) {
