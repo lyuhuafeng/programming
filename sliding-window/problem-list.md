@@ -121,3 +121,5 @@ void slidingWindow(string s, string t) {
 - vip: [340. 至多包含 K 个不同字符的最长子串](https://leetcode.cn/problems/longest-substring-with-at-most-k-distinct-characters/)
 
 - [题目列表](https://leetcode.cn/tag/sliding-window/problemset/)
+
+- [18. 四数之和](https://leetcode.cn/problems/4sum/): 双指针，不涉及到滑动窗口 [`sum4-leet-18.cpp`](code/sum4-leet-18.cpp)
