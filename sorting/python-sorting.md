@@ -3,8 +3,11 @@
 内置 `list.sort()` 和 `sorted()`。二者都是稳定的。
 
 区别：
-* `list.sort()` 只能用于 list；后者可用于任何 iterable。
-* `list.sort()` 直接改 list 并返回 `None`；后者返回一个新的 list（不是原来的 iterable 类型！），应该是 key？
+
+`list.sort()` | `sorted()`
+---- | ----
+只能用于 list | 可用于任何 iterable
+直接改原 list 并返回 `None` | 返回一个新的 list（不是原来的 iterable 类型！），应该是 key？
 
 # key functions
 

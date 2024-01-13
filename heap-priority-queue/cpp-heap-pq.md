@@ -39,7 +39,7 @@ void sort_heap(RandomIt first, RandomIt last, Compare comp) {
 }
 ```
 
-# STL priority_queue 优先级队列
+# stl priority_queue 优先级队列
 
 ```cpp
 #include <queue>
@@ -54,7 +54,7 @@ priority_queue 类，是个 container adaptor。底层可用 vector 或 queue，
 * `empty()`, `size()`
 * `swap()`: 跟另一个 pq 交换内容。(为何需要此功能？)
 
-## STL priority_queue 代码例子
+## stl priority_queue 代码例子
 
 用三种方法创建的 pq，缺省是 max heap，都已经排好序。遍历输出，可见从 9 到 0。
 
@@ -117,7 +117,7 @@ int main() {
 
 方法 | 是否需改对象数据结构 | 创建 pq 时是否需提供comparator 参数
 ----|----|----
-1, 定义独立的 `operator<(T a, T b)` | N | N
+1, <font color="green">最佳</font>：定义独立的 `operator<(T a, T b)` | N | N
 2, 定义独立的比较函数 `my_cmp(T a, T b)` | N | Y. `my_cmp`
 3, 定义独立的 lambda 做比较函数 | N | Y. `decltype(my_cmp)`
 4, 定义独立的 functor (struct/class)，其中重载 `operator(T a, T b)` | N | Y. `functor_name`
@@ -126,7 +126,7 @@ int main() {
 
 ### 1. 定义独立的 `bool operator<(const T& a, const T& b)`
 
-最方便。完整代码：[pq_standalone_optr_lt.cpp](code/pq_standalone_optr_lt.cpp)
+<font color="green">最方便</font>。完整代码：[`pq_standalone_optr_lt.cpp`](code/pq_standalone_optr_lt.cpp)
 
 ```cpp
 struct Person { ... }
