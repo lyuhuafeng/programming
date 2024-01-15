@@ -155,3 +155,25 @@ To add: remove, insertion 的时间分析。在原始手写笔记上有一些。
 # STL
 
 参见 [`cpp-heap-pq.md`](../heap-priority-queue/cpp-heap-pq.md)
+
+例，struct 根据身高 height 排序。完整代码：[`heap_sort_using_pq_optr_lt.cpp`](code/heap_sort_using_pq_optr_lt.cpp)。核心代码如下。要点：
+
+- 需重定义 `operator<`。不需改原始的 struct 定义。
+- 用原始 vector 做参数，初始化 priority queue。这一步不会改变原 vector 内容。
+- 从 priority queue 依次取出元素，放入 vector 相应位置。从 vector 角度看，是 in-place 操作。priority queue 是额外空间。
+
+```cpp
+    struct Person {
+        int age;
+        float height;
+    };
+
+    bool operator<(const Person& p1, const Person& p2) {
+        return p1.height < p2.height;
+    }
+
+    priority_queue<Person> pq(v.begin(), v.end());
+    for (int i = v.size() - 1; i >= 0; --i) {
+        v[i] = pq.top(); pq.pop();
+    }
+```
