@@ -1,8 +1,10 @@
 # Dijkstra shortest path 算法
 
-解决的是「单源最短路」问题：给定一个起点，求它到其他多个顶点的最短路径。
+解决的是「单源最短路」single-source shortest path 问题：给定「一个起点」（source），求它「到其他所有顶点」的最短路径。
 
-## 伪代码
+最后生成一个 SPT (shortest path tree)，以起点（source）为 root，其他顶点为子节点。
+
+# 伪代码
 
 ```python
  1  function Dijkstra(Graph, source):
@@ -41,7 +43,7 @@
 
 实际优化：初始时只把起点顶点 src 放入 Q，其他顶点被「发现」后再放入。Q 在实际代码中用 priority queue。
 
-## 更简单直观的步骤
+# 更简单直观的步骤
 
 ```
 1. 初始化
@@ -56,7 +58,7 @@
 重复步骤 2、3 的操作，直到所有顶点的 visited 都为 true。（总共重复 n 次）
 ```
 
-## 如何更新 dist
+# 如何更新 dist
 
 如何找「未 visit 过的顶点中，dist 最小的」那个？
 
@@ -70,7 +72,7 @@ Workaround 是，不更新 `(v1, d1)`，而是再增加一个 `(v1, d2)` 元素�
 
 或者用 C++ stl set，自身是排序的。
 
-## C++ 代码
+# C++ 代码
 
 [`dijkstra-huafeng.cpp`](code/dijkstra-huafeng.cpp)
 
@@ -86,7 +88,7 @@ priority queue 里用的是自定义的结构体，和自定义的比较函数�
     priority_queue<vertex_dist, vector<vertex_dist>, my_cmp> pq;
 ```
 
-也可以用 pair 类型，就不用自定义比较函数了。
+也可以用 pair 类型，就不用自定义比较函数了。pair 默认根据 first 来排序，所以要把 dist 作为 first，vertex 作为 second。与原来自定义的结构体顺序相反。
 
 ```cpp
     #include <utility> // pair
@@ -103,17 +105,15 @@ priority queue 里用的是自定义的结构体，和自定义的比较函数�
     priority_queue<vertex_dist, vector<vertex_dist>, greater<vertex_dist>> pq;
 ```
 
-注意，pair 默认根据 first 来排序，故要把 dist 作为 first，vertex 作为 second。与原来自定义的结构体顺序相反。
-
 用 pair 的代码：[`dijkstra-huafeng-using-pair.cpp`](code/dijkstra-huafeng-using-pair.cpp)
 
-小图灵的标程：[`dijkstra-little-turing.cpp`](code/dijkstra-little-turing.cpp)，用了链式前向星而不是 vector 来存储邻接表；重载了 `'<'` 操作符而不是自定义比较函数，使 priority queue 的定义更简捷。
+小图灵的标程：[`dijkstra-little-turing.cpp`](code/dijkstra-little-turing.cpp)，用了链式前向星而不是 vector 来存储邻接表；重载了 `operator<` 操作符而不是自定义比较函数，使 priority queue 的定义更简捷。
 
-## Java code
+# Java code
 
 [`dijkstra-huafeng.java`](code/dijkstra-huafeng.java)
 
-## 松弛，edge relaxation
+# 松弛，edge relaxation
 
 从 src 到某顶点 D，找到更短距离，更新该路径 (update the path) 的过程，称为「松弛」（to relax an edge, edge relaxation）。
 
@@ -129,19 +129,19 @@ priority queue 里用的是自定义的结构体，和自定义的比较函数�
 
 不使用 edge relaxation 技术的算法：Floyd。能处理 negative edge。`O(V3)`，慢，但已是不松弛的算法里最快的之一了。可见松弛还是很能提高性能的。
 
-## 适用条件
+# 适用条件
 
 weight 不能为负数；有向（或双向）；无环？
 
 图是有限的
 
-## 不适用的情况
+# 不适用的情况
 
 negative cycles 或 infinite cycles：一个cycle，所有 edge 加起来是负的，则每转一圈 cost 就减少一点。算法永远不会停止。(negative cycle: a cycle that has a negative total weight for its edges.)
 
 negative edge: 某 edge 为负，但没有负的 cycle。算法可停止，但结果不一定对。
 
-## 时间复杂度
+# 时间复杂度
 
 多种情况
 * 使用 adj matrix

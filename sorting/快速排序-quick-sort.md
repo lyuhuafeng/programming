@@ -280,3 +280,13 @@ Std::nth_element()
 时间复杂度：平均 vs. 最坏
 
 快排：随机化算法，随机选pivot
+
+# go 语言实现
+
+风格一，`sort()` 和 `partition()` 都用 `(a[], left, right)` 做参数。
+
+[`quick-sort-golang-sol1.go`](code/quick-sort-golang-sol1.go)
+
+风格二，`sort()` 和 `partition()` 都用 `(a[])` 做参数。递归时，要把当前数组切出一块再去调用。
+
+[`quick-sort-golang-sol2.go`](code/quick-sort-golang-sol2.go)
