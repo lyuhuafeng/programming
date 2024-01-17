@@ -36,11 +36,11 @@ int findCircleNum(vector<vector<int>>& isConnected) {
 
 // 改进方法 2
 // 不用 set 及其 vector 记录各连通分量了。
-// bool visited[i] 改为 int prov[i]，表示 i 属于哪个连通分量。若 i=0 表示还没访问过。用在 bfs 中。
+// bool visited[i] 改为 int prov[i]，表示 i 属于哪个连通分量。若 i=0 表示还没访问过（省的 id 从 1 开始）。用在 bfs 中。
 // 用 cnt 记录发现了几个连通分量，省去了 set、vector<set> 以及最后 v.size()
 int findCircleNum(vector<vector<int>>& isConnected) {
-    int n = isConnected.size();
-    vector<int> prov(n, 0); // prov[i]: i属于哪个省
+    int n = isConnected.size(); // 共多少个节点（省）
+    vector<int> prov(n, 0); // prov[i]: i 属于哪个省。0：该省还未访问过。
     int cnt = 0; // 从1开始
     for (int i = 0; i < n; i++) {
         if (prov[i] > 0) {

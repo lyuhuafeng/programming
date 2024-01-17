@@ -1,17 +1,17 @@
-class Solution {
+#include <vector>
+using namespace std;
 
-private:
     class union_find {
     private:
         vector<int> parents; // 链表, 若 parents[i] == i 则 i 为树的 root
-        vector<int> rank; // rank[i]: i所在树的 rank
+        vector<int> rank; // rank[i]: 以 i 为 root 的树的 rank
         int merged_count = 0;
     public:
         int disjoint_count = 0;
 
     public:
         union_find(const vector<vector<int>> & isConnected) {
-            int n = isConnected.size();
+            int n = isConnected.size(); // 共有多少节点
             for (int i = 0; i < n; i++) {
                 parents.push_back(i);
                 rank.push_back(1);
@@ -51,9 +51,23 @@ private:
         }
     };
 
-public:
+    // find() 的另一种实现，非递归
+    int find2(vector<int>& parents, int i) {
+        vector<int> path;
+        while (parents[i] != i) {
+            path.push_back(i);
+            i = parents[i];
+        }
+        // now: i is the root
+        for (int j : path) {
+            parents[j] = i;
+        }
+        return i;
+    }
+
     int findCircleNum(vector<vector<int>>& isConnected) {
         union_find uf(isConnected);
         return uf.disjoint_count;
     }
-};
+
+int main() {}
