@@ -66,8 +66,8 @@ public:
         for (vector<int>& e : edges) {
             indegree[e[1]]++; // 统计 in-degree
         }
-        vector<int> vec; // 记录 in-degree 为 2 的边（如果有的话就两条边）
-        // 找 in-degree 为 2 的节点所对应的边。逆序遍历，因优先返回后出现的
+        vector<int> vec; // 记录 in-degree 为 2 的顶点对应的两条 edge。（若有这样的顶点，则必定对应两条 edge）
+        // 找 in-degree 为 2 的顶点所对应的 edge。逆序遍历，因优先返回后出现的
         for (int i = n - 1; i >= 0; i--) {
             if (indegree[edges[i][1]] == 2) {
                 vec.push_back(i);

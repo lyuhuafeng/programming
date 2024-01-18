@@ -2,7 +2,12 @@
 #include <cstdio>
 using namespace std;
 
-// 遍历每条边，若两个顶点分属不同连通分量，且均已访问过，则增加这条边会构成环。就是可将其去掉。
+// 依次遍历每条边。某边的两个顶点，有几种情况：
+// - 两顶点均不在任何 CC 中：这两个顶点形成一个新的 CC
+// - 一个顶点属于某 CC，一个顶点不属于任何 CC：后者加入前者所在 CC
+// - 两个顶点分属两个 CC：这两个 CC 合并
+// - 两个顶点属于同一 CC：有问题！这就是导致环的那条 edge！
+//
 // 树中，edge 数量比 node 数量少 1。现在多了一条边，则输入的 edge 数量就是 node 数量。
 
     int find(int parents[], int i) {
@@ -18,7 +23,7 @@ using namespace std;
 
     vector<int> findRedundantConnection(vector<vector<int>>& edges) {
         int n = edges.size();
-        int parents[n + 1], rank[n + 1]; // 下标从1开始
+        int parents[n + 1], rank[n + 1]; // 顶点下标从1开始
         // parents[i] = 0:i尚未处理; i:i是root; 其他值:i不是root。都初始化成 0:尚未处理
         fill_n(parents + 1, n, 0);
         fill_n(rank + 1, n, 0);
