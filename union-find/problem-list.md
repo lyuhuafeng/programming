@@ -63,11 +63,22 @@
 
 ## [leetcode 399. 除法求值](https://leetcode.cn/problems/evaluate-division/)
 
+法一，并查集，「逐步增加 CC 法」：
+
 与「`leetcode 684. 冗余连接`」有点像，都是逐条 edge 输入。
 
 写代码写到 union 两棵不同的树时，发现，被合并的树上，每个顶点的 val 都要更新，完全可以每个顶点都直接挂到 ur 上去。这样，始终不会形成链表，`find(i)` 可以直接用 `parents[i]` 得到，也不需要 `rank[]` 数组了。
 
-- 我的并查集方法 [`eval-division-leet-399.cpp`](code/eval-division-leet-399.cpp)
+法二，常规并查集方法。
+
+先遍历一遍所有 equations，把每个变量都作为一个单独的 CC，其 parent 就是自己，val 为 1.0。
+
+再遍历一遍所有 equations，看每个 equation 的两个变量的 CC 是否能合并，并更新 val。
+
+注意一点区别。法一中，去掉了 `find()` 函数，直接用 `parents[i]` 得到。法二中，还是得用 `find()` 函数。<font color="red">to think later</font>。
+
+- 我的「逐步增加 CC」并查集法 [`eval-division-leet-399.cpp`](code/eval-division-leet-399.cpp)
+- 常规并查集法 [`eval-division-leet-399-regular.cpp`](code/eval-division-leet-399-regular.cpp)
 - [yukiyama 的解法](https://leetcode.cn/problems/evaluate-division/solutions/1536352/yukiyama-by-yukiyama-geql/)
 
 ## [leetcode 1631. 最小体力消耗路径](https://leetcode.cn/problems/path-with-minimum-effort/)
