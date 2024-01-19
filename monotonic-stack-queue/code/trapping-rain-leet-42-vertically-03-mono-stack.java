@@ -1,3 +1,7 @@
+import java.lang.Integer;
+import java.util.Stack;
+import java.lang.Math;
+
 class Solution {
 
 // 找每个元素左边的 greatest，右边的 greatest。
@@ -10,7 +14,7 @@ class Solution {
 // 找“严格 greater”而不是 "greater-or-euqal"，while 比较时要包含相等的情况（被 pop 掉）
 
     public int trap(int[] height) {
-        Stack<Integer> st = new Stack<>();
+        Stack<Integer> st = new Stack<>(); // 存放下标
         int n = height.length;
         int[] lg = new int[n]; // left greatest
         // 正序遍历，求 previous greatest，就是 left greatest
