@@ -47,6 +47,9 @@ int main() {
         //   (1) 顶点不在 mst 里。
         //   (2) 该顶点与 cur 相连
         //   (3) 该顶点与 cur 的距离，比该顶点与 mst 的距离（与 mst 中其他所有顶点的距离），更小
+        //         若该顶点的 min_dist 小于 INT_MAX，说明该顶点已经与 mst 相连，但与 cur 的距离更小
+        //         若该顶点的 min_dist 等于 INT_MAX，说明该顶点与 mst 中其他所有顶点都未相连
+        //         两种情况下，min_dist[j] 都可用 grid[cur][j] 来更新
         // 代码中，(2)、(3) 一起用 grid[cur][j] < min_dist[j] 判断
         for (int j = 1; j <= v; j++) {
             if (!in_mst[j] && grid[cur][j] < min_dist[j]) {

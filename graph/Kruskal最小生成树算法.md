@@ -9,14 +9,21 @@
 
 Prim's
 - greedy 算法，每次找离 MST 最近的 vertex 加入。
+- 输入为 `graph[][]`。遍历各 vertex。
 - 时间复杂度：`O(V^2)`。与 vertex 数量相关，与 edge 数量无关。
 - 适用于「稠密图」dense graph（vertex 多）。
+- 记录 mst 里的各 edge，比较麻烦。`parent[j]` 记录 vertex 的「相邻」vertex。每当 vertex cur 加入 mst，某些 j 的「相邻」vertex 可能更新为 cur。经常更新，无法一次性把 `(j, cur)` 作为 edge 记录下来。
 
 Kruskal's
 - greedy 算法，每次找 weight 最小的 edge 加入。
+- 输入为 `edges[]`。遍历各 edge。
 - 时间复杂度：`ElogE（快排）+ logE（并查集）= ElogE`。至于 edge 数量相关。
 - 适用于「稀疏图」sparse graph（edge 少）。
-- 输出 MST 的 edge，比 prim 要容易得多。因 Kruskal 直接操作 edge，而 prim一样 把 vertex 连成 edge。
+- 记录 mst 里的各 edge，比 prim 要容易得多。因 Kruskal 直接操作 edge，每次找到最短 edge，就把 edge 加入 mst。
+
+## 扩展：求所有 spanning tree 中，最大的 edge weight 最小的那个
+
+解：mst 就是这样的 spanning tree。Prim's 和 Kruskal's 都可以求出来。但 Kruskal's 是按 edge weight 从小到大加入 mst 的，最后一个加入的 edge 就是 weight 最大的。若用 Prim's 方法，还要遍历一遍 mst 的各 edge，才能找出 weight 最大的。
 
 # 算法步骤
 

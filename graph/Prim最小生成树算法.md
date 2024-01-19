@@ -106,8 +106,11 @@ int main() {
         //   - 若与 cur 相连，需要更新，他们到 mst 的距离，可能变小
         // 更新时的判断条件：
         //   (1) 顶点不在 mst 里。
-        //   (2) 该顶点与 cur 相连
+        //   (2) 该顶点与 cur 相连；cur 是个 fringe vertex
         //   (3) 该顶点与 cur 的距离，比该顶点与 mst 的距离（与 mst 中其他所有顶点的距离），更小
+        //         若该顶点的 min_dist 小于 INT_MAX，说明该顶点已经与 mst 相连，但与 cur 的距离更小
+        //         若该顶点的 min_dist 等于 INT_MAX，说明该顶点与 mst 中其他所有顶点都未相连
+        //         两种情况下，min_dist[j] 都可用 grid[cur][j] 来更新
         // 代码中，(2)、(3) 一起用 grid[cur][j] < min_dist[j] 判断
         for (int j = 1; j <= v; j++) {
             if (!in_mst[j] && grid[cur][j] < min_dist[j]) {
@@ -142,9 +145,9 @@ int main() {
         }
 ```
 
-# 进阶：记录 MST 都有哪些边
+# 进阶：记录 MST 都有哪些 edge
 
-用一维数组记录每条边，不需要记录方向，`parent[v] = u`。如果顶点很多，可以改用 map。
+用一维数组记录 mst 的每条 edge，不需要记录方向，`parent[v] = u`，`(u, v)` 是一条 edge。如果顶点很多，可以改用 map。
 
 在第三步，更新 `min_dist[]` 数组时，也更新 `parent[]` 数组。
 
@@ -161,7 +164,6 @@ int main() {
             parent[j] = cur; // 记录 mst 的边。注意不能反过来 parent[cur] = j
         }
     }
-
     // 最后输出 mst 的各边，略
 ```
 
