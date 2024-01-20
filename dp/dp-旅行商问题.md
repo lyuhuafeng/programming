@@ -11,6 +11,12 @@ TSP 的推广
 - travelling purchaser problem
 - vehicle routing problem 
 
+对称 (STSP) vs. 非对称 (ATSP)
+
+对称：在模型中，a 到 b 的距离，与 b 到 a 的距离，是一样的。
+
+在 graph 中体现，就是，STSP 的输入是无向图，而 ATSP 的输入是有向图。
+
 # 暴力枚举
 
 n! 种组合，时间复杂度 O(n!)
@@ -109,6 +115,9 @@ S 初值是 M-1，表示「所有顶点」。每确定一个顶点，就从 S �
 
 当 `S == 0`，所有顶点均已确定，可退出循环。
 
+时间复杂度：`O(n^2 * 2^n)`
+
+空间复杂度：`O(n * 2^n)`
 
 # dp 解法二
 
@@ -125,3 +134,21 @@ dp[S][v] = min{ c(v, u) + dp[u][S ∪ {u}] }, u ∉ S
 https://www.geeksforgeeks.org/travelling-salesman-problem-using-dynamic-programming/
 
 https://www.geeksforgeeks.org/approximate-solution-for-travelling-salesman-problem-using-mst/
+
+https://www.jiuzhang.com/solution/traveling-salesman-problem/ 很多方法，有 dfs 的
+
+# MST 近似算法 - 2 approximation
+
+若所有顶点都满足「三角不等式」(the Triangle Inequality)，即 `c(i,j) ≤ c(i,k) + c(k,j)` 对任意 i, j, k 都成立；也就是说，任何两顶点之间的最短路径，都是他俩之间直接相连，而不是经过其他顶点。
+
+则，可用最小生成树 (MST) 算法，求出一个近似结果。该结果不会超过 optimal tour 的两倍。
+
+- 以某顶点 src 为起点
+- 用 Prim's 算法，以 src 为 root，构建 MST
+- preorder 遍历 MST，得到顶点序列，再加上 src 作为重点，就是近似结果
+
+为何 2 倍？
+- TSP optimal tour 的 cost，不会小于 MST 的 cost。（由定义，MST 有连接所有顶点的 minimum cost。TSP optimal tour 也连接了所有顶点，还多了一条 edge）
+- full walk 的总 cost，最多是 MST cost 的两倍。（MST 的每条 edge，最多访问两次）
+- preorder 遍历 MST，不是 full walk，所需 cost 肯定少于 full walk。
+
