@@ -54,6 +54,13 @@ priority_queue 类，是个 container adaptor。底层可用 vector 或 queue，
 * `empty()`, `size()`
 * `swap()`: 跟另一个 pq 交换内容。(为何需要此功能？)
 
+时间复杂度：
+- 创建（从另一个 container）：`O(n)` 次比较。用 Floyd 方法。对比：
+  - Floyd 方法，一次性从所有元素创建，`O(n)`
+  - Williams 方法，从 empty heap 开始，逐个加入元素：`O(nlogn)`
+- `pop()`: sift-down 操作，`O(logn)` 次比较
+- `push()`: sift-up 操作，`O(logn)` 次比较
+
 ## stl priority_queue 代码例子
 
 用三种方法创建的 pq，缺省是 max heap，都已经排好序。遍历输出，可见从 9 到 0。

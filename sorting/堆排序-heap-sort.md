@@ -132,6 +132,14 @@ wiki 上的版本，可指定范围 `[start, end]` <font color="red">to check la
 
 # 时间复杂度
 
+## heap 操作的时间复杂度：
+- 创建（从另一个 container）：`O(n)` 次比较。用 Floyd 方法。对比：
+  - Floyd 方法，一次性从所有元素创建，`O(n)`
+  - Williams 方法，从 empty heap 开始，逐个加入元素：`O(nlogn)`
+- `pop()`: sift-down 操作，`O(logn)` 次比较
+- `push()`: sift-up 操作，`O(logn)` 次比较
+
+
 方法一，使用sift_down。
 设高度h=log2n，需要的工作量为
    0 * n/2  +  1 * n/4   +   2 * n/8 + … + h * 1 = O(n)
@@ -144,8 +152,9 @@ h * n/2 + (h-1) * n/4 + (h-2) * n/8 + … + 1 * 1
 其中第一项就是 log2n * n/2 = O(nlogn)，所以总不会好于O(nlogn).
 事实上，全部加起来就是O(nlogn).
 
-整个heap sort，
-先make_heap，O(n)；
+## 整个 heap sort 的时间复杂度：
+
+先 make_heap，`O(n)`；
 再一系列sift down，从top->end 调用sift_down，树的层数减少得慢（头一半节点时，height不变）。
 h * n/2 + (h-1) * n/4 + (h-2) * n/8 + … + 0 * 1 = O(nlogn)
 总共 O(n) + O(nlogn) = O(nlogn).

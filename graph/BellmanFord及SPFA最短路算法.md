@@ -14,8 +14,8 @@ Bellman-Ford 比 Dijkstra 强的地方
 
 # 原理
 
-- dist[] 变量定义，与 Dijkstra 相同。初始化方式也一样：src 到自己：0；src 到其他顶点：INF。
-- prevs[] 变量定义，与 Dijkstra 相同。
+- `dist[]` 变量定义，与 Dijkstra 相同。初始化方式也一样：src 到自己：0；src 到其他顶点：INF。
+- `prevs[]` 变量定义，与 Dijkstra 相同。
 
 具体算法不同：
 
@@ -72,7 +72,7 @@ at the end of the i-th iteration, from any vertex v, following the predecessor t
 
 # 优化一
 
-若某次iteration中没有发生relaxation，则说明所有shortest path都已找到，且无negative cycles。此时可中止算法。
+若某次 iteration 中没有发生 relaxation，则说明所有 shortest path 都已找到，且无 negative cycles。此时可中止算法。
 
 # 优化：SPFA（最短路径快速算法）
 

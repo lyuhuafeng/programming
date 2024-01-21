@@ -17,61 +17,49 @@ struct vertex_dist {
     int dist;
 };
 
-void add_edge(vector<edge_weight> adj[], int u, int v, int wt) {
-    adj[u].push_back({v, wt});
-    adj[v].push_back({u, wt});
-}
-
 // 缺省：max-heap，出 max 值，比较函数返回 a < b
 // 我们这里：min-heap，出 min 值，比较函数相应取反，返回 a > b
-struct my_cmp {
-    bool operator()(const vertex_dist& v1, const vertex_dist& v2) const {
-        return v1.dist > v2.dist;
-    }
+bool operator<(const vertex_dist& v1, const vertex_dist& v2) {
+    return v1.dist > v2.dist;
 };
 
-void shortest_path(vector<edge_weight> adj[], int V, int src) {
-    priority_queue<vertex_dist, vector<vertex_dist>, my_cmp> pq;
+int shortest_path(vector<edge_weight> adj[], int V, int src) {
+    priority_queue<vertex_dist> pq;
 
-    vector<int> dist(V, INT_MAX);
-    vector<bool> visited(V, false);
-    vector<int> prevs(V, -1); // 每个顶点的前驱顶点，方便打印最终的 shortest path
+    vector<int> dist(V + 1, INT_MAX);
+    vector<bool> visited(V + 1, false);
+    vector<int> prevs(V + 1, -1); // 每个顶点的前驱顶点，方便打印最终的 shortest path
 
     // 插入src，距离为0
     pq.push({src, 0});
     dist[src] = 0;
     prevs[src] = src;
-    // printf("push: vertex:%d, dist:%d, prev:%d\n", src, 0, src);
 
-    int reached = 0;
+    int reached = 0; // 可到达多少顶点
+    int max_dist = 0; // 最后一个收到信号的顶点，花费的时间。
     while (!pq.empty()) {
         int u = pq.top().vertex;
         pq.pop();
         if (visited[u]) {
-            // printf("min:%d. dist:%d. already visited. skip.\n", u, dist[u]);
             continue;
         }
+        max_dist = dist[u];
         reached++;
+
         printf("vertex:%d, min_dist:%d, prev_vertex:%d\n", u, dist[u], prevs[u]);
         visited[u] = true;
-        // printf("min:%d. dist:%d. set visited.\n", u, dist[u]);
         for (auto x : adj[u]) {
             int v = x.to;
             int weight = x.weight;
-            printf("  calc %d -> %d (w:%d)\n", u, v, weight);
             if (dist[v] > dist[u] + weight) {
                 // 更新 v 的「最短距离」和「前驱顶点」
                 dist[v] = dist[u] + weight;
                 prevs[v] = u;
                 pq.push({v, dist[v]});
-                // printf("  push: vertex:%d, dist:%d, prev:%d\n", v, dist[v], prevs[v]);
             }
         }
     }
-
-    printf("vertice reachable: %d\n", reached); // 有多少顶点可以到达
-    printf("vertex distance from source\n");
-    for (int i = 0; i < V; ++i) {
+    for (int i = 1; i <= V; ++i) {
         if (i == src) {
             printf(" vertex:%d, src\n", i);
         } else if (prevs[i] == -1) {
@@ -84,27 +72,43 @@ void shortest_path(vector<edge_weight> adj[], int V, int src) {
             printf(" <- %d\n", src);
         }
     }
+
+    return (reached == V ? max_dist : -1);
 }
 
-int main() {
-    int V = 9; // 共9个顶点，编号从0开始
-    vector<edge_weight> adj[V];
-    add_edge(adj, 0, 1, 4);
-    add_edge(adj, 0, 7, 8);
-    add_edge(adj, 1, 2, 8);
-    add_edge(adj, 1, 7, 11);
-    add_edge(adj, 2, 3, 7);
-    add_edge(adj, 2, 8, 2);
-    add_edge(adj, 2, 5, 4);
-    add_edge(adj, 3, 4, 9);
-    add_edge(adj, 3, 5, 14);
-    add_edge(adj, 4, 5, 10);
-    add_edge(adj, 5, 6, 2);
-    add_edge(adj, 6, 7, 1);
-    add_edge(adj, 6, 8, 6);
-    add_edge(adj, 7, 8, 7);
+class Solution {
+public:
+    // 有向图，times[i] = (u, v, w)，表示：顶点 u -> v，耗时 w
+    // n: n 个顶点。编号从 1 到 n。
+    // k: 起点
+    int networkDelayTime(vector<vector<int>>& times, int n, int k) {
+        vector<edge_weight> adj[n + 1]; // 每个顶点可到达的顶点、权重
+        for (vector<int>& t : times) {
+            adj[t[0]].push_back({t[1], t[2]});
+        }
+        return shortest_path(adj, n, k);
+    }
+};
 
-    shortest_path(adj, V, 0);
+int main() {
+    Solution sol;
+    vector<vector<int>> times = {{2,1,1},{2,3,1},{3,4,1}};
+    int n = 4;
+    int k = 2;
+    int ans = sol.networkDelayTime(times, n, k);
+    printf("ans:%d\n", ans);
+
+    times = {{1,2,1}};
+    n = 2;
+    k = 1;
+    ans = sol.networkDelayTime(times, n, k);
+    printf("ans:%d\n", ans);
+
+    times = {{1,2,1}};
+    n = 2;
+    k = 2;
+    ans = sol.networkDelayTime(times, n, k);
+    printf("ans:%d\n", ans);
 
     return 0;
 }
