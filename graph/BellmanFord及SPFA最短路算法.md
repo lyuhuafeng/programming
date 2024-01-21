@@ -29,9 +29,15 @@ Bellman-Ford 比 Dijkstra 强的地方
 
 如果 V-1 轮 relax 后，仍然还能 relax（有的顶点的 dist 又变小了），说明存在 negative cycle。
 
+注意，每轮 relax 的顺序都是固定的。代码中就是按存储的顺序来。（relax 顺序很重要）
+
 完整代码：[`bellman-ford-shortest-path.cpp`](code/bellman-ford-shortest-path.cpp)
 
 核心代码
+
+注意：relax 时的判断 `dist[u] != INT_MAX && dist[u] + w < dist[v]`。`dist[u]` 可能还是 INF，做加法后可能超出 int 范围，故要先确认 `dist[u] != INF`。
+
+<font color="red">to do: 每轮 relax 后，如何得知是哪个顶点「确定」了？貌似不能知道。</font>
 
 ```cpp
     void bellman_ford(const vector<edge>& edges, int vertices, int src) {
@@ -78,16 +84,23 @@ at the end of the i-th iteration, from any vertex v, following the predecessor t
 
 SPFA，shortest path faster algorithm，一般认为是有队列优化的 Bellman-Ford 算法。
 
-普通的 Bellman-Ford 算法，固定 V-1 轮，每轮都试图 relax 所有的边。可改进之处：并不是对所有 edge 都试图 relax。
+普通的 Bellman-Ford 算法，固定 V-1 轮，每轮都试图 relax 所有的边。可改进之处：relax 必定只会发生在路径前导节点 relax 成功过的节点上。只对这样的顶点进行 relax 操作。
 
 若顶点 v 对应的 `dist[v]` 更新了，则以 v 为起点的所有 edge 才需要试图 relax。用一个 queue 存放这样的顶点。只从这个 queue 里取顶点，每次取出一个顶点，然后尝试 relax 这个顶点出发的所有 edge。
 
 从 queue 里取顶点，而不是固定若干轮。若有 negative cycle，则可能无限循环下去。为此，记录每个顶点已经被 relax 了多少次，若超过 V-1 次，则说明存在 negative cycle，则停止。
 
-另外，如果某顶点已经在 queue 里，则不需要再放进去。因无法直接查看 queue 是否已有某顶点，所以用一个 inqueue[] 数组，记录每个顶点是否在 queue 里。
+另外，如果某顶点已经在 queue 里，则不需要再放进去。因无法直接查看 queue 是否已有某顶点，所以用一个 `inqueue[]` 数组，记录每个顶点是否在 queue 里。
 
 ... tries to produce relaxation along each edge (a -> b; weight). Relaxation along the edges is an attempt to improve the value dist[b] using the value dist[a] + weight.
 
+注意，relax 顺序很重要。
+- 这里用普通 FIFO queue，按放入顺序 relax
+- 若用 priority queue，类似 Dijkstra
+- 离 src 近的 vertex 先处理
+  - SLF (small label first): 对新来的 v，若 `dist(v) < dist(q.front())`，则 v 放到队头。
+  - LLL (large label last): 对所有 v，若 `dist(v) > q 中所有 dist 的平均值`，则 v 放到队尾。
+  
 完整代码：[`bellman-ford-spfa.cpp`](code/bellman-ford-spfa.cpp)
 
 核心代码
@@ -134,3 +147,5 @@ SPFA，shortest path faster algorithm，一般认为是有队列优化的 Bellma
         print_dist(dist, prevs);
     }
 ```
+
+时间复杂度：平均 `O(E)`，最差 `O(V*E)`
