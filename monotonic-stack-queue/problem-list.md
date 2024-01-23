@@ -29,7 +29,10 @@ https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
 
 - [2023C-回转寿司](https://oj.algomooc.com/problem.php?id=2655) 环形 [`od-2655-sushi-2023c.cpp`](code/od-2655-sushi-2023c.cpp)
 
-
+- [2654: 2023Q1A-天然蓄水池](https://oj.algomooc.com/problem.php?id=2654) 类似接雨水，但要找出哪个凹槽盛水最多。（各凹槽是不相连的）通过此题，发现接雨水的特点，（看图），是阶梯状的凹槽，两边向中间，逐步升高。但不是「单调递增或递降栈」，而是「保旧、可舍弃新」的，从两边往中间逼近即可。
+  - 不用栈，两边往中间逼近。超时。[`od-2654-mine-tle.cpp`](code/od-2654-mine-tle.cpp) 能加速吗？不能用「单调栈」。
+  - 类似接雨水官方解法 running 版本，但要从两边分别求 [`od-2654-water-official.cpp`](code/od-2654-water-official.cpp) 如何判断凹槽结束？stack empty，说明新来的是目前最高柱，是新凹槽的开始。（考虑图：阶梯上升凹槽）。但这只是左半边；右半边是阶梯下降的，得逆序来一遍。
+  - 不 running 的版本？
 
 - 85. 最大矩形 https://leetcode.cn/problems/maximal-rectangle/solution/by-alexhilton-zwd6/
 - 768. 最多能完成排序的块 https://leetcode.cn/problems/max-chunks-to-make-sorted-ii/solution/768-zui-duo-neng-wan-cheng-pai-xu-de-kua-pp4l/	
