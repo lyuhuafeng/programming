@@ -1,6 +1,6 @@
 # [862. 和至少为 K 的最短子数组](https://leetcode.cn/problems/shortest-subarray-with-sum-at-least-k/)
 
-# 基于[官方题解](https://leetcode.cn/problems/shortest-subarray-with-sum-at-least-k/solutions/1923445/he-zhi-shao-wei-k-de-zui-duan-zi-shu-zu-57ffq/)
+基于[官方题解](https://leetcode.cn/problems/shortest-subarray-with-sum-at-least-k/solutions/1923445/he-zhi-shao-wei-k-de-zui-duan-zi-shu-zu-57ffq/)
 
 定义前缀和 `ps[0] = 0`, `ps[i] = sum{a[0 ... i-1]}`，则 `sum[i ... j] = ps[j+1] - ps[i]`。
 

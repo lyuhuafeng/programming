@@ -12,6 +12,7 @@ vector<int> buildings(const vector<int>& h) {
     // top 的 prev greater 是 top-1
     // top-1 的 prev greater 是 top-2
     // 依次类推。所以，站在 new 位置上，往前看，能看到的数目，
+    // new 刚来、还没入栈时，整个栈恰好是个 prev greater, prev prev greater 序列，恰好为所求。
     // 就是从 top 开始，依次比 top 高的。就是整个栈里现有的。也就是 st.size()。
     stack<int> st;
     for (int i = 0; i < n; i++) {
