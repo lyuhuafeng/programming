@@ -13,8 +13,10 @@ Structural property
 - 除最底层外，各层全满，每个 parent 均有两个 child。所有节点靠左。
 
 Ordering property
+- 下标从 `0` 开始，`i` 的两个子节点下标为 `2*i+1` 和 `2*i+2`，`i` 的父节点为 `(i-1)/2`。
 - 每个 parent >= 所有 child 节点（max-heap 最大堆）
-- 故，最大元素在: 根节点、堆顶、`array[0]`，但两个子节点谁大谁小不一定
+- 两个子节点谁大谁小不一定
+- 故，最大元素在: 根节点、堆顶、`array[0]`
 
 # 两个基本操作 sift down, sift up
 
@@ -24,7 +26,7 @@ Ordering property
 ## sift_down，调整 `a[start, end]` 范围，使之成为 heap
 
 - 前提：除了 start，`a[start + 1, end]` 范围已是 heap
-- 要做：只需把 start 元素下沉即可
+- 要做：只需把 start 元素下沉到合适位置
 
 ```cpp
     void sift_down(T a[], int start, int end) {
@@ -45,6 +47,9 @@ Ordering property
 
 ## sift_up: child 是新加到最后、可能要上移的节点
 
+- 前提：`a[0, child - 1]` 范围已是 heap
+- 要做：只需把 child 上浮到合适位置。不断与 parent 交换，直到遇到一个比自己大的 parent 或自己已到了最高处。
+
 ```cpp
     void sift_up(T a[], int child) {
         T val = a[child];
@@ -59,7 +64,7 @@ Ordering property
     }
 ```
 
-另一种实现：不断与 parent 交换，直到遇到一个比自己大的 parent 或者到了最高处
+另一种实现：同样思路，改用 for 循环。
 
 ```cpp
     void sift_up(T a[], int child) {
@@ -77,14 +82,14 @@ wiki 上的版本，可指定范围 `[start, end]` <font color="red">to check la
 
 ## 法一，sift down 方式
 
-直接调整：认为所有 leaf 节点均已满足 heap 条件（因为无 child 可比较）
+直接调整：从原始序列开始。认为所有 leaf 节点均已满足 heap 条件（因为无 child 可比较）
 
-然后依次调整/下沉所有 non-leaf 节点
+然后依次<font color="green">逆序</font>下沉所有 non-leaf 节点
 
 ```cpp
     // a[]: 原始顺序; n: 元素个数，array 长度
     void make_heap(T a[], int n) {
-        // n-1: 最后一个index, (n-1-1)/2: 最后一个index的parent
+        // n-1: 最后一个 index；(n-1-1)/2: 最后一个 index 的 parent
         for (int i = (n - 1 - 1) / 2; i >= 0; i--) {
             sift_down(a, i, n - 1);
         }
@@ -93,7 +98,7 @@ wiki 上的版本，可指定范围 `[start, end]` <font color="red">to check la
 
 ## 法二，sift up 方式
 
-每次插入一个元素，插入时即调整。
+从空序列开始，每次插入一个元素，插入时即调整。
 
 第 0 个元素不用插入，无需 sift up.
 
@@ -110,7 +115,9 @@ wiki 上的版本，可指定范围 `[start, end]` <font color="red">to check la
 # 堆排序 heap sort
 
 依次把当前最大元素 `a[0]` 取出，并调整剩下部分，使 `a[0]` 重新最大。
+
 取出的各最大元素放在 array 最后，是 in-place 操作。
+
 是<font color="green">不稳定</font>的。
 
 ```cpp
@@ -123,6 +130,8 @@ wiki 上的版本，可指定范围 `[start, end]` <font color="red">to check la
         }
     }
 ```
+
+完整代码：[`heap_sort_raw_complete.cpp`](code/heap_sort_raw_complete.cpp)
 
 另一种排序方法 bottom-up:
 

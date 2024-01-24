@@ -37,7 +37,10 @@ https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
 - 85. 最大矩形 https://leetcode.cn/problems/maximal-rectangle/solution/by-alexhilton-zwd6/
 - 768. 最多能完成排序的块 https://leetcode.cn/problems/max-chunks-to-make-sorted-ii/solution/768-zui-duo-neng-wan-cheng-pai-xu-de-kua-pp4l/	
 - 769. 最多能完成排序的块	https://leetcode.cn/problems/max-chunks-to-make-sorted/solution/by-alexhilton-4e5d/	
-- 901. 股票价格跨度 https://leetcode.cn/problems/online-stock-span/solution/by-alexhilton-piye/
+- [901. 股票价格跨度](https://leetcode.cn/problems/online-stock-span/) 简单找 previous greater，代码略
+
+- [121. 买卖股票的最佳时机](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock/) 其实没用到单调栈，但感觉还是有点那意思。[我的题解](买卖股票最佳时机-leet-121.md)
+
 - http://toughcoder.net/blog/2022/08/15/secret-weapon-monotonic-stack/
 
 # 单调队列
