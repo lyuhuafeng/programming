@@ -1,20 +1,25 @@
 # 单调栈、单调队列
 
 - [leetcode 496. 下一个更大元素I](https://leetcode.cn/problems/next-greater-element-i/) 基本模版
+
 - [leetcode 503. 下一个更大元素II](https://leetcode.cn/problems/next-greater-element-ii/) 环形
-- [leetcode 84. 柱状图中最大的矩形](https://leetcode.cn/problems/largest-rectangle-in-histogram/)
-  - [`largest-rectangle-in-histogram-leet-84.cpp`](code/largest-rectangle-in-histogram-leet-84.cpp)
-  - 对每个 i，找到其 prev smaller `l[i]`、next smaller `r[i]`，则 i 对应的最大面积为 `h[i] * ((r[i] - 1) - (l[i] + 1) + 1) = h[i] * (r[i] - l[i] - 1)`。打擂台即可。
-  - 两个都是严格 smaller，一遍循环不能都得到。可以两遍循环，分别找出 prev smaller 和 next smaller。
-  - 若用一遍循环，经观察，若有多个相邻、相同的，尽管中间的 i 的结果不对，但最靠边的两个 i 中的一个，结果是对的，也算歪打正着。
-  - <font color="red">to think (1) 以 i 为左边界或右边界可否？看 case 1 的图，为右边界就是不行的？(2) 更简单的方法？</font>
+
 - [leetcode 739. 每日温度](https://leetcode.cn/problems/daily-temperatures/) next greater 标准模版
+
+- [leetcode 1475. 商品折扣后的最终价格](https://leetcode.cn/problems/final-prices-with-a-special-discount-in-a-shop/) 基本模版 next smaller or equal
+
+- [901. 股票价格跨度](https://leetcode.cn/problems/online-stock-span/) 简单找 previous greater，代码略
+
+- [leetcode 42. 接雨水](https://leetcode.cn/problems/trapping-rain-water/) [解法笔记](leet-42-接雨水多种方法.md)
+
+- [leetcode 84. 柱状图中最大的矩形](https://leetcode.cn/problems/largest-rectangle-in-histogram/) 跟「接雨水」有某种对称关系。[解法笔记](leet-84-柱状图中最大矩形.md)
+
 - [leetcode 1673. 最具竞争力的子序列](https://leetcode.cn/problems/find-the-most-competitive-subsequence/)
   - [两种解法](单调队列-leet1673-竞争力子序列.md)，分别用单调栈和单调队列。前者简单得多，且只用到 stack 本身，不用求 next greater 之类的
 - [leetcode 402. 移掉K位数字](https://leetcode.cn/problems/remove-k-digits/) 跟上题一样 [`remove-k-digits-leet-402.cpp`](code/remove-k-digits-leet-402.cpp)
-- [leetcode 42. 接雨水](https://leetcode.cn/problems/trapping-rain-water/) [我的解法笔记](leet-42-接雨水多种方法.md)
+
 - [407. 接雨水 II](https://leetcode.cn/problems/trapping-rain-water-ii/) 二维方格上接
-- [leetcode 1475. 商品折扣后的最终价格](https://leetcode.cn/problems/final-prices-with-a-special-discount-in-a-shop/) 基本模版 next smaller or equal
+
 - [795. 区间子数组个数](https://leetcode.cn/problems/number-of-subarrays-with-bounded-maximum/) [单调栈解法、非单调栈解法](leet-795-区间子数组个数.md)
 
 https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
@@ -37,9 +42,10 @@ https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
 - 85. 最大矩形 https://leetcode.cn/problems/maximal-rectangle/solution/by-alexhilton-zwd6/
 - 768. 最多能完成排序的块 https://leetcode.cn/problems/max-chunks-to-make-sorted-ii/solution/768-zui-duo-neng-wan-cheng-pai-xu-de-kua-pp4l/	
 - 769. 最多能完成排序的块	https://leetcode.cn/problems/max-chunks-to-make-sorted/solution/by-alexhilton-4e5d/	
-- [901. 股票价格跨度](https://leetcode.cn/problems/online-stock-span/) 简单找 previous greater，代码略
 
 - [121. 买卖股票的最佳时机](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock/) 其实没用到单调栈，但感觉还是有点那意思。[我的题解](买卖股票最佳时机-leet-121.md)
+
+581. 最短无序连续子数组
 
 - http://toughcoder.net/blog/2022/08/15/secret-weapon-monotonic-stack/
 
