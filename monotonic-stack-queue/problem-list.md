@@ -15,7 +15,7 @@
 - [leetcode 84. 柱状图中最大的矩形](https://leetcode.cn/problems/largest-rectangle-in-histogram/) 跟「接雨水」有某种对称关系。[解法笔记](leet-84-柱状图中最大矩形.md)
 
 - [leetcode 1673. 最具竞争力的子序列](https://leetcode.cn/problems/find-the-most-competitive-subsequence/)
-  - [两种解法](单调队列-leet1673-竞争力子序列.md)，分别用单调栈和单调队列。前者简单得多，且只用到 stack 本身，不用求 next greater 之类的
+  - [两种解法](leet-1673-竞争力子序列.md)，分别用单调栈和单调队列。前者简单得多，且只用到 stack 本身，不用求 next greater 之类的
 - [leetcode 402. 移掉K位数字](https://leetcode.cn/problems/remove-k-digits/) 跟上题一样 [`remove-k-digits-leet-402.cpp`](code/remove-k-digits-leet-402.cpp)
 
 - [407. 接雨水 II](https://leetcode.cn/problems/trapping-rain-water-ii/) 二维方格上接
