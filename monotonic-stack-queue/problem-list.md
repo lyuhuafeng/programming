@@ -27,7 +27,7 @@
 
 - [leetcode 84. 柱状图中最大的矩形](https://leetcode.cn/problems/largest-rectangle-in-histogram/) 跟「接雨水」有某种对称关系。[解法笔记](leet-84-柱状图中最大矩形.md)
 
-- [85. 最大矩形](https://leetcode.cn/problems/maximal-rectangle)
+- [85. 最大矩形](https://leetcode.cn/problems/maximal-rectangle) 是 84 的扩展。[解法笔记](leet-85-最大矩形.md)
 
 ## xx
 
