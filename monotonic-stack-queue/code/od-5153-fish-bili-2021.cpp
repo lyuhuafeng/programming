@@ -5,7 +5,7 @@
 using namespace std;
 
 // https://blog.csdn.net/weixin_48157259/article/details/134502718
-// https://blog.csdn.net/Rocky6688/article/details/108471729
+// https://cloud.tencent.com/developer/article/2117536
 
 struct fish{
     int fish_id, fish_len, t;
@@ -15,10 +15,10 @@ int main() {
     int n;
     scanf("%d", &n);
     vector<int> flen(n);
-    for (int i = 0; i < n; i++) {
-        scanf("%d", &flen[i]);
-    }
-    // = {4, 3, 2, 3, 2, 1};
+    // for (int i = 0; i < n; i++) {
+    //     scanf("%d", &flen[i]);
+    // }
+    flen = {4, 3, 2, 3, 2, 1};
 
     stack<fish> st;
     int cnt = 0;
