@@ -2,18 +2,19 @@
 #include <stack>
 using namespace std;
 
+// 站在某栋楼的位置上往两边看，能看到哪些楼，跟这栋楼自己的高度毫无关系。
+// 单调严格下降栈，栈顶最低，越往栈底越高，分别是前一个的 prev greater。
+//     top 的 prev greater 是 top-1
+//     top-1 的 prev greater 是 top-2
+//     依次类推
+// 当这栋楼作为 new 来到时，没入栈时，站在栈外往栈里看，就是从 top 开始、依次比 top 高的。
+// 其实就是栈里所有元素，也就是 st.size()。
+// 两个方向都是严格下降，只能两个方向各遍历一次。
 
 vector<int> buildings(const vector<int>& h) {
     int n = h.size();
     vector<int> res(n, 1); // 初始化为 1：先把每栋楼自己先算上
 
-    // 单调不严格下降栈，
-    // 每个 new 来后，都以 top 为第一个，查看
-    // top 的 prev greater 是 top-1
-    // top-1 的 prev greater 是 top-2
-    // 依次类推。所以，站在 new 位置上，往前看，能看到的数目，
-    // new 刚来、还没入栈时，整个栈恰好是个 prev greater, prev prev greater 序列，恰好为所求。
-    // 就是从 top 开始，依次比 top 高的。就是整个栈里现有的。也就是 st.size()。
     stack<int> st;
     for (int i = 0; i < n; i++) {
         res[i] += st.size();
@@ -27,7 +28,7 @@ vector<int> buildings(const vector<int>& h) {
     stack<int> su;
     for (int i = n - 1; i >= 0; i--) {
         res[i] += su.size();
-        while (!su.empty() && h[i] >= su.top()) {
+        while (!su.empty() && h[i] <= su.top()) {
             su.pop();
         }
         su.push(h[i]);
@@ -36,7 +37,7 @@ vector<int> buildings(const vector<int>& h) {
 }
 
 // 上面法一，新来的 i 入栈之前，先累加 i 的值。
-// 法二，新来的 i 入栈之后，累加 i+1 或 i-1 的值。
+// 法二，新来的 i 入栈之后，累加 i+1 或 i-1 的值。显然不如法一直观、清晰。收在这里为完整性。
 vector<int> buildings2(const vector<int>& h) {
     int n = h.size();
     vector<int> res(n, 1); // 初始化为 1：先把每栋楼自己先算上

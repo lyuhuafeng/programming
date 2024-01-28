@@ -42,20 +42,21 @@
 
 - [321.hard 拼接最大数](https://leetcode.cn/problems/create-maximum-number/) 在 1673、402 基础上 [题解笔记](leet-321-拼接最大数.md)
 
-- [316.hard 去除重复字母](https://leetcode.cn/problems/remove-duplicate-letters/)，[`1081.` 不同字符的最小子序列](https://leetcode.cn/problems/smallest-subsequence-of-distinct-characters) 两道题目相同 [题解笔记](leet-316-1081-去除重复字母.md)
-
+- [316.hard 去除重复字母](https://leetcode.cn/problems/remove-duplicate-letters/)，[`1081.` 不同字符的最小子序列](https://leetcode.cn/problems/smallest-subsequence-of-distinct-characters) 两道题目相同 [`od 2651.` 2023Q1A-删除重复数字后的最大数字](https://oj.algomooc.com/problem.php?id=2651) 只是由最小改成最大 [题解笔记](leet-316-1081-od-2651-去除重复字母.md)
 
 - [795. 区间子数组个数](https://leetcode.cn/problems/number-of-subarrays-with-bounded-maximum/) [单调栈解法、非单调栈解法](leet-795-区间子数组个数.md)
 
 https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
 
 ## 类似
+
 - [百度 2017 秋招-士兵队列](https://oj.algomooc.com/problem.php?id=5150) 乍一看是单调递增栈，其实不是。将军从第一个士兵开始看起，如果用栈解决，是「旧的一定保留在栈内，为此不惜扔掉新来的」，与单调递增栈的「新来的一定要入栈，为此不惜扔掉栈顶的旧的」逻辑不同。（当然，此逻辑得到的栈，确实也是单调递增的）。代码简单：`maxh = -1, cnt = 0; for (int h : soldiers) { if (h > maxh) { maxh = h; cnt++}} return cnt;`
 
-- [腾讯2021秋招&用友2022秋招-逛街](https://oj.algomooc.com/problem.php?id=5152) 逻辑上，是上一题的扩展，但不能简单套用，否则会超时。用 stack 自身性质。[`od-5152-high-buildings-tecent-2021.cpp`](code/od-5152-high-buildings-tecent-2021.cpp) 两种解法，思路基本一致。
+- [腾讯2021秋招&用友2022秋招-逛街](https://oj.algomooc.com/problem.php?id=5152) 逻辑上，是上一题的扩展，但不能简单套用，否则会超时。用 stack 自身性质。[`od-5152-high-buildings-tecent-2021.cpp`](code/od-5152-high-buildings-tecent-2021.cpp) 两种解法，思路基本一致。od 的测试数据貌似有问题。
+
+- [1944. 队列中可以看到的人数](https://leetcode.cn/problems/number-of-visible-people-in-a-queue/) 一眼看上去，跟上题差不多，其实有些差异。[题解笔记](leet-1994-队列中可以看到的人数.md)
 
 - [121. 买卖股票的最佳时机](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock/) 其实没用到单调栈，但感觉还是有点那意思。[我的题解](买卖股票最佳时机-leet-121.md)
-
 
 
 
@@ -63,12 +64,7 @@ https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
 
 - [Bilibili2021秋招-大鱼吃小鱼](https://oj.algomooc.com/problem.php?id=5153) 单调栈法精妙，以及直观模拟、及其派生的递归法 [题解笔记](od-5153-大鱼吃小鱼.md)
 
-
-- [768. 最多能完成排序的块 II](https://leetcode.cn/problems/max-chunks-to-make-sorted-ii)
-https://leetcode.cn/problems/max-chunks-to-make-sorted-ii/solution/768-zui-duo-neng-wan-cheng-pai-xu-de-kua-pp4l/
-
-- [769. 最多能完成排序的块](https://leetcode.cn/problems/max-chunks-to-make-sorted/)	https://leetcode.cn/problems/max-chunks-to-make-sorted/solution/by-alexhilton-4e5d/
-
+- [769. 最多能完成排序的块](https://leetcode.cn/problems/max-chunks-to-make-sorted/) 及 [768. II](https://leetcode.cn/problems/max-chunks-to-make-sorted-ii) 两道递进 [题解笔记](leet-769-768-最多能完成排序的块.md)
 
 - [581. 最短无序连续子数组](https://leetcode.cn/problems/shortest-unsorted-continuous-subarray/) [题解笔记](leet-581-最短无序连续子数组.md)
 
@@ -76,7 +72,9 @@ https://leetcode.cn/problems/max-chunks-to-make-sorted-ii/solution/768-zui-duo-n
 
 https://leetcode.cn/tag/monotonic-stack/problemset/
 
-907，子数组最小值之和
+[907. 子数组最小值之和](https://leetcode.cn/problems/sum-of-subarray-minimums/) 以每个 i 为最低点，看左右两边能延伸到哪里。为防重复计算，一边找 greater，另一边找 greater-or-equal，故一遍遍历即可。[`leet-907-sum-of-subarray-minsums.cpp`](code/leet-907-sum-of-subarray-minsums.cpp)
+
+[2104. 子数组范围和](https://leetcode.cn/problems/sum-of-subarray-ranges/)
 
 https://cloud.tencent.com/developer/article/1998273
 
