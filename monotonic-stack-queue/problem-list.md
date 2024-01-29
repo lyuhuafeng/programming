@@ -14,7 +14,9 @@
 
 - [2023C-回转寿司](https://oj.algomooc.com/problem.php?id=2655) 环形 [`od-2655-sushi-2023c.cpp`](code/od-2655-sushi-2023c.cpp)
 
-- [962. 最大宽度坡](https://leetcode.cn/problems/maximum-width-ramp/)
+- [962. 最大宽度坡](https://leetcode.cn/problems/maximum-width-ramp/) next greater 模版
+
+- [1019. 链表中的下一个更大节点](https://leetcode.cn/problems/next-greater-node-in-linked-list/) 链表，非常有价值。[解法笔记](leet-1019-链表中的下一个更大节点.md)
 
 ## 雨水
 
@@ -33,7 +35,7 @@
 
 - [1856. 子数组最小乘积的最大值](https://leetcode.cn/problems/maximum-subarray-min-product/) 跟 84 很像，多了个前缀和。代码：[`leet-1856-max-subarray-min-product.cpp`](code/leet-1856-max-subarray-min-product.cpp)
 
-## xx
+## 字典序最小
 
 - [leetcode 1673. 最具竞争力的子序列](https://leetcode.cn/problems/find-the-most-competitive-subsequence/)
   - [两种解法](leet-1673-竞争力子序列.md)，分别用单调栈和单调队列。前者简单得多，且只用到 stack 本身，不用求 next greater 之类的
@@ -45,8 +47,6 @@
 - [316.hard 去除重复字母](https://leetcode.cn/problems/remove-duplicate-letters/)，[`1081.` 不同字符的最小子序列](https://leetcode.cn/problems/smallest-subsequence-of-distinct-characters) 两道题目相同 [`od 2651.` 2023Q1A-删除重复数字后的最大数字](https://oj.algomooc.com/problem.php?id=2651) 只是由最小改成最大 [题解笔记](leet-316-1081-od-2651-去除重复字母.md)
 
 - [795. 区间子数组个数](https://leetcode.cn/problems/number-of-subarrays-with-bounded-maximum/) [单调栈解法、非单调栈解法](leet-795-区间子数组个数.md)
-
-https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
 
 ## 类似
 
@@ -68,19 +68,28 @@ https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
 
 - [581. 最短无序连续子数组](https://leetcode.cn/problems/shortest-unsorted-continuous-subarray/) [题解笔记](leet-581-最短无序连续子数组.md)
 
-1019 链表中的下一个更大节点
-
-https://leetcode.cn/tag/monotonic-stack/problemset/
 
 [907. 子数组最小值之和](https://leetcode.cn/problems/sum-of-subarray-minimums/) 以每个 i 为最低点，看左右两边能延伸到哪里。为防重复计算，一边找 greater，另一边找 greater-or-equal，故一遍遍历即可。[`leet-907-sum-of-subarray-minsums.cpp`](code/leet-907-sum-of-subarray-minsums.cpp)
 
 [2104. 子数组范围和](https://leetcode.cn/problems/sum-of-subarray-ranges/)
 
-https://cloud.tencent.com/developer/article/1998273
-
 https://cloud.tencent.com/developer/article/2313991?areaId=106001 LeetCode 周赛上分之旅 #39 结合中心扩展的单调栈贪心问题
 
+[`2818.` 操作使得分最大](https://leetcode.cn/problems/apply-operations-to-maximize-score/)
+题解一（贪心 + 排序 + 中心扩展 + 单调栈 + 快速幂）
+https://cloud.tencent.com/developer/article/2313991?areaId=106001
+
+
 - http://toughcoder.net/blog/2022/08/15/secret-weapon-monotonic-stack/
+
+https://leetcode.cn/circle/discuss/9oZFK9/
+
+https://leetcode.cn/problems/next-greater-node-in-linked-list/solutions/2217563/tu-jie-dan-diao-zhan-liang-chong-fang-fa-v9ab/  题单
+
+https://leetcode.cn/tag/monotonic-stack/problemset/
+
+https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
+
 
 # 单调队列
 
