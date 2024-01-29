@@ -29,11 +29,29 @@
 
 - [407. 接雨水 II](https://leetcode.cn/problems/trapping-rain-water-ii/) 二维方格上接
 
-- [leetcode 84. 柱状图中最大的矩形](https://leetcode.cn/problems/largest-rectangle-in-histogram/) 跟「接雨水」有某种对称关系。[解法笔记](leet-84-柱状图中最大矩形.md)
+- [84. 柱状图中最大的矩形](https://leetcode.cn/problems/largest-rectangle-in-histogram/) 跟「接雨水」有某种对称关系。[解法笔记](leet-84-柱状图中最大矩形.md)
 
 - [85. 最大矩形](https://leetcode.cn/problems/maximal-rectangle) 是 84 的扩展。[解法笔记](leet-85-最大矩形.md)
 
+1504. 统计全 1 子矩形 1845
+
 - [1856. 子数组最小乘积的最大值](https://leetcode.cn/problems/maximum-subarray-min-product/) 跟 84 很像，多了个前缀和。代码：[`leet-1856-max-subarray-min-product.cpp`](code/leet-1856-max-subarray-min-product.cpp)
+
+
+[907. 子数组最小值之和](https://leetcode.cn/problems/sum-of-subarray-minimums/) 以每个 i 为最低点，看左右两边能延伸到哪里。为防重复计算，一边找 greater，另一边找 greater-or-equal，故一遍遍历即可。[`leet-907-sum-of-subarray-minsums.cpp`](code/leet-907-sum-of-subarray-minsums.cpp)
+
+[2104. 子数组范围和](https://leetcode.cn/problems/sum-of-subarray-ranges/) 在上题 907 基础上扩展，很巧妙。[题解笔记](leet-2104-子数组范围和.md)
+
+[`2818.` 操作使得分最大](https://leetcode.cn/problems/apply-operations-to-maximize-score/)
+题解一（贪心 + 排序 + 中心扩展 + 单调栈 + 快速幂）
+https://cloud.tencent.com/developer/article/2313991?areaId=106001
+
+2281. 巫师的总力量和（最小值×和） 2621
+
+
+
+
+
 
 ## 字典序最小
 
@@ -45,6 +63,8 @@
 - [321.hard 拼接最大数](https://leetcode.cn/problems/create-maximum-number/) 在 1673、402 基础上 [题解笔记](leet-321-拼接最大数.md)
 
 - [316.hard 去除重复字母](https://leetcode.cn/problems/remove-duplicate-letters/)，[`1081.` 不同字符的最小子序列](https://leetcode.cn/problems/smallest-subsequence-of-distinct-characters) 两道题目相同 [`od 2651.` 2023Q1A-删除重复数字后的最大数字](https://oj.algomooc.com/problem.php?id=2651) 只是由最小改成最大 [题解笔记](leet-316-1081-od-2651-去除重复字母.md)
+
+316 扩展：重复个数不超过 limit  https://leetcode.cn/contest/tianchi2022/problems/ev2bru/
 
 - [795. 区间子数组个数](https://leetcode.cn/problems/number-of-subarrays-with-bounded-maximum/) [单调栈解法、非单调栈解法](leet-795-区间子数组个数.md)
 
@@ -68,16 +88,7 @@
 
 - [581. 最短无序连续子数组](https://leetcode.cn/problems/shortest-unsorted-continuous-subarray/) [题解笔记](leet-581-最短无序连续子数组.md)
 
-
-[907. 子数组最小值之和](https://leetcode.cn/problems/sum-of-subarray-minimums/) 以每个 i 为最低点，看左右两边能延伸到哪里。为防重复计算，一边找 greater，另一边找 greater-or-equal，故一遍遍历即可。[`leet-907-sum-of-subarray-minsums.cpp`](code/leet-907-sum-of-subarray-minsums.cpp)
-
-[2104. 子数组范围和](https://leetcode.cn/problems/sum-of-subarray-ranges/)
-
 https://cloud.tencent.com/developer/article/2313991?areaId=106001 LeetCode 周赛上分之旅 #39 结合中心扩展的单调栈贪心问题
-
-[`2818.` 操作使得分最大](https://leetcode.cn/problems/apply-operations-to-maximize-score/)
-题解一（贪心 + 排序 + 中心扩展 + 单调栈 + 快速幂）
-https://cloud.tencent.com/developer/article/2313991?areaId=106001
 
 
 - http://toughcoder.net/blog/2022/08/15/secret-weapon-monotonic-stack/
@@ -89,6 +100,22 @@ https://leetcode.cn/problems/next-greater-node-in-linked-list/solutions/2217563/
 https://leetcode.cn/tag/monotonic-stack/problemset/
 
 https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
+
+单调栈-音乐会等待.docx
+
+1124. 表现良好的最长时间段 1908
+456. 132 模式 ~2000
+2866. 美丽塔 II 2072
+2454. 下一个更大元素 IV 2175
+2289. 使数组按非递减顺序排列 2482
+1776. 车队 II 2531
+2832. 每个元素为最大值的最大范围（会员题）
+
+
+
+
+
+
 
 
 # 单调队列
