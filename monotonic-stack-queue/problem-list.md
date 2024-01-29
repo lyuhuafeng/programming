@@ -88,6 +88,8 @@ https://cloud.tencent.com/developer/article/2313991?areaId=106001
 
 - [581. 最短无序连续子数组](https://leetcode.cn/problems/shortest-unsorted-continuous-subarray/) [题解笔记](leet-581-最短无序连续子数组.md)
 
+- [`456.` 132 模式](https://leetcode.cn/problems/132-pattern/) [题解笔记](leet-456-模式123.md)
+
 https://cloud.tencent.com/developer/article/2313991?areaId=106001 LeetCode 周赛上分之旅 #39 结合中心扩展的单调栈贪心问题
 
 
@@ -104,7 +106,7 @@ https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
 单调栈-音乐会等待.docx
 
 1124. 表现良好的最长时间段 1908
-456. 132 模式 ~2000
+
 2866. 美丽塔 II 2072
 2454. 下一个更大元素 IV 2175
 2289. 使数组按非递减顺序排列 2482
