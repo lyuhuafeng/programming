@@ -131,8 +131,8 @@ vice versa。
 注意，s、t 可能是任意数据类型，但映射后的 A、B 序列肯定是 int 类型的，因为存放的是下标值，是该元素在 s 中的下标。若 s、t 序列不是 int 类型的，则 A 只能用 unordered_map；若 s、t 是 int 类型的，则 A 可以用数组（当然要知道数据范围），省时间。
 
 代码
-* A 用 unorderes_map: [lcs-via-lis-l5-u16-ex3.cpp](code/lcs-via-lis-l5-u16-ex3.cpp)
-* A 用数组: [lcs-via-lis-l5-u16-ex3-array.cpp](code/lcs-via-lis-l5-u16-ex3-array.cpp)
+* A 用 unorderes_map: [`lcs-via-lis-l5-u16-ex3.cpp`](code/lcs-via-lis-l5-u16-ex3.cpp)
+* A 用数组: [`lcs-via-lis-l5-u16-ex3-array.cpp`](code/lcs-via-lis-l5-u16-ex3-array.cpp)
 
 核心代码
 
@@ -184,5 +184,39 @@ x       if (mp[c] > 0) {
         }
     }
     int ans = llen + 1;
+```
+
+另一个版本。注意，text1 若有重复字符，则不能用此方法。
+
+```cpp
+    int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        int f[n + 1]; // 长度为 i 的 LIS，结尾元素的最小值。下标从 1 开始，f[0] 无用。
+        int llen = 0;
+        for (int i = 0; i < n; i++) {
+            int j = lower_bound(f + 1, f + llen + 1, nums[i]) - f;
+            f[j] = nums[i];
+            llen = max(llen, j);
+        }
+        return llen;
+    }
+
+    int longestCommonSubsequence(string text1, string text2) {
+        int m = text1.length(), n = text2.length();
+        int mp[26]; // 26个小写字母
+        fill_n(mp, 26, -1);
+        for (int i = 0; i < m; i++) {
+            mp[text1[i] - 'a'] = i;
+        }
+
+        vector<int> b;
+        for (char c : text2) {
+            if (mp[c - 'a'] >= 0) {
+                b.push_back(mp[c - 'a']);
+            }
+        }
+        // 求 b 的 LIS 长度
+        return lengthOfLIS(b);
+    }
 ```
 

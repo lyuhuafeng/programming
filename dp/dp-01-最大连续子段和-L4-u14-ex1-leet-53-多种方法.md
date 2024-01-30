@@ -7,9 +7,9 @@
 
 ![largest subarray sum](pics/largest-subarray-sum.png)
 
-多种方法：dp、前缀和、分治、Kadane
+多种方法：dp (Kadane's algorithm)、前缀和、分治
 
-# 动态规划法
+# dp 法（Kadane’s Algorithm）
 
 f[i] 表示以第 i 个元素 ai 结尾的最大子段和。
 
@@ -20,7 +20,7 @@ f[i] 表示以第 i 个元素 ai 结尾的最大子段和。
 * 若 `f[i-1] < 0`，则 `f[i-1] + ai` 反而小于 ai，则从 ai 重新开始新子段更合算，此时 `f[i] = ai` 是最大值
 
 得到所有 f[i] 后，遍历一遍，找出其最大值，即为所求。
-- 优化：每次得到一个 f[i] 后就打擂台，省去再遍历一遍。然后发现算 f[i] 只用到了前一个 f[i-1]，可只用一个变量，省去 f[] 数组。
+- 优化：每次得到一个 f[i] 后就打擂台，省去再遍历一遍。然后发现算 f[i] 只用到了前一个 f[i-1]，可只用一个变量，省去 f[] 数组。这样优化后，称为 <font color="green">Kadane’s Algorithm</font>。
 
 问题：如果都是负数，答案是最大的负数，还是 0？取决于问题的定义。
 
@@ -34,7 +34,7 @@ f[i] 表示以第 i 个元素 ai 结尾的最大子段和。
         }
         return ans;
     }
-// 或，不用考虑初值
+// 或，不用考虑 dp 和 ans 的初值
     int maxSubArray(vector<int>& nums) {
         int dp = nums[0];
         int ans = dp;
@@ -82,13 +82,13 @@ f[i] 表示以第 i 个元素 ai 结尾的最大子段和。
     }
 // 或：滚动式前缀和
     int maxSubArray_running_prefix_sum(vector<int>& nums) {
-        int s = 0; // 前缀和
+        int ps = 0; // 前缀和
         int minps = 0; // 最小前缀和
         int ans = INT_MIN;
         for (int i : nums) {
-            s += i;
-            ans = max(ans, s - minps);
-            minps = min(minps, s);
+            ps += i;
+            ans = max(ans, ps - minps); // 注意，此时 ps 包含了 i，而 minps 没包含 i
+            minps = min(minps, ps);
         }
         return ans;
     }
@@ -152,26 +152,3 @@ f[i] 表示以第 i 个元素 ai 结尾的最大子段和。
         return dfs(nums, 0, nums.size() - 1).sub_array_sum_max;
     }
 ```
-
-# Kadane’s Algorithm
-
-<font color="red">to check later</font>
-
-* https://www.geeksforgeeks.org/largest-sum-contiguous-subarray/
-* https://www.interviewbit.com/blog/maximum-subarray-sum/
-
-```cpp
-    max_curr = a[0];
-    begin_curr = 0, end_curr = 0;
-    max_so_far = a[0];
-    begin_so_far = 0, end_so_far = 0;
-
-    for (int i = 1; i < n; i++) {
-        max_curr = (max_curr < 0) ? a[i] : (max_curr + a[i]);
-        if (max_curr > max_so_far) {
-            max_so_mar = max_cur;
-        }
-    }
-```
-
-如何记住起始位置？

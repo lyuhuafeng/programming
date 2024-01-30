@@ -47,7 +47,10 @@ f[] 数组，`f[i]` 表示：长度为 i 的 LIS 的结尾元素的最小值。�
 如何维护 `f[]` 数组
 - `llen`: 表示当前最长的 LIS 长度。
 - 若 `a[i] > f[llen]`，也就是 `a[i] > 当前最长 LIS 的结尾元素`，则 `a[i]` 可直接接在当前 LIS 结尾后，得到更长的 LIS，即 `f[++llen] = a[i]`。
-- 否则，`a[i]` 不能接到当前最长 LIS 之后。在 `f[]` 里找第一个大于等于 (或「大于」，若所求 LIS 非严格递增) `a[i]` 的 `f[j]`。用 `a[i]` 更新 `f[j]`。（当然，若 `f[j] == a[i]`，相当于什么都没做）因为 `f[j-1] < a[i]`, `f[j] >= a[i]`。找的过程，因为 `f[]` 单调，故可用二分查找。若所求 LIS 是严格上升的，用 `lower_bound()`；若所求 LIS 不是严格上升的，而是可以有相等元素，则用 `upper_bound()`。
+- 否则，`a[i]` 不能接到当前最长 LIS 之后。在 `f[]` 里找第一个大于等于 (或「大于」，若所求 LIS 非严格递增) `a[i]` 的 `f[j]`。用 `a[i]` 更新 `f[j]`。（当然，若 `f[j] == a[i]`，相当于什么都没做）因为 `f[j-1] < a[i]`, `f[j] >= a[i]`。找的过程，因为 `f[]` 单调，故可用二分查找。
+  - 若所求 LIS 是严格上升的，用 `lower_bound()`；
+  - 若所求 LIS 不是严格上升的，而是可以有相等元素，则用 `upper_bound()`。
+  - <font color="green">如何记忆：严格，则尽量更新前面的，故用 `lower`。</font>
 
 为何严格上升用 `lower_bound()`？
 
@@ -78,14 +81,20 @@ c++ 代码的两个实现
 * [`lis-dp-greedy-bsearch.cpp`](code/lis-dp-greedy-bsearch.cpp)。注意，`f[]` 用数组。按定义，`f[i]` 对应长度为 i 的 LIS，`f[0]` 无用，所以 `lower_bound()` 时查找的起点是 `f+1`。
 * [`lis-dp-greedy-bsearch-vector.cpp`](code/lis-dp-greedy-bsearch-vector.cpp)，f 用 vector，处理上稍微简单一点，不用维护 llen（到目前为止，发现的 LIS 最长长度），最后直接用 `f.size()` 就行。此时，`f[i]` 对应长度为 `i+1` 的 LIS，而不是长度为 i 的 LIS。
 
-关键代码两种：
+`lower_bound()` 寻找时，结果 j 可能是「`llen` 之后」。
+- 若 f 用数组，空间已经开好，则直接给 `f[j]` 赋值也不会出错；
+- 若 f 用 vector，不是事先开好空间，而是逐步 `push_back()` 扩大空间，则此时不能直接给 `f[j]` 赋值，需要分情况讨论。
+再考虑到用数组时，`f[i]` 对应「长度为 `i+1` 的 LIS ...」。所以，f 用数组最方便。
+
+关键代码三种，主要区别就是 `lower_bound()` 并更新 `f[]` 的写法：
+
 ```cpp
 // f[] 用数组。f[0] 无用。用 lower_bound() 涵盖 a[i] > f[last] 的情况。
     int lis_greedy(char a[], int n) {
-        char f[n + 1]; // f[i]: 长度为 i 的 LIS，其最后一个元素值。f[0] 无用
+        char f[n + 1]; // f[i]: 长度为 i 的 LIS，结尾元素的最小值。f[0] 无用
         int llen = 0; // 到目前为止，发现的 LIS 最长长度
         for (int i = 0; i < n; i++) {
-            int j = lower_bound(f + 1, f + llen + 1, a[i]) - f; // 所求 LIS 严格递增，则找 f[] 中第一个 >= a[i] 的
+            int j = lower_bound(f + 1, f + llen + 1, a[i]) - f; // 所求 LIS 严格递增
             if (j > llen) {
                 f[++llen] = a[i];
             } else {
@@ -95,15 +104,27 @@ c++ 代码的两个实现
         return llen;
     }
 
-// f 用 vector。f[0] 有用。显式判断是否 a[i] > f[last]。
-    int lis_greedy(char a[], int n) {
-        vector<char> f; // f[i]: 长度为 i+1 的 LIS，其最后一个元素值。
+// 上一种的优化。最佳方法。f[] 用数组。f[0] 无用。用 lower_bound() 涵盖 a[i] > f[last] 的情况。
+    int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        int f[n + 1]; // 长度为 i 的 LIS，结尾元素的最小值。下标从 1 开始，f[0] 无用。
+        int llen = 0;
+        for (int i = 0; i < n; i++) {
+            int j = lower_bound(f + 1, f + llen + 1, nums[i]) - f;
+            f[j] = nums[i];
+            llen = max(llen, j);
+        }
+        return llen;
+    }
 
+// f 用 vector。f[0] 有用。llen 可以用 f.size() 代替，但其实也没用到。显式判断是否 a[i] > f[last]。
+    int lis_greedy(char a[], int n) {
+        vector<char> f; // f[i]: 长度为 i+1 的 LIS，结尾元素的最小值。f[0] 有用。
         for (int i = 0; i < n; i++) {
             if (f.empty() || a[i] > f.back()) {
                 f.push_back(a[i]);
             } else {
-                int j = lower_bound(f.begin(), f.end(), a[i]) - f.begin(); // LIS 严格递增，求 f[] 中第一个 >= a[i] 的
+                int j = lower_bound(f.begin(), f.end(), a[i]) - f.begin(); // LIS 严格递增
                 f[j] = a[i];
                 // 或 *lower_bound(f.begin(), f.end(), a[i]) = a[i];
             }
@@ -111,30 +132,6 @@ c++ 代码的两个实现
         int llen = f.size();
         return llen;
     }
-```
-
-lower_bound() 并更新 f[] 的几种写法
-
-```cpp
-// 法一
-    int j = lower_bound(f + 1, f + llen + 1, a[i]) - f; // LIS 严格递增，求 f[] 中第一个 >= a[i] 的
-    if (j > llen) {
-        f[++llen] = a[i];
-    } else {
-        f[j] = a[i];
-    }
-// 法二
-    if (f.empty() || a[i] > f.back()) {
-        f.push_back(a[i]);
-    } else {
-        int j = lower_bound(f.begin(), f.end(), a[i]) - f.begin(); // f[] 中第一个 >= a[i] 的
-        f[j] = a[i];
-        // 或 *lower_bound(f.begin(), f.end(), a[i]) = a[i];
-    }
-// 法三
-    int j = lower_bound(f + 1, f + llen + 1, a[i]) - f;
-    f[j] = a[i];
-    llen = max(llen, j);
 ```
 
 这里有个讲解，可参考一下
