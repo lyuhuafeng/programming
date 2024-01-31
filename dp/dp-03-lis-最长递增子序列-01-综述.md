@@ -117,7 +117,8 @@ c++ 代码的两个实现
         return llen;
     }
 
-// f 用 vector。f[0] 有用。llen 可以用 f.size() 代替，但其实也没用到。显式判断是否 a[i] > f[last]。
+// f 用 vector。f[i] 对应长度为 i+1 的 LIS。f[0] 有用。llen 可以用 f.size() 代替，但其实也没用到。
+// 需显式判断是否 a[i] > f[last]。
     int lis_greedy(char a[], int n) {
         vector<char> f; // f[i]: 长度为 i+1 的 LIS，结尾元素的最小值。f[0] 有用。
         for (int i = 0; i < n; i++) {

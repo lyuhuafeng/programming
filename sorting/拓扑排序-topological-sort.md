@@ -8,13 +8,13 @@ DAG (Directed acyclic graph)：有向无环图
 * 某图是 DAG <=> 该图至少有一个拓扑序
 * 某图不是 DAG <=> 该图没有拓扑序
 
-# 法一，Kahn’s Algorithm
+# 法一，Kahn’s Algorithm (BFS)
 
 基于如下事实：一个 DAG，至少有一个顶点 in-degree 为 0，至少有一个顶点 out-degree 为 0。
 
 ```
     计算每个顶点的 in-degree
-    所有 in-degree 为 0 的顶点，放入 queue。
+    所有 in-degree 为 0 的顶点，放入 queue。(开启 bfs 之旅)
     初始化 visited_vertex = 0
     repeat 直至 queue 空
         从 queue 头取出一个顶点 v，visited_vertex++。
@@ -23,12 +23,17 @@ DAG (Directed acyclic graph)：有向无环图
         否则，该 DAG 有拓扑序，就是「每次从 queue 头取出的顶点」的顺序
 ```
 
-时间复杂度：O(V+E)
+注意：<font color="red">从 queue 中取出顶点后，不用看它是否被访问过，不用维护一个 `visited[]` 数组。</font>
 
-代码实现：[leet 207. 课程表](https://leetcode.cn/problems/course-schedule/): [`kahn-topological-sort-leet-207-course-schedule.cpp`](code/kahn-topological-sort-leet-207-course-schedule.cpp)
+时间复杂度：`O(V+E)`
+
+可检测 cycle：若存在 cycle，则 queue 空后，`visited_vertex != 顶点总数`。原因：cycle 的每个顶点，其 in-degree 都不会降为 0，都不会被放入 queue。
+
+代码实现：[`leet 207`. 课程表](https://leetcode.cn/problems/course-schedule/): [`kahn-topological-sort-leet-207-course-schedule.cpp`](code/kahn-topological-sort-leet-207-course-schedule.cpp)
 
 ```cpp
     bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        // prerequisites[i] = [ai, bi]: ai 必须先修 bi. 邻接关系：ai <- bi
         vector<int> indegree(numCourses, 0);
         for (const vector<int> & e : prerequisites) {
             indegree[e[0]]++;
@@ -59,7 +64,7 @@ DAG (Directed acyclic graph)：有向无环图
     }
 ```
 
-# 法二，DFS
+# 法二，DFS 无回溯
 
 参考文献：https://www.geeksforgeeks.org/topological-sorting/
 
@@ -140,9 +145,9 @@ dfs using departure time
 dfs to get all topological sorts
 * https://www.geeksforgeeks.org/all-topological-sorts-of-a-directed-acyclic-graph/
 
-# Kahn vs. DFS
+# Kahn (BFS) vs. DFS
 
-若有拓扑序，Kahn 法肯定能找到。<font color="red">如检测到 cycle，可提前退出。how?</font>
+若有拓扑序，Kahn 法肯定能找到。可检测 cycle。
 
 若有环 (cycle)，则 DFS 法。<font color="red">用 dfs 似乎不能检测 cycle？见下面两道例题</font>
 
@@ -157,3 +162,5 @@ DFS 实现较复杂，较省内存，DAG 很大时也比较快。
 - [leet 207. 课程表](https://leetcode.cn/problems/course-schedule/) 问拓扑排序是否存在：[`kahn-topological-sort-leet-207-course-schedule.cpp`](code/kahn-topological-sort-leet-207-course-schedule.cpp)
 
 - [leet 210. 课程表 II](https://leetcode.cn/problems/course-schedule-II/) 求任意一个拓扑排序： [`kahn-topological-sort-leet-210-course-schedule-ii.cpp`](code/kahn-topological-sort-leet-210-course-schedule-ii.cpp) 核心代码其实只增加了一行。另外一点优化：把「每个顶点能访问到的顶点列表」用 `map<vertex, set<vertex>>` 存起来，避免重复遍历。
+
+- VIP 题 [leet ??](https://leetcode.com/problems/alien-dictionary/)

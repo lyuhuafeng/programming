@@ -50,16 +50,16 @@
 - 相同之处：每次把「当前」顶点能到达的各顶点放入「待处理」集合。
 - 不同之处：按什么顺序，从「待处理」集合中取出一个，作为「当前」顶点？
   - BFS：按放入的「顺序」。则「待处理」集合是个普通 FIFO queue。
-  - Dijkstra：按顶点离 src 的「代价」（离起点近）。则「待处理」集合是个 priority queue。且「待处理」集合中的顶点的「代价」是可以更新的。
+  - Dijkstra：按顶点离 src 的「代价」（离起点近）。则「待处理」集合是个 priority queue。且「待处理」集合中的顶点的「代价」是可以更新的。为了更新 pq 中的「代价」，维护 visited[] 数组。
 
 若顶点之间的移动代价相同，则 Dijkstra 退化为 BFS。
 
-```
 维护
 - dist[] 数组，dist[i] 表示：从起点 src 出发，到顶点 i 的最短距离。
 - visited[] 数组，bool 类型，visited[i] 表示：顶点 i 是否已「处理」过。因为 C++ priority queue 无法更新 queue 中元素，..., detailed below.
 - prev[] 数组，prev[i] 表示：从起点 src 出发，到顶点 i 的 shortest path，i 的前一个顶点编号
 
+```
 1. 初始化
    起点的 dist = 0，其余所有顶点的 dist = INF。
    所有顶点的 visited = false。
@@ -114,7 +114,6 @@ priority queue 里用的是自定义的结构体，和自定义的比较函数�
 
 ```cpp
     #include <utility> // pair
-
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> q;
 ```
 
@@ -122,7 +121,6 @@ priority queue 里用的是自定义的结构体，和自定义的比较函数�
 
 ```cpp
     #include <utility> // pair
-
     typedef pair<int, int> vertex_dist;
     priority_queue<vertex_dist, vector<vertex_dist>, greater<vertex_dist>> pq;
 ```

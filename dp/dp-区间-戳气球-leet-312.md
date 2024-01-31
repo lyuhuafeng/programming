@@ -8,7 +8,7 @@
 
 状态转移
 - `k`: `[i ... j]` 范围内最后戳破的。
-- `dp[i][j] = max{ dp[i][k-1] + dp[k+1][j] + v[i-1] * v[k] * v[j+1] }, ∀ k ∈ [i ... j]`
+- `dp[i][j] = max{ dp[i][k-1] + dp[k+1][j] + v[i-1] * v[k] * v[j+1] }, ∀ k ∈ [i ... j]` （虽然不能确定 k 左右各是哪个气球，但 k 左右两边各只有一个，且每个的钱是确定的）
 
 遍历顺序
 - i 逆序，j 正序
@@ -27,7 +27,7 @@ c++ 代码
         v.push_back(1);
         
         int dp[n + 2][n + 2];
-        memset(dp, 0, sizeof dp);
+        fill_n(&dp[0][0], (n + 2) * (n + 2), 0);
 
         for (int i = n; i >= 1; i--) {
             // dp[i][i] = v[i - 1] * v[i] * v[i + 1];
@@ -61,7 +61,7 @@ func maxCoins(nums []int) int {
         for j := i; j <= n; j++ {
             for k := i; k <= j; k++ {
                 sum := dp[i][k - 1] + dp[k + 1][j] + v[i - 1] * v[k] * v[j + 1]
-                dp[i][j] = max(dp[i][j], sum) // max() built-in since 1.21 (2023.08.08)
+                dp[i][j] = max(dp[i][j], sum) // max() built-in since v1.21 (2023.08.08)
             }
         }
     }

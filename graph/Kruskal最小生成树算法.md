@@ -17,7 +17,7 @@ Prim's
 Kruskal's
 - greedy 算法，每次找 weight 最小的 edge 加入。
 - 输入为 `edges[]`。遍历各 edge。
-- 时间复杂度：`ElogE（快排）+ logE（并查集）= ElogE`。至于 edge 数量相关。
+- 时间复杂度：`O(ElogE)（快排）+ O(logE)（并查集）= O(ElogE)`。只与 edge 数量相关。
 - 适用于「稀疏图」sparse graph（edge 少）。
 - 记录 mst 里的各 edge，比 prim 要容易得多。因 Kruskal 直接操作 edge，每次找到最短 edge，就把 edge 加入 mst。
 

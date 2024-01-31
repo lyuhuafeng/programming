@@ -21,7 +21,7 @@ func maxCoins(nums []int) int {
         for j := i; j <= n; j++ {
             for k := i; k <= j; k++ {
                 sum := dp[i][k - 1] + dp[k + 1][j] + v[i - 1] * v[k] * v[j + 1]
-                dp[i][j] = max(dp[i][j], sum) // max() built-in since 1.21 (2023.08.08)
+                dp[i][j] = max(dp[i][j], sum) // max() built-in since v1.21 (2023.08.08)
             }
         }
     }

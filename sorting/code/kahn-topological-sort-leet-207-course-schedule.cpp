@@ -3,6 +3,7 @@
 using namespace std;
 
     bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        // prerequisites[i] = [ai, bi]: ai 必须先修 bi. 邻接关系：ai <- bi
         vector<int> indegree(numCourses, 0);
         for (const vector<int> & e : prerequisites) {
             indegree[e[0]]++;
@@ -32,4 +33,10 @@ using namespace std;
         return ans;
     }
 
-int main() {}
+int main() {
+    vector<vector<int>> prerequisites = {{2, 1}, {3, 2}, {2, 4}};
+    canFinish(5, prerequisites); // 4 个顶点，编号从 1 开始。canFinish() 要求编号从 0 开始，所以这里参数是 5.
+    prerequisites = {{1, 0}, {2, 1}, {3, 2}, {4, 2}, {1, 3}};
+    canFinish(5, prerequisites); // 5 个顶点，编号从 0 开始。
+    return 0;
+}

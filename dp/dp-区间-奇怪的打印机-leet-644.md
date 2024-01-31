@@ -2,9 +2,10 @@
 
 区间 dp
 
-两个问题
+三个问题
 - 为何是两段的和？
 - 初始化为 0 vs. inf?
+- 为何 i 正序遍历？
 
 # 法一：动态规划
 
@@ -25,12 +26,24 @@
 初始化：
 - 按区间长度，只需初始化区间长度为 1 的。一个字符要打印一次，即 `dp[i][i] = 1`。
 
+小优化：去掉连续的重复字符，减少空间占用。
+
 ```cpp
     int strangePrinter(string s) {
-        int n = s.length();
-        if (n == 0) {
+        if (s.length() == 0) {
             return 0;
         }
+        string t;
+        t.push_back(s[0]);
+        for (int i = 1; i < s.length(); i++) {
+            if (s[i] != s[i - 1]) {
+                t.push_back(s[i]);
+            }
+        }
+        s = t;
+        // 以上：去掉重复字符
+
+        int n = s.length();
         int dp[n][n];
         fill_n(&dp[0][0], n * n, 0); // 初始化为 0
         for (int i = 0; i < n; i++) {
@@ -94,5 +107,32 @@ dp[][] 定义同上。
         }
         int ans = dp[0][n - 1];
         return ans;
+    }
+```
+
+# 法三，dp by 3leaf
+
+`f[n+1][n+1]`，而不是 `f[n][n]`。观察可知，len = 1 时，i 最大值为 n-1，此时 i+1 则超出范围，所以用 `f[n+1][n+1]`。若 len 从 2 开始，像前两种解法那样，应该不存在此问题。
+
+```cpp
+    int strangePrinter(string s) {
+        int n = s.length();
+        if (n == 0) {
+            return 0;
+        }
+        int f[n + 1][n + 1];
+        fill_n(&f[0][0], (n + 1) * (n + 1), 0);
+        for (int len = 1; len <= n; len++) {
+            for (int i = 0; i + len - 1 <= n - 1; i++) {
+                int j = i + len - 1;
+                f[i][j] = f[i + 1][j] + 1;
+                for (int k = i + 1; k <= j; k++) {
+                    if (s[i] == s[k]) {
+                        f[i][j] = min(f[i][j], f[i][k - 1] + f[k + 1][j]);
+                    }
+                }
+            }
+        }
+        return f[0][n - 1];
     }
 ```
