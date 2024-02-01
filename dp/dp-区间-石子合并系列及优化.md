@@ -10,23 +10,23 @@
   - [l5-u17-ex1](https://oj.youdao.com/course/37/286/1#/1/14362)
 
 
-
 # [SDOI2008] 石子合并，基础版，直线，每次合并两堆
 
-dp[i][j]: 合并区间 [i, j] 的 cost。所求解答为 dp[0][n-1]。
+`dp[i][j]`: 合并区间 `[i .. j]` 的 cost。所求解答为 `dp[0][n-1]`。
 
-转移方程：`dp[i][j] = min⁡{ dp[i][k] + dp[k+1][j] + sum[i...j] }, ∀k 满足 i <= k < j` (<font color="red">or `i < k < j` ?</font>)
+转移方程：`dp[i][j] = min⁡{ dp[i][k] + dp[k+1][j] + sum[i...j] }, ∀k 满足 i <= k < j` (<font color="green">注意，k 的范围，可以等于 i，但必须小于 j。</font>)
 
-初始化：`dp[i][i] = 0`。 其余为 inf。
+初始化：`dp[i][i] = 0`。 其余不用初始化。（或，为了求一大堆的 min，需要先初始化为 inf）
 
-遍历顺序：i 逆序，j 正序
-
-代码：[merge-stones-line-2.cpp](code/merge-stones-line-2.cpp)
+代码两种，区别只在枚举顺序。
+- 枚举顺序：i 逆序，j 正序：[`merge-stones-line-2.cpp`](code/merge-stones-line-2.cpp)
+- 枚举顺序：len 正序，(i,j) 正序：[`merge-stones-line-2-len-first.cpp`](code/merge-stones-line-2-len-first.cpp)
 
 核心代码：注意其初始化部分，只有两句，没有做多余的全面初始化。
 
 ```c++
-    //// 前缀和计算，略。请注意看代码及注释。
+// 前缀和计算，略。请注意看代码及注释。
+// 枚举顺序：i 逆序，j 正序
     int dp[n][n];
     for (int i = n - 1; i >= 0; i--) {
         dp[i][i] = 0;
@@ -38,7 +38,26 @@ dp[i][j]: 合并区间 [i, j] 的 cost。所求解答为 dp[0][n-1]。
         }
     }
     int ans = dp[0][n - 1];
+
+// 枚举顺序：len 正序，(i,j) 正序。注意，只有加了注释的这三句，与上法不同。
+    int dp[n][n];
+    for (int i = 0; i < n; i++) { dp[i][i] = 0; } // 处理 len = 1 的情况
+    for (int len = 2; len <= n; len++) { // 枚举 len，从 2 开始
+        for (int i = 0, j = i + len - 1; j <= n - 1; i++, j++) { // 枚举 (i,j)。只有这三句与上法不同
+            dp[i][j] = INT_MAX;
+            for (int k = i; k < j; k++) {
+                dp[i][j] = min(dp[i][j], dp[i][k] + dp[k + 1][j] + ps[j + 1] - ps[i]);
+            }
+        }
+    }
+    int ans = dp[0][n - 1];
+
 ```
+
+四边形不等式优化：两种实现，枚举顺序不同。
+
+- 先 i 逆序，再 j 正序：[`merge-stones-line-2-speedup.cpp`](code/merge-stones-line-2-speedup.cpp)
+- 先 len 正序，再 (i,j) 正序：[`merge-stones-line-2-len-first-speedup.cpp`](code/merge-stones-line-2-len-first-speedup.cpp)
 
 # [NOI1995] 石子合并；环形，每次合并两堆
 
@@ -74,9 +93,8 @@ dp[i][j]: 合并区间 [i, j] 的 cost。所求解答为 dp[0][n-1]。
 # 更优算法
 
 <font color="red">to check later</font>
-* [GarsiaWachs 算法](https://www.luogu.com.cn/problem/solution/P5569)
-* [四边形不等式解法](https://www.luogu.com.cn/problem/solution/P1880)
-  - [here](https://www.luogu.com.cn/blog/countercurrent-time/solution-p1880)
+
+石子合并问题的最优解法是 Garsia-Wachs algorithm，复杂度 `O(nlogn)`
 
 
 

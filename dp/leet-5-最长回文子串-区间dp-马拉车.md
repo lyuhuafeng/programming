@@ -12,6 +12,8 @@
 状态
 - `dp[i][j]` 表示子串 `s[i ... j]` 是否回文，bool 类型。
 
+算法主要是求各子串是否回文。若是，则更新 start、len。后者其实是顺带求的。
+
 状态转移方程
 - 若子串只有 1 位，`dp[i][i] = true`
 - 若子串只有 2 位，`dp[i][j] = (s[i] == s[j])`
@@ -51,6 +53,63 @@
         }
         string ans = s.substr(max_start, maxl);
         return ans;
+    }
+```
+
+# dp, 代码精简优化
+
+上面的递推公式可以归纳成一个，就不用单独判断 `i==j` 或 `i+1==j` 的情况了：
+```cpp
+    dp[i][j] = (s[i] == s[j] && (j - i < 2 || dp[i + 1][j - 1]));
+```
+三种实现方法，主要是枚举的方法、顺序不同。最直观的情况，先枚举 i 再枚举 j，则 i 需要逆序枚举。<font color="green">但另两种情况下，先枚举 len 或先枚举 j，则 i 就不用逆序了。</font>
+
+(1) 最直观，逆序枚举 i，正序枚举 j：
+
+```cpp
+    string longestPalindrome(string s) {
+        int n = s.length();
+        bool dp[n][n]; // 不需要初始化
+
+        int max_start = 0, maxl = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = i; j <= n - 1; j++) {
+                dp[i][j] = (s[i] == s[j] && (j - i < 2 || dp[i + 1][j - 1]));
+                if (dp[i][j] == true && j - i + 1 > maxl) {
+                    max_start = i, maxl = j - i + 1;
+                }
+            }
+        }
+        string ans = s.substr(max_start, maxl);
+        return ans;
+    }
+```
+
+(2) 正序枚举 len，正序枚举 i、j
+
+```cpp
+    string longestPalindrome(string s) {
+        int n = s.length();
+        bool dp[n][n]; // 不需要初始化
+        for (int len = 1; len <= n; len++) {
+            for (int i = 0, j = i + len - 1; j <= n-1; i++, j++) {
+                dp[i][j] = (s[i] == s[j] && (j - i < 2 || dp[i + 1][j - 1]));
+            }
+        }
+    }
+```
+
+(3) 正序枚举 j，正序枚举 i。先 j 后 i，最少见。
+
+```cpp
+    string longestPalindrome(string s) {
+        int n = s.length();
+        bool dp[n][n]; // 不需要初始化
+        for (int j = 0; j < n; j++) {
+            for (int i = 0; i <= j; i++) {
+                dp[i][j] = (s[i] == s[j] && (j - i < 2 || dp[i + 1][j - 1]));
+            }
+        }
     }
 ```
 
@@ -96,6 +155,26 @@
             int l = max(expand(s, i, i), expand(s, i, i + 1));
             if (l > maxl) {
                 start = i - (l - 1) / 2, maxl = l;
+            }
+        }
+        return s.substr(start, maxl);
+    }
+```
+
+或者这样，不单独搞 `expand()` 函数：
+
+```cpp
+    string longestPalindrome(string s) {
+        int n = s.length();
+        int start = 0, maxl = 0;
+        for (int c = 0; c < 2 * n - 1; c++) {
+            int l = c / 2, r = l + c % 2;
+            while (l >= 0 && r < n && s[l] == s[r]) {
+                if (maxl < r - l + 1) {
+                    maxl = r - l + 1;
+                    start = l;
+                }
+                l--, r++;
             }
         }
         return s.substr(start, maxl);

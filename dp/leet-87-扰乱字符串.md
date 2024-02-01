@@ -1,5 +1,7 @@
 # [87. 扰乱字符串](https://leetcode.cn/problems/scramble-string/)
 
+# dp 法
+
 [reference notes](https://leetcode.cn/problems/scramble-string/solutions/51990/miao-dong-de-qu-jian-xing-dpsi-lu-by-sha-yu-la-jia)
 
 `dp[i][j][k][h]` 表示 `T[k .. h]` 是否由 `S[i .. j]` 变来。因变换必须长度一样，故 `j−i = h−k = len`，可把四维数组降成三维。`dp[i][j][len]` 表示从 `S[i .. i+len-1]` 是否能变为 `T[j .. j+len-1]`。
@@ -51,3 +53,7 @@
         return dp[0][0][n];
     }
 ```
+
+# dfs
+
+用 dfs 暴力记忆化，很方便
