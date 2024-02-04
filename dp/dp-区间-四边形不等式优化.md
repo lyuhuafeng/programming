@@ -1,9 +1,7 @@
 # 区间 dp 的四边形不等式优化
 # Knuth-Yao speedup on range dp
 
-https://blog.csdn.net/weixin_43914593/article/details/105150937
-
-四边形不等式（quadrangle inequality）应用于DP优化，是一个古老的知识点。它起源于Knuth（高纳德）1971年的一篇论文1，用来解决最优二叉搜索树问题。1980年，储枫（F. Frances Yao，姚期智的夫人）做了深入研究2，扩展为一般性的DP优化方法，把一些复杂度 `O(n^3)` 的DP问题，优化为 `O(n^2)`。所以这个方法又被称为「Knuth-Yao DP Speedup Theorem」。
+此优化方法，起源于 Knuth（高纳德）1971 年的论文，用来解决最优二叉搜索树问题。1980年，储枫（F. Frances Yao，姚期智的夫人）将其扩展为一般性的 DP 优化方法，把一些复杂度 `O(n^3)` 的 DP 问题，优化为 `O(n^2)`。故，此法称为「Knuth-Yao DP Speedup Theorem」。
 
 适用范围：状态转移公式类似这样的
 ```cpp
