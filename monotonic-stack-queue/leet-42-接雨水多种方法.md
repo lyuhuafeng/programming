@@ -4,7 +4,16 @@ references:
 - [四种方法](https://mp.weixin.qq.com/s/XyiYcDwEv3VW5Zs-WmRbDQ)
 - [水平方向解法的一种理解](https://mp.weixin.qq.com/s/epYmfWy5BEOYOxF8kKj9Gw)
 
-# solution 1. 按列（竖直方向），每个柱子顶上竖直方向能存多少水。
+目录
+- [solution 1. 按列（竖直方向），每个柱子顶上竖直方向能存多少水](#sol-1-vertical)
+- [solution 2. 最佳解法，1 的改进](#sol-2)
+- [类似思路](#sol-2.1)
+- [堆法，按列](#sol-2-heap)
+- [solution 3. 按行](#sol-3)
+- [直观解法](#sol-3.1)
+- [正确、但不直观的解法，也是 leetcode 官方解法](#sol-3.2)
+
+# <a id="sol-1-vertical"></a>solution 1. 按列（竖直方向），每个柱子顶上竖直方向能存多少水
 
 ![vertically](pics/trap-rain-vertically.png)
 
@@ -14,7 +23,7 @@ references:
 - 优化一下，预处理。[trapping-rain-leet-42-vertically-02-preprocess.cpp](code/trapping-rain-leet-42-vertically-02-preprocess.cpp)
 - 变形的单调栈，求 prev greatest 和 next greatest（注意是 greatest 不是 greater）。但有些硬套公式、为了使用单调栈而使用的感觉。[trapping-rain-leet-42-vertically-03-mono-stack.java](code/trapping-rain-leet-42-vertically-03-mono-stack.java)
 
-# solution 2. 最佳解法，1 的改进
+# <a id="sol-2"></a>solution 2. 最佳解法，1 的改进
 
 与 1 基本相同，按列（竖直方向），每个柱子顶上竖直方向能存多少水。但求左最高、右最高的方法不同。
 
@@ -125,14 +134,76 @@ func trap(height []int) int {
 }
 ```
 
-## 类似思路
+## <a id="sol-2.1"></a>类似思路
 
 来自 https://mp.weixin.qq.com/s/XyiYcDwEv3VW5Zs-WmRbDQ 方法 4，但把简单问题复杂化了。
 - [`trapping-rain-leet-42-vertically-11.cpp`](code/trapping-rain-leet-42-vertically-11.cpp)
 
-# solution 3. 按行
+# <a id="sol-2-heap"></a>堆法，按列
 
-## 直观解法
+用 heap (priority queue)。
+
+堆内存储 `{柱子位置, 柱子及其顶上竖直水总高度}`。
+
+先将左右边界柱入队；持续从队中弹出最矮的 p，看 p 两边（实际只能有一边）柱子 p1：
+- 若 p1 比 p 矮，则 p1 可存水至 p 高度。将 p1 及其顶上水总高度（就是 p 的高度）入队；
+- 若 p1 比 p 不矮，则 p1 顶上无法存水。则将 p1 入队
+
+用「虚拟柱」表示：柱，及其顶上的水。
+
+每弹出一个，只要不是最后一个，堆内肯定还有比它高的，所以它旁边比它矮的，可以存水到它的高度。
+
+两边先入队，所以处理顺序是从两边逐渐往中间蔓延。虽然每个出队的「虚拟柱」，都要看左右两边，但它是从其中一边来的，实际上只能往另一边（向内）走。
+
+如果有比该「虚拟柱」还高的，只能在「向内」的方向。
+
+代码：
+
+```cpp
+    struct pole {
+        int idx; // 位置索引
+        int h;   // 虚拟柱的高度
+    };
+
+    // 矮的在堆顶，min heap，与缺省的相反，所以比较函数也相反
+    bool operator<(const pole &a, const pole &b) {
+        return a.h > b.h;
+    }
+
+    int trap(vector<int>& height) {
+        vector<int> dirs = { -1, 1 };
+
+        int n = height.size();
+        vector<bool> visited(n, false);
+        priority_queue<pole> pq;
+        pq.push({0, height[0]});
+        pq.push({n - 1, height[n - 1]});
+        visited[0] = true, visited[n - 1] = true;
+
+        int ans = 0;
+        while (!pq.empty()) {
+            pole p = pq.top();
+            pq.pop();
+
+            // 看看左右两边的情况
+            for (int d : dirs) {
+                int pos = p.idx + d;
+                if (pos >= 0 && pos <= n - 1 && !visited[pos]) {
+                    if (height[pos] < p.h) {
+                        ans += p.h - height[pos];
+                    }
+                    pq.push({pos, max(height[pos], p.h)});
+                    visited[pos] = true;
+                }
+            }            
+        }
+        return ans;
+    }
+```
+
+# <a id="sol-3"></a>solution 3. 按行
+
+## <a id="sol-3.1"></a>直观解法
 
 每根柱子，与其 previous greater 和 next greater，构成一个凹槽，水平方向，分层（见图），能存多少水。
 
@@ -147,7 +218,7 @@ func trap(height []int) int {
 
 2023.12.21 感悟：受[「leet-795-区间子数组个数」的直接了当解法](leet-795-区间子数组个数.md)启发，「两端都是 greater」不行，则<font color="green">改成「一端 greater、另一端 greater-or-equal」，就可以把等高的两根柱子分割在不同的区间里，就可以了</font>。改哪端都可以。若从上面的错误代码改，两处 while 条件里，都改成 `>` ，或都改成 `>=`，都可以。当然，最好还是改成遍历一遍，同时求出 next greater 和 previous greater or equal。代码：[`trapping-rain-leet-42-horizonally-01-mono-stack-intuitive.cpp`](code/trapping-rain-leet-42-horizonally-01-mono-stack-intuitive.cpp)
 
-## 正确、但不直观的解法，也是 leetcode 官方解法
+# <a id="sol-3.2"></a>正确、但不直观的解法，也是 leetcode 官方解法
 
 <font color="green">2024.01.22：其实是上面「直观解法」的 running 版本。</font>
 
@@ -195,5 +266,4 @@ func trap(height []int) int {
         return ans;
     }
 ```
-
 

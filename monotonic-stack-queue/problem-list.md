@@ -27,7 +27,7 @@
   - 类似接雨水官方解法 running 版本，但要从两边分别求 [`od-2654-water-official.cpp`](code/od-2654-water-official.cpp) 如何判断凹槽结束？stack empty，说明新来的是目前最高柱，是新凹槽的开始。（考虑图：阶梯上升凹槽）。但这只是左半边；右半边是阶梯下降的，得逆序来一遍。
   - 不 running 的版本？
 
-- [407. 接雨水 II](https://leetcode.cn/problems/trapping-rain-water-ii/) 二维方格上接
+- `407. 接雨水 II`：二维方格上接，[题解笔记](leet-407-接雨水II.md)
 
 - [84. 柱状图中最大的矩形](https://leetcode.cn/problems/largest-rectangle-in-histogram/) 跟「接雨水」有某种对称关系。[解法笔记](leet-84-柱状图中最大矩形.md)
 
