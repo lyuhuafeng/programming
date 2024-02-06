@@ -7,11 +7,11 @@ references:
 目录
 - [solution 1. 按列（竖直方向），每个柱子顶上竖直方向能存多少水](#sol-1-vertical)
 - [solution 2. 最佳解法，1 的改进](#sol-2)
-- [类似思路](#sol-2.1)
+- [面积法](#sol-2-area)
 - [堆法，按列](#sol-2-heap)
 - [solution 3. 按行](#sol-3)
-- [直观解法](#sol-3.1)
-- [正确、但不直观的解法，也是 leetcode 官方解法](#sol-3.2)
+  - [直观解法](#sol-3-1)
+  - [正确、但不直观的解法，也是 leetcode 官方解法](#sol-3-2)
 
 # <a id="sol-1-vertical"></a>solution 1. 按列（竖直方向），每个柱子顶上竖直方向能存多少水
 
@@ -134,10 +134,70 @@ func trap(height []int) int {
 }
 ```
 
-## <a id="sol-2.1"></a>类似思路
+# <a id="sol-2-area"></a>面积法
 
-来自 https://mp.weixin.qq.com/s/XyiYcDwEv3VW5Zs-WmRbDQ 方法 4，但把简单问题复杂化了。
-- [`trapping-rain-leet-42-vertically-11.cpp`](code/trapping-rain-leet-42-vertically-11.cpp)
+inspired by 3leaf
+
+所有柱子中，最高的可能有若干。我们只关心最左边、最右边的两根，分别称为 lh、rh。
+- lh 以左（不含 lh），称为「左部」
+- rh 以右（不含 rh），称为「右部」
+- lh 和 rh 之间（含它俩），称为「中部」
+
+退化情况，若最高的只有一根，称为 h，则「中部」退化为 h 自己。
+
+面积公式推导过程：
+
+```cpp
+    l_area = 左柱 + 左雨 + 中全 + 右全 (1)
+    r_area = 右柱 + 右雨 + 中全 + 左全 (2)
+
+    注意到 中全 = 中柱 + 中雨 (3)
+
+    (1) + (2)，得
+    l_area + r_area
+        = (左柱 + 左雨 + 中全 + 右全) + (右柱 + 右雨 + 中全 + 左全)
+        = (左柱 + 左雨 + 中全 + 右柱 + 右雨) + (右全 + 中全 + 左全)
+        = (左柱 + 左雨 + 中全 + 右柱 + 右雨) + 全     // 将 3 代入
+        = (左柱 + 左雨 + 中柱 + 中雨 + 右柱 + 右雨) + 全
+        = 柱 + 雨 + 全
+
+    所以，雨 = l_area + r_area - 柱 - 全
+```
+
+代码： [`trapping-rain-leet-42-area.cpp`](code/trapping-rain-leet-42-area.cpp)
+
+```cpp
+    // p_area: 柱面积
+    // full: 整个矩形全面积
+    // l_area: 左面积
+    // r_area: 右面积
+
+    int trap(vector<int>& height) {
+        int n = height.size();
+
+        int p_area = 0, maxh = 0;
+        for (int h : height) {
+            p_area += h;
+            maxh = max(maxh, h);
+        }
+        int full = maxh * n;
+
+        int l_area = 0, l_max = 0;
+        for (int i = 0; i < n; i++) {
+            l_max = max(l_max, height[i]);
+            l_area += l_max;
+        }
+
+        int r_area = 0, r_max = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            r_max = max(r_max, height[i]);
+            r_area += r_max;
+        }
+
+        int ans =  l_area - full - p_area + r_area; // 考虑到 C++ 溢出报错, 先减后加
+        return ans;
+    }
+```
 
 # <a id="sol-2-heap"></a>堆法，按列
 
@@ -157,7 +217,7 @@ func trap(height []int) int {
 
 如果有比该「虚拟柱」还高的，只能在「向内」的方向。
 
-代码：
+代码：[`trapping-rain-leet-42-vertically-21-pq.cpp`](code/trapping-rain-leet-42-vertically-21-pq.cpp)
 
 ```cpp
     struct pole {
@@ -195,7 +255,7 @@ func trap(height []int) int {
                     pq.push({pos, max(height[pos], p.h)});
                     visited[pos] = true;
                 }
-            }            
+            }
         }
         return ans;
     }
@@ -203,7 +263,7 @@ func trap(height []int) int {
 
 # <a id="sol-3"></a>solution 3. 按行
 
-## <a id="sol-3.1"></a>直观解法
+## <a id="sol-3-1"></a>直观解法
 
 每根柱子，与其 previous greater 和 next greater，构成一个凹槽，水平方向，分层（见图），能存多少水。
 
@@ -218,7 +278,7 @@ func trap(height []int) int {
 
 2023.12.21 感悟：受[「leet-795-区间子数组个数」的直接了当解法](leet-795-区间子数组个数.md)启发，「两端都是 greater」不行，则<font color="green">改成「一端 greater、另一端 greater-or-equal」，就可以把等高的两根柱子分割在不同的区间里，就可以了</font>。改哪端都可以。若从上面的错误代码改，两处 while 条件里，都改成 `>` ，或都改成 `>=`，都可以。当然，最好还是改成遍历一遍，同时求出 next greater 和 previous greater or equal。代码：[`trapping-rain-leet-42-horizonally-01-mono-stack-intuitive.cpp`](code/trapping-rain-leet-42-horizonally-01-mono-stack-intuitive.cpp)
 
-# <a id="sol-3.2"></a>正确、但不直观的解法，也是 leetcode 官方解法
+# <a id="sol-3-2"></a>正确、但不直观的解法，也是 leetcode 官方解法
 
 <font color="green">2024.01.22：其实是上面「直观解法」的 running 版本。</font>
 
