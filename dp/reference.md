@@ -175,7 +175,7 @@ https://github.com/shinezzz/LeetCode-Topic/tree/master/5%E5%8A%A8%E6%80%81%E8%A7
 - 0248. 中心对称数 III：[题解]()
 - 1088. 易混淆数 II：[题解]()
 - 1067. 范围内的数字计数：[题解]()
-- 1742. 盒子中小球的最大数量：[题解]()
+- 1742. 盒子中小球的最大数量：[题解](leet-1742-盒子中小球的最大数量.md)
 - 面试题 17.06. 2出现的次数：[题解]()
 - 1397. 找到所有好字符串（有难度，需要结合一个经典字符串算法）：[题解]()
 
@@ -185,15 +185,10 @@ https://github.com/shinezzz/LeetCode-Topic/tree/master/5%E5%8A%A8%E6%80%81%E8%A7
 
 - [10. 正则表达式匹配](https://leetcode-cn.com/problems/regular-expression-matching)
 
-
 - [打家劫舍系列](dp-打家劫舍系列-leet.md)
-
-- [322: 零钱兑换](https://leetcode.cn/problems/coin-change/)，[518: 零钱兑换2](https://leetcode.cn/problems/coin-change-ii/)：[解法：完全背包-恰好装满](背包-3-完全背包-恰好装满-零钱兑换-leet-322-518.md)
 
 - [980. 不同路径 III](https://leetcode.cn/problems/unique-paths-iii)
 
-
-来自 [github: shinezzz leetcode 背包专题](https://github.com/shinezzz/LeetCode-Topic/tree/master/4背包专题)
 
 
 
@@ -221,7 +216,7 @@ https://github.com/shinezzz/LeetCode-Topic/tree/master/5%E5%8A%A8%E6%80%81%E8%A7
 #
 - [96. 不同的二叉搜索树](https://leetcode.cn/problems/unique-binary-search-trees/) [解法笔记](leet-96-不同的二叉搜索树.md)
 
-761. 特殊的二进制序列https://leetcode.cn/problems/special-binary-string/description/
+- [761. 特殊的二进制序列](https://leetcode.cn/problems/special-binary-string/)
 
 
 # 树形 dp
@@ -231,17 +226,43 @@ https://github.com/itcharge/LeetCode-Py/blob/main/Contents/10.Dynamic-Programmin
 - [`124.` 二叉树中的最大路径和](https://leetcode.cn/problems/binary-tree-maximum-path-sum/): [解法笔记](leet-124-二叉树中的最大路径和.md)
 
 
+# 背包
+
+- https://github.com/itcharge/LeetCode-Py/blob/main/Contents/10.Dynamic-Programming/04.Knapsack-Problem/06.Knapsack-Problem-List.md
+- 来自 [github: shinezzz leetcode 背包专题](https://github.com/shinezzz/LeetCode-Topic/tree/master/4背包专题)
+- https://www.jianshu.com/p/bf08431d6560 最全 LeetCode 背包问题目录（持续更新）
+- https://zhuanlan.zhihu.com/p/150676736 leetcode—动态规划-背包问题
+
+01
+
+- 416. 分割等和子集：[题解](背包-1-01背包-恰好装满-分割等和子集-leet416.md)
+- 494. 目标和：[题解](背包-1-01背包-恰好装满-目标和-leet494.md)
+- 1049. 最后一块石头的重量 II：[题解]()
+
+完全
+
+- 279. 完全平方数：[题解]()
+- 322. 518. 零钱兑换系列：[题解](背包-3-完全背包-恰好装满-零钱兑换-leet-322-518.md)
+- 139. 单词拆分：[题解]()
+- 377. 组合总和 Ⅳ：[题解]()
+- 638. 大礼包：[题解]()
+- 1449. 数位成本和为目标值的最大数字：[题解]()
+
+多重
+
+分组
+
+- 1155. 掷骰子等于目标和的方法数：[题解]()
+- 2585. 获得分数的方法数：[题解]()
+
+多维
+
+- 474. 一和零：[题解]()
+- 879. 盈利计划：[题解]()
+- 1995. 统计特殊四元组：[题解]()
 
 
-
-
-
-
-https://www.jianshu.com/p/bf08431d6560
-最全 LeetCode 背包问题目录（持续更新）
-
-https://zhuanlan.zhihu.com/p/150676736
-leetcode—动态规划-背包问题
+# references 
 
 https://github.com/CyC2018/CS-Notes/tree/master/notes
 
@@ -268,11 +289,6 @@ https://blog.csdn.net/litble/article/details/85305561
 
 https://programmercarl.com/背包理论基础01背包-1.html
 
-
-
-
-
-
 https://github.com/youngyangyang04/leetcode-master/blob/master/problems/%E8%83%8C%E5%8C%85%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%8001%E8%83%8C%E5%8C%85-2.md
 2d降为1d：滚动数组
 
@@ -297,14 +313,8 @@ https://programmercarl.com/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%90%86%E8%AE%B
 多重背包
 https://programmercarl.com/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80%E5%A4%9A%E9%87%8D%E8%83%8C%E5%8C%85.html
 
-
 https://zhuanlan.zhihu.com/p/93857890
-
-
 
 多重背包单调队列优化
 https://zhuanlan.zhihu.com/p/122891321
-
-
-
 
