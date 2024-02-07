@@ -22,7 +22,7 @@
 
 ![lcs-simple-dp](pics/lcs-simple-dp-formula.png)
 
-显然时间复杂度为 O(n^2)。
+显然时间复杂度为 `O(n²)`。
 
 完整代码，既求出了 lcs 长度，又找出了 lcs 字符串及每个字符在原字符串中的位置：[longest-common-sub-sequence-leet-1143.cpp](code/longest-common-sub-sequence-leet-1143.cpp)
 
@@ -109,7 +109,7 @@ vice versa。
 * [l5, u16: dp进阶2, ex3: 最长公共子序列](https://oj.youdao.com/course/37/285/1#/1/14239)
 * [acwing 3510. 最长公共子序列](https://www.acwing.com/problem/content/3513/)
 
-上述朴素 dp 解法，是 `O(n^2)` 的，会被 10^5 卡死。本改进可以做到 `O(nlogn)`。
+上述朴素 dp 解法，是 `O(n²)` 的，会被 `10⁵` 卡死。本改进可以做到 `O(nlogn)`。
 
 <font color="brown">重要！前提：两个序列中，至少有一个是没有重复元素的。</font>
 
