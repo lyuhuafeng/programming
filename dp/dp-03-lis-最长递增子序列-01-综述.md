@@ -135,6 +135,8 @@ c++ 代码的两个实现
     }
 ```
 
+相关题目：[`1713.` 得到子序列的最少操作次数](leet-1713-得到子序列的最少操作次数.md)
+
 这里有个讲解，可参考一下
 
 https://leetcode.cn/problems/longest-increasing-subsequence/solutions/14796/dong-tai-gui-hua-she-ji-fang-fa-zhi-pai-you-xi-jia/

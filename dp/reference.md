@@ -278,8 +278,6 @@ https://github.com/youngyangyang04/leetcode-master/blob/master/problems/%E8%83%8
 https://github.com/ShusenTang/LeetCode
 
 
-https://blog.51cto.com/acoier/5319249
-lcs -> lis
 
 dilworth
 https://blog.csdn.net/litble/article/details/85305561
