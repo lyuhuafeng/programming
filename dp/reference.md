@@ -237,7 +237,7 @@ https://github.com/itcharge/LeetCode-Py/blob/main/Contents/10.Dynamic-Programmin
 
 - 416. 分割等和子集：[题解](背包-1-01背包-恰好装满-分割等和子集-leet416.md)
 - 494. 目标和：[题解](背包-1-01背包-恰好装满-目标和-leet494.md)
-- 1049. 最后一块石头的重量 II：[题解]()
+- 1049. 最后一块石头的重量 II：[题解](leet-1094-最后一块石头的重量ii.md)
 
 完全
 
