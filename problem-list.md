@@ -1,4 +1,7 @@
 
+- [179. 最大数](https://leetcode.cn/problems/largest-number/) 看 leet 上我的提交
+
+
 # 双指针
 
 - [11. 盛最多水的容器](https://leetcode.cn/problems/container-with-most-water/)：解法：[`container-with-most-water-leet-11.go`](code/container-with-most-water-leet-11.go)
@@ -6,11 +9,11 @@
 
 # [byte dance list](https://mp.weixin.qq.com/s/Mczq-QdgQ7UwFlCika09Vg)
 
-- [15. 三数之和](https://leetcode.cn/problems/3sum/)  看 leet 上我的解答
+- [15. 三数之和](https://leetcode.cn/problems/3sum/) 代码：[`leet-15-3sum.cpp`](code/leet-15-3sum.cpp)
 3. 无重复字符的最长子串
-146. LRU缓存机制
-25. K个一组翻转链表
-206. 反转链表
+- [146. LRU缓存机制](https://leetcode.cn/problems/lru-cache/) 代码：[`leet-146-lru-cache.cpp`](code/leet-146-lru-cache.cpp)
+- [25. K个一组翻转链表](https://leetcode.cn/problems/reverse-nodes-in-k-group/) 代码：[``]()
+- [206. 反转链表](https://leetcode.cn/problems/reverse-linked-list/) 代码：[`leet-206-reverse-linked-list.cpp`](code/leet-206-reverse-linked-list.cpp)
 215. 数组中的第K个最大
 103. 二叉树的锯齿形层次
 121. 买卖股票的最佳时机
