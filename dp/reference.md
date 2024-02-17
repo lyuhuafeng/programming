@@ -256,8 +256,13 @@ https://github.com/itcharge/LeetCode-Py/blob/main/Contents/10.Dynamic-Programmin
 多维
 
 - 474. 一和零：[题解](背包-1-01背包-两维-一和零-leet474.md)
-- 879. 盈利计划：[题解]()
+- 879. 盈利计划：[3leaf 题解, to study later](https://mp.weixin.qq.com/s?__biz=MzU4NDE3MTEyMA==&mid=2247488103&idx=1&sn=5767d5691b6c87f15ca3182c3742fc79)
 - 1995. 统计特殊四元组：[题解](leet-1995-统计特殊四元组.md)
+
+树形
+
+- 洛谷 P1064（NOIP2006 提高组）金明的预算方案：
+
 
 3leaf 背包 doc list https://leetcode.cn/problems/count-special-quadruplets/solutions/1181794/gong-shui-san-xie-yi-ti-si-jie-mei-ju-ha-gmhv/
 
