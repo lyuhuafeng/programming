@@ -189,11 +189,6 @@ https://github.com/shinezzz/LeetCode-Topic/tree/master/5%E5%8A%A8%E6%80%81%E8%A7
 
 - [980. 不同路径 III](https://leetcode.cn/problems/unique-paths-iii)
 
-
-
-
-
-
 # counting DP 计数
 
 - [62. 不同路径](https://leetcode.cn/problems/unique-paths/) easy
@@ -246,9 +241,12 @@ https://github.com/itcharge/LeetCode-Py/blob/main/Contents/10.Dynamic-Programmin
 - 139. 单词拆分：[题解](leet-139-单词拆分.md)
 - 377. 组合总和 Ⅳ：[题解](leet-377-组合总和iv.md)
 - 638. 大礼包：[题解]()
-- 1449. 数位成本和为目标值的最大数字：[题解]()
+- 1449. 数位成本和为目标值的最大数字：[题解](leet-1449-数位成本和为目标值的最大数字.md)
 
 多重
+
+- 30. 串联所有单词的子串
+- 1787. 使所有区间的异或结果为零
 
 分组
 
@@ -257,10 +255,11 @@ https://github.com/itcharge/LeetCode-Py/blob/main/Contents/10.Dynamic-Programmin
 
 多维
 
-- 474. 一和零：[题解]()
+- 474. 一和零：[题解](背包-1-01背包-两维-一和零-leet474.md)
 - 879. 盈利计划：[题解]()
-- 1995. 统计特殊四元组：[题解]()
+- 1995. 统计特殊四元组：[题解](leet-1995-统计特殊四元组.md)
 
+3leaf 背包 doc list https://leetcode.cn/problems/count-special-quadruplets/solutions/1181794/gong-shui-san-xie-yi-ti-si-jie-mei-ju-ha-gmhv/
 
 # references 
 
