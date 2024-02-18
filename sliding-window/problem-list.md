@@ -122,9 +122,5 @@ void slidingWindow(string s, string t) {
 
 - [题目列表](https://leetcode.cn/tag/sliding-window/problemset/)
 
-- [18. 四数之和](https://leetcode.cn/problems/4sum/): 双指针，不涉及到滑动窗口 [`sum4-leet-18.cpp`](code/sum4-leet-18.cpp)
-
 
 https://cloud.tencent.com/developer/article/2313991?areaId=106001
-2ptrs
-https://leetcode.cn/problems/minimum-absolute-difference-between-elements-with-constraint/

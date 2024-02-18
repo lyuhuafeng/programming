@@ -7,11 +7,12 @@ references:
 目录
 - [solution 1. 按列（竖直方向），每个柱子顶上竖直方向能存多少水](#sol-1-vertical)
 - [solution 2. 最佳解法，1 的改进](#sol-2)
+- [双指针扫描一次](#sol-2ptr)
 - [面积法](#sol-2-area)
 - [堆法，按列](#sol-2-heap)
 - [solution 3. 按行](#sol-3)
   - [直观解法](#sol-3-1)
-  - [正确、但不直观的解法，也是 leetcode 官方解法](#sol-3-2)
+  - [不直观解法，leetcode 官方解法](#sol-3-2)
 
 # <a id="sol-1-vertical"></a>solution 1. 按列（竖直方向），每个柱子顶上竖直方向能存多少水
 
@@ -75,65 +76,97 @@ references:
 该思路的 go 代码版本：[`trapping-rain-leet-42-vertically-12-perfect.go`](code/trapping-rain-leet-42-vertically-12-perfect.go)。与 C++ 版本不同的是，在开始遍历求 maxh 的过程中，记录了 l、r 的位置；后面再遍历求和时，直接用 l、r 位置，不用跟 maxh 比较来确定位置。
 
 ```go
-func trap(height []int) int {
-    var maxh int = -1 // 全局最高柱子高度
-    li, ri := -1, -1  // 最左、最右的 maxh 的下标
-    for i, h := range height {
-        if h > maxh {
-            maxh = h
-            li, ri = i, i // 同时更新最左边、最右边的 maxh 下标
-        } else if h == maxh {
-            ri = i // 只更新最右边的 maxh 下标
+    func trap(height []int) int {
+        var maxh int = -1 // 全局最高柱子高度
+        li, ri := -1, -1  // 最左、最右的 maxh 的下标
+        for i, h := range height {
+            if h > maxh {
+                maxh = h
+                li, ri = i, i // 同时更新最左边、最右边的 maxh 下标
+            } else if h == maxh {
+                ri = i // 只更新最右边的 maxh 下标
+            }
         }
-    }
 
-    sum := 0
-    maxh_sofar := height[0]
-    for i := 1; i < li; i++ {
-        if h := height[i]; h < maxh_sofar { // 这个h的赋值，可以覆盖到下面的 else if
-            sum += (maxh_sofar - h) * 1
-        } else if h > maxh_sofar {
-            maxh_sofar = h
+        sum := 0
+        maxh_sofar := height[0]
+        for i := 1; i < li; i++ {
+            if h := height[i]; h < maxh_sofar { // 这个h的赋值，可以覆盖到下面的 else if
+                sum += (maxh_sofar - h) * 1
+            } else if h > maxh_sofar {
+                maxh_sofar = h
+            }
         }
-    }
-    maxh_sofar = height[len(height) - 1]
-    for i := len(height) - 1 - 1; i > ri; i-- {
-        if h := height[i]; h < maxh_sofar {
-            sum += (maxh_sofar - h) * 1
-        } else if h > maxh_sofar {
-            maxh_sofar = h
+        maxh_sofar = height[len(height) - 1]
+        for i := len(height) - 1 - 1; i > ri; i-- {
+            if h := height[i]; h < maxh_sofar {
+                sum += (maxh_sofar - h) * 1
+            } else if h > maxh_sofar {
+                maxh_sofar = h
+            }
         }
+        for i := li + 1; i < ri; i++ {
+            sum += (maxh - height[i]) * 1
+        }
+        return sum
     }
-    for i := li + 1; i < ri; i++ {
-        sum += (maxh - height[i]) * 1
-    }
-    return sum
-}
 ```
 
 该思路甚至可以再简化些。对某个位置 `i`，其实就是找「`i` 往左最高的」和「`i` 往右最高的」。换个方向，就是「从左起点往右，直到 `i`，最高的」和「从右终点往左，直到 `i`，最高的」。上个思路，要统计全局最高的，这样一个或两个方向的最高的就不用显式统计了，但代码逻辑较多。现在再简化一下，分别用两个数组记录所有的，代码能少很多。go 代码：[`trapping-rain-leet-42-vertically-12-perfect-more.go`](code/trapping-rain-leet-42-vertically-12-perfect-more.go)
 
 ```go
-// hl[i]: 从左边界统计，到 i 为止，最大的。max{ height[i] }, ∀ i ∈ [0, i]
-// hr[i]: 从右边界统计，到 i 为止，最大的。max{ height[i] }, ∀ i ∈ [i, n-1]
-func trap(height []int) int {
-    n := len(height)
-    hl, hr := make([]int, n), make([]int, n)
-    maxhl, maxhr := -1, -1
-    for i, h := range height {
-        j := n - 1 - i
-        maxhl, maxhr = max(maxhl, h), max(maxhr, height[j])
-        hl[i], hr[j] = maxhl, maxhr
+    // hl[i]: 从左边界统计，到 i 为止，最大的。max{ height[i] }, ∀ i ∈ [0, i]
+    // hr[i]: 从右边界统计，到 i 为止，最大的。max{ height[i] }, ∀ i ∈ [i, n-1]
+    func trap(height []int) int {
+        n := len(height)
+        hl, hr := make([]int, n), make([]int, n)
+        maxhl, maxhr := -1, -1
+        for i, h := range height {
+            j := n - 1 - i
+            maxhl, maxhr = max(maxhl, h), max(maxhr, height[j])
+            hl[i], hr[j] = maxhl, maxhr
+        }
+        sum := 0
+        // 去掉头尾，因头尾两柱肯定无法盛水
+        for i := 1; i <= n - 1 - 1; i++ {
+            sum += (min(hl[i], hr[i]) - height[i]) * 1
+        }
+        return sum
     }
-    sum := 0
-    // 去掉头尾，因头尾两柱肯定无法盛水
-    for i := 1; i <= n - 1 - 1; i++ {
-        sum += (min(hl[i], hr[i]) - height[i]) * 1
-    }
-    return sum
-}
 ```
 
+# <a id="sol-2ptr"></a>双指针扫描一次
+
+看一种只需要遍历一次即可的解法，这个算法需要
+两个指针 l 和 r 开始分别指向首尾位置，从两边向中间扫描。若 l 较低，则从左向右扫，l++；若 r 较低，则从右向左扫，r--。左右两边各维护一个「当前最高」maxl、maxr。以左边为例，若 `maxl > h[l]`，则「maxl 所在位置」与「maxl 的 next higher 所在位置」构成了一个槽，且 maxl 是较矮的一端。（考虑阶梯型图像 to add pic）。当前 l 在这个槽内，顶上可装水 `maxl - h[l]`。右边类似。直到 l、r 重合，结束。
+
+代码：[`trapping-rain-leet-42-2ptrs.cpp`](code/trapping-rain-leet-42-2ptrs.cpp)
+
+```cpp
+    int trap(vector<int>& height) {
+        int l = 0, r = height.size() - 1;
+        int maxl = 0, maxr = 0;
+        int ans = 0;
+        while (l < r) {
+            if (height[l] < height[r]) {
+                if (height[l] > maxl) {
+                    maxl = height[l];
+                } else {
+                    ans += maxl - height[l];
+                }
+                l++;
+            } else {
+                if (height[r] > maxr) {
+                    maxr = height[r];
+                } else {
+                    ans += maxr - height[r];
+                }
+                r--;
+            }
+        }
+        return ans;
+    }
+```
 # <a id="sol-2-area"></a>面积法
 
 inspired by 3leaf
