@@ -33,11 +33,17 @@ https://leetcode.cn/problems/minimum-absolute-difference-between-elements-with-c
 ## 快慢指针
 
 - 27. 移除元素 [两种题解：快慢指针、左右指针](leet-27-移除元素.md)
+  - 参考 [26. 删除有序数组中的重复项](https://leetcode.cn/problems/remove-duplicates-from-sorted-array/solutions/575549/shua-chuan-lc-jian-ji-shuang-zhi-zhen-ji-2eg8/)
+  - 参考 [80. 删除有序数组中的重复项 II](https://leetcode.cn/problems/remove-duplicates-from-sorted-array-ii/solutions/702970/gong-shui-san-xie-guan-yu-shan-chu-you-x-glnq/)
+
+- 283. 移动零 [题解](leet-283-移动〇.md)
+
+- 141. 142. 环形链表系列 [题解](leet-141-142-环形链表.md)
+- 287. 寻找重复数 [题解，将数组理解为链表的模拟](leet-287-寻找重复数.md)
 
 - 345. 反转字符串中的元音字母. [题解](https://leetcode.cn/problems/reverse-vowels-of-a-string/submissions/502688780/)
 - 680. 验证回文串 II [题解](https://leetcode.cn/problems/valid-palindrome-ii/submissions/502693587/)
 
 - 88. 合并两个有序数组 [题解](https://leetcode.cn/problems/merge-sorted-array/submissions/471274273/)
-- 141. 环形链表 [题解](https://leetcode.cn/problems/linked-list-cycle/submissions/471274987/) 快慢指针。若 head 指向自己，也算环。开始 `b = a->next`，以免直接 while 结束。
 
 

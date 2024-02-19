@@ -17,6 +17,16 @@
         }
         return i;
     }
+    // for 循环的稍变化的写法
+    int removeElement(vector<int>& nums, int val) {
+        int i = 0;
+        for (int jv : nums) {
+            if (jv != val) {
+                nums[i++] = jv; // 大量重复，但结果正确
+            }
+        }
+        return i;
+    }
 
     int removeElement(vector<int>& nums, int val) {
         int i = 0, j = 0; // i:slow, j:fast
@@ -64,3 +74,53 @@
         return i + 1;
     }
 ```
+
+# 左右指针，另一种实现
+
+只要 l 值为 val，就用 r 值赋值，即使 r 值也有可能为 val。但赋值后，只是 r 移动，l 不动，所以下次发现 l 值还是 val，又会被赋值。
+
+```cpp
+// r 为 开区间
+    int removeElement(vector<int>& nums, int val) {
+        int l = 0, r = nums.size();
+        while (l < r) {
+            if (nums[l] == val) {
+                nums[l] = nums[r - 1];
+                r--;
+            } else {
+                l++;
+            }
+        }
+        return l;
+    }
+// r 为 闭区间
+    int removeElement(vector<int>& nums, int val) {
+        int l = 0, r = nums.size() - 1;
+        while (l <= r) {
+            if (nums[l] == val) {
+                nums[l] = nums[r];
+                r--;
+            } else {
+                l++;
+            }
+        }
+        return l;
+    }
+```
+
+下面是另一种写法，用 for 循环代替 while 循环，但写法有些别扭，详见注释。
+
+```cpp
+    int removeElement(vector<int>& nums, int val) {
+        int j = nums.size() - 1;
+        for (int i = 0; i <= j; i++) {
+            if (nums[i] == val) {
+                swap(nums[i], nums[j]);
+                i--, j--; // i-- 的目的是为了抵消 for 循环的 i++
+            }
+        }
+        // 此时 i == j + 1。所以其实 return i 也可以。但变量 i 现在不可见，所以用 j+1。
+        return j + 1;
+    }
+```
+
