@@ -10,7 +10,7 @@
 
 
 
-- 左右指针：需要两个指针，一个指向开头，一个指向末尾，然后向中间遍历，直到满足条件或者两个指针相遇
+- 左右对撞指针：需要两个指针，一个指向开头，一个指向末尾，然后向中间遍历，直到满足条件或者两个指针相遇
 - 快慢指针：需要两个指针，开始都指向开头，根据条件不同，快指针走得快，慢指针走的慢，直到满足条件或者快指针走到结尾
 - 后序指针：常规指针操作是从前向后便利，对于合并和替换类型题，防止之前的数据被覆盖，双指针需从后向前便利
 
@@ -29,21 +29,33 @@ https://leetcode.cn/problems/minimum-absolute-difference-between-elements-with-c
 - 633. 平方数之和. [题解](https://leetcode.cn/problems/sum-of-square-numbers/submissions/471271654/)
 - 240. 搜索二维矩阵 II
 - 524. 通过删除字母匹配到字典里最长单词 [题解](leet-524-通过删除字母匹配到字典里最长单词.md)
+- 713. 乘积严格小于 K 的子数组 [代码](https://leetcode.cn/problems/subarray-product-less-than-k/submissions/503025321/)
+- 977. 有序数组的平方 [代码，类似归并](https://leetcode.cn/problems/squares-of-a-sorted-array/submissions/503031908/)
+- 88. in-place 合并两个有序数组 [题解，归并变化](https://leetcode.cn/problems/merge-sorted-array/submissions/471274273/)
+- 75. 荷兰国旗颜色分类 [题解，类似 partition 过程](leet-75-荷兰国旗颜色分类.md)
+- 881. 救生艇 [题解](leet-881-救生艇.md)
 
 ## 快慢指针
 
-- 27. 移除元素 [两种题解：快慢指针、左右指针](leet-27-移除元素.md)
-  - 参考 [26. 删除有序数组中的重复项](https://leetcode.cn/problems/remove-duplicates-from-sorted-array/solutions/575549/shua-chuan-lc-jian-ji-shuang-zhi-zhen-ji-2eg8/)
-  - 参考 [80. 删除有序数组中的重复项 II](https://leetcode.cn/problems/remove-duplicates-from-sorted-array-ii/solutions/702970/gong-shui-san-xie-guan-yu-shan-chu-you-x-glnq/)
+- 27. 移除值为 val 的元素 [两种题解：快慢指针、左右指针](leet-27-移除元素.md)
+- 26. 80. 删除有序数组中的重复项系列 [通解](leet-26-80-删除有序数组中的重复项.md)
+- 83. 82. 删除排序链表中的重复元素系列 [链表操作，题解](leet-83-82-删除排序链表中的重复元素.md)
 
 - 283. 移动零 [题解](leet-283-移动〇.md)
 
 - 141. 142. 环形链表系列 [题解](leet-141-142-环形链表.md)
+876. 链表的中间结点
+若干链表题目 https://leetcode.cn/problems/middle-of-the-linked-list/solutions/165152/kuai-man-zhi-zhen-zhu-yao-zai-yu-diao-shi-by-liwei/
+
 - 287. 寻找重复数 [题解，将数组理解为链表的模拟](leet-287-寻找重复数.md)
+- 202. 快乐数 [快慢指针解法](leet-202-快乐数.md)
 
 - 345. 反转字符串中的元音字母. [题解](https://leetcode.cn/problems/reverse-vowels-of-a-string/submissions/502688780/)
 - 680. 验证回文串 II [题解](https://leetcode.cn/problems/valid-palindrome-ii/submissions/502693587/)
 
-- 88. 合并两个有序数组 [题解](https://leetcode.cn/problems/merge-sorted-array/submissions/471274273/)
 
+固定间距指针
+- 1456. 定长子串中元音的最大数目 [代码](https://leetcode.cn/problems/maximum-number-of-vowels-in-a-substring-of-given-length/submissions/503089055/)
+
+- 101. 对称二叉树 [递归、递推两种方法](https://leetcode.cn/problems/symmetric-tree/submissions/475784579/)
 
