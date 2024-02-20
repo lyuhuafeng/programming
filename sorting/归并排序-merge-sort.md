@@ -51,12 +51,12 @@
     }
 
     void merge_sort(int a[], int n, int t[]) {
-        // cur: 当前要 merge 的子区间的长度，从 1 到 n - 1，每次加倍
+        // cur: 当前要 merge 的子区间的「半长度」，从 1 开始，每次加倍最大不超过 n - 1，
         for (int cur = 1; cur <= n - 1; cur *= 2) {
             for (int l = 0; l < n - 1; l += 2 * cur) {
                 int m = l + cur - 1;
                 int r = min(l + 2 * cur - 1, n - 1);
-                merge_lists(a, l, m, r, t); // 与递归法里的 merge_lists() 一样
+                merge_lists(a, l, m, r, t); // [l,m] [m+1,r] 与递归法里的 merge_lists() 一样
             }
         }
     }
@@ -78,6 +78,21 @@
         // 最后 nums1 里剩的元素，自然排在 nums1 最前部，不用再处理。
     }
 ```
+
+出自 [`977.` 有序数组的平方](https://leetcode.cn/problems/squares-of-a-sorted-array/)。双指针，从数组两端往中间移动，每次比较两端元素，决定 merge 顺序。
+
+```cpp
+    vector<int> sortedSquares(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> res(n);
+        int l = 0, r = n - 1, k = n - 1;
+        for (int l = 0, r = n - 1, k = n - 1; k >= 0; k--) {
+            res[k] = nums[l] * nums[l] < nums[r] * nums[r] ? pow(nums[r--], 2) : pow(nums[l++], 2);
+        }
+        return res;
+    }
+```
+
 
 # 链表的归并排序（递归法）
 
@@ -106,8 +121,7 @@
     }
 
     Node *sorted_merge(Node *a, Node *b) {
-        Node dummy = {0, nullptr};
-        Node *p = &dummy;
+        Node dummy = {0, nullptr}, *p = &dummy;
         while (a && b) {
             if (a->val < b->val) {
                 p->next = a; a = a->next;

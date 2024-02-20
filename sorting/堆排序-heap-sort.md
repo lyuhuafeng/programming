@@ -16,7 +16,7 @@ Ordering property
 - 下标从 `0` 开始，`i` 的两个子节点下标为 `2*i+1` 和 `2*i+2`，`i` 的父节点为 `(i-1)/2`。
 - 每个 parent >= 所有 child 节点（max-heap 最大堆）
 - 两个子节点谁大谁小不一定
-- 故，最大元素在: 根节点、堆顶、`array[0]`
+- 故，最大元素在：根节点、堆顶、`array[0]`
 
 # 两个基本操作 sift down, sift up
 
@@ -53,7 +53,7 @@ Ordering property
 ```cpp
     void sift_up(T a[], int child) {
         T val = a[child];
-        while ((parent = (child - 1) / 2) >= 0) {
+        while ((parent = (child - 1) / 2) >= 0) { // 相当于 child > 0
             if (a[parent] >= val) {
                 return;
             }

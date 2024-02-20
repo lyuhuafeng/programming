@@ -23,8 +23,7 @@ void split(Node *h, Node* &a, Node* &b) {
 }
 
 Node *sorted_merge(Node *a, Node *b) {
-    Node dummy = {0, nullptr};
-    Node *p = &dummy;
+    Node dummy = {0, nullptr}, *p = &dummy;
     while (a && b) {
         if (a->val < b->val) {
             p->next = a; a = a->next;

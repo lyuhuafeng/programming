@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std;
 
-void insert_sort(int a[], int n) {
+void insertion_sort(int a[], int n) {
     for (int i = 1; i <= n - 1; i++) {
         // 把位置 i 的元素(未排序区第一个元素)放到到合适的位置
         // 如果 a[i] 比前一个小，说明 a[i] 位置不对，需要挪。
@@ -20,7 +20,7 @@ void insert_sort(int a[], int n) {
     }
 }
 
-void insert_sort_2(int a[], int n) {
+void insertion_sort_2(int a[], int n) {
     for (int i = 1; i <= n - 1; i++) {
         // 把 a[i] (未排序区第一个元素) 插入到合适的位置
         // 只要后面的小（已排序区是从小到大排），就往前交换
@@ -38,6 +38,6 @@ void display(int nums[], int n) {
 }
 int main() {
     int nums[] = {6, 1, 7, 8, 9, 3, 5, 4, 2};
-    insert_sort(nums, sizeof nums / sizeof(int));
+    insertion_sort(nums, sizeof nums / sizeof(int));
     display(nums, sizeof nums / sizeof nums[0]);
 }

@@ -44,7 +44,8 @@ https://leetcode.cn/problems/minimum-absolute-difference-between-elements-with-c
 - 283. 移动零 [题解](leet-283-移动〇.md)
 
 - 141. 142. 环形链表系列 [题解](leet-141-142-环形链表.md)
-876. 链表的中间结点
+- 876. 链表的中间结点
+- 19. 删除链表的倒数第 N 个结点
 若干链表题目 https://leetcode.cn/problems/middle-of-the-linked-list/solutions/165152/kuai-man-zhi-zhen-zhu-yao-zai-yu-diao-shi-by-liwei/
 
 - 287. 寻找重复数 [题解，将数组理解为链表的模拟](leet-287-寻找重复数.md)
@@ -56,6 +57,8 @@ https://leetcode.cn/problems/minimum-absolute-difference-between-elements-with-c
 
 固定间距指针
 - 1456. 定长子串中元音的最大数目 [代码](https://leetcode.cn/problems/maximum-number-of-vowels-in-a-substring-of-given-length/submissions/503089055/)
+
+- 1047. 删除字符串中的所有相邻重复项 [模拟 stack，代码](https://leetcode.cn/problems/remove-all-adjacent-duplicates-in-string/submissions/503099531/)
 
 - 101. 对称二叉树 [递归、递推两种方法](https://leetcode.cn/problems/symmetric-tree/submissions/475784579/)
 

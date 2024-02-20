@@ -3,7 +3,7 @@ using namespace std;
 
 void display(int[], int);
 
-void select_sort(int a[], int n) {
+void selection_sort(int a[], int n) {
     for (int i = 0; i < n; i++) {
         // 从未排序区 [i, n - 1] 里挑出最小的
         // 位置 i 是未排序区的起点。
@@ -27,7 +27,7 @@ int main() {
     int nums[] = {6, 1, 9, 7, 8, 3, 5, 4, 2, 0};
     int len = sizeof nums / sizeof(int);
     display(nums, len);
-    select_sort(nums, len);
+    selection_sort(nums, len);
     display(nums, len);
     return 0;
 }
