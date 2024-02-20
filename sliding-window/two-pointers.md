@@ -44,9 +44,17 @@ https://leetcode.cn/problems/minimum-absolute-difference-between-elements-with-c
 - 283. 移动零 [题解](leet-283-移动〇.md)
 
 - 141. 142. 环形链表系列 [题解](leet-141-142-环形链表.md)
+- 161. 相交链表 [代码](https://leetcode.cn/problems/intersection-of-two-linked-lists/submissions/503365899/)
 - 876. 链表的中间结点
 - 19. 删除链表的倒数第 N 个结点
-若干链表题目 https://leetcode.cn/problems/middle-of-the-linked-list/solutions/165152/kuai-man-zhi-zhen-zhu-yao-zai-yu-diao-shi-by-liwei/
+- 206. 翻转链表; 25. k个一组翻转链表: [题解](leet-206-25-翻转链表-k个一组翻转链表.md)
+- 24. 两两交换链表中的节点。可认为是 25 的特例，但这里没用 25 的解法：[代码](https://leetcode.cn/problems/swap-nodes-in-pairs/submissions/475738529/)
+
+- 328. 奇偶链表 [代码](https://leetcode.cn/problems/odd-even-linked-list/submissions/503371882/)
+- 203. 移除特定值的链表元素 [代码](https://leetcode.cn/problems/remove-linked-list-elements/submissions/503373893/)
+- 21. 合并两个有序链表 [代码](https://leetcode.cn/problems/merge-two-sorted-lists/submissions/475623607/)
+- 2. 两数相加. [代码](https://leetcode.cn/problems/add-two-numbers/submissions/475726869/)
+- 148. 排序链表（链表的 merge sort）[代码](https://leetcode.cn/problems/sort-list/submissions/475867769/)
 
 - 287. 寻找重复数 [题解，将数组理解为链表的模拟](leet-287-寻找重复数.md)
 - 202. 快乐数 [快慢指针解法](leet-202-快乐数.md)
