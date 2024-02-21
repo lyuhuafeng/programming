@@ -1,4 +1,5 @@
-# [leet 236. 二叉树的最近公共祖先](https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree)
+# [236. 二叉树的最近公共祖先](https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree)
+# [LCR 194. 二叉树的最近公共祖先](https://leetcode.cn/problems/er-cha-shu-de-zui-jin-gong-gong-zu-xian-lcof/)
 
 求：该树中两个指定节点的最近公共祖先。
 
@@ -15,13 +16,13 @@ Definition for a binary tree node.
 
 # 法一：官方思路二
 
-官方思路二，我的实现。官方用 dfs，我用层序遍历。
+官方思路二，我的实现。官方用 dfs，我用层序遍历（借助 queue 但不是 deque）。
 
-deque 层序遍历，用 map 记录每个 val 的父节点；不放入 null 节点。
+层序遍历，用 map 记录每个 val 的父节点；不放入 null 节点。
 
-从 p 开始，逆序，用 set 记录 p 的所有祖先节点。
+从 p 开始，在 map 里持续找父（祖先）节点，用 set 记录 p 的所有祖先节点。
 
-从 q 开始，逆序，遍历所有 q 的祖先节点，遇到 p 的就是答案。
+从 q 开始，在 map 里持续找，遍历 q 的所有祖先节点，遇到「p 祖先 set」里的就是答案。
 
 ```cpp
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
@@ -29,20 +30,17 @@ deque 层序遍历，用 map 记录每个 val 的父节点；不放入 null 节�
             return root;
         }
         unordered_map<int, TreeNode *> m; // 每个节点的父节点
-        deque<TreeNode *> dq;
-        dq.push_front(root);
-        while (!dq.empty()) {
-            int len = dq.size();
-            while (len--) {
-                TreeNode *n = dq.back(); dq.pop_back();
-                if (n->left != nullptr) {
-                    m[n->left->val] = n;
-                    dq.push_front(n->left);
-                }
-                if (n->right != nullptr) {
-                    m[n->right->val] = n;
-                    dq.push_front(n->right);
-                }
+        queue<TreeNode *> qu;
+        qu.push(root);
+        while (!qu.empty()) {
+            TreeNode *n = qu.front(); qu.pop();
+            if (n->left != nullptr) {
+                m[n->left->val] = n;
+                qu.push(n->left);
+            }
+            if (n->right != nullptr) {
+                m[n->right->val] = n;
+                qu.push(n->right);
             }
         }
 
@@ -65,7 +63,7 @@ deque 层序遍历，用 map 记录每个 val 的父节点；不放入 null 节�
 
 # 法二：递归方法
 
-非官方。来自官方题解下面的吐槽。
+非官方。来自官方题解下面的吐槽。巧妙。
 
 ```cpp
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
