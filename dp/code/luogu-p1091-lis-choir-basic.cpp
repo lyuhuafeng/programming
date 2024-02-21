@@ -2,6 +2,8 @@
 #include <algorithm>
 using namespace std;
 
+// luogu ac, 2024.02.21
+
 int h[1005], f[1005], g[1005]; // 各数组范围是 [1, n]
 
 void lis(int n) {

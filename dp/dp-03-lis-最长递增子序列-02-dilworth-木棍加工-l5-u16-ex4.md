@@ -11,7 +11,7 @@
 
 ```
   定义 struct stick { l, w; }
-  两个对象 s1, s2。定义：若 (s1.l >= s2.l && s1.w && s2.w)，则 s1 在 s2 之前。
+  两个对象 s1, s2。定义：若 (s1.l ≥ s2.l && s1.w ≥ s2.w)，则 s1 在 s2 之前。
   (4,3)、(3,2) 两者 comparable，前者在后者之前。
   但 (4, 5) 和 (5,4) 这俩不 comparable，谁也不在谁之前。
 ```
@@ -34,7 +34,7 @@ antichain:
 
 - 偏序集上的 antichain (an antichain in a partially ordered set): is a set of elements no two of which are comparable to each other. 任意两个都是「不可比」的。
 
-若用 graph 来理解，chain 中的各顶点，根据其排序关系，可以构成一个链表；antichain 中的个顶点，两两之间都不能连通。
+若用 graph 来理解，chain 中的各顶点，根据其排序关系，可以构成一个单向连接的链表；antichain 中的个顶点，两两之间都不能连通。
 
 # Dilworth's theorem
 
@@ -72,13 +72,15 @@ antichain:
 
 5 根棍子，`(l,w)` 分别为 `(4,9),(5,2),(2,1),(3,5),(1,4)`。
 
-排序后为 `5,4  4,9  3,5  2,1  1,4`。
+排序后为 `(5,4),(4,9),(3,5),(2,1),(1,4)`。
 
 划分的两个 chain 分别是 `(5,2),(2,1)` 和 `(4,9),(3,5),(1,4)`。（加工时，chain 内顺序不能变，不同的 chain 可以交换顺序）
 
-想求 chain 的个数，需要找 anti-chain 的最大长度。anti-chain 其实是从每个 chain 中取出一个构成的，其各元素之间是「不可比」的。我们已经按 l （不严格）递减排序，所以找 w 时要按（严格）升序，这样保证每俩个之间都「不可比」。而 w 的严格升序，就是 w 的严格 LIS 长度。最后找到的，可能是 2->9, 2->5, 2->4, 1->4，长度都为 2，所以 chain 的个数也是 2。<font color="red">总觉得很绕，to think later</font>
+想求 chain 的个数，需要找 anti-chain 的最大长度。anti-chain 其实是从每个 chain 中取出一个构成的，其各元素之间是「不可比」的。我们已经按 l（不严格）递减排序，所以找 w 时要按（严格）升序，这样保证每俩个之间都「不可比」。而 w 的严格升序，就是 w 的严格 LIS 长度。最后找到的，可能是 2->9, 2->5, 2->4, 1->4，长度都为 2，所以 chain 的个数也是 2。<font color="red">总觉得很绕，to think later</font>
 
 代码：[`dilworth-sticks-l5-u16-ex4.cpp`](code/dilworth-sticks-l5-u16-ex4.cpp)
+
+# 其他例题
 
 - [354. 俄罗斯套娃信封问题](https://leetcode.cn/problems/russian-doll-envelopes/) 最长递增子序列 LIS (Longes Increasing Subsequence) 的变种。也是 partial ordered set，但是找最长 chain 的长度，而不是 chain 的个数，所以没用到 Dilworth 定理。排序时，两个维度，其中一个是逆序的。跟「木棍加工」不同。
 
