@@ -1,6 +1,8 @@
 # [871. 最低加油次数](https://leetcode.cn/problems/minimum-number-of-refueling-stops/)
 
-dp 或 greedy，代码：[`min-refuels-leet-871-dp-greedy.cpp`](code/min-refuels-leet-871-dp-greedy.cpp) leetcode ac
+dp 或 greedy
+
+代码：[`min-refuels-leet-871-dp-greedy.cpp`](code/min-refuels-leet-871-dp-greedy.cpp)
 
 # dp 法
 

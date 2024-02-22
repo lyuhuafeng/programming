@@ -220,6 +220,8 @@ https://github.com/itcharge/LeetCode-Py/blob/main/Contents/10.Dynamic-Programmin
 
 - [`124.` 二叉树中的最大路径和](https://leetcode.cn/problems/binary-tree-maximum-path-sum/): [解法笔记](leet-124-二叉树中的最大路径和.md)
 
+- [`luogu p1352.` 没有上司的舞会](https://www.luogu.com.cn/problem/P1352): [解法笔记](luogu-p1352-没有上司的舞会.md)
+
 
 # 背包
 

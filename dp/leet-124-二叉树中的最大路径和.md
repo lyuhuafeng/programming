@@ -2,10 +2,10 @@
 
 # 递归方法
 
-辅助函数 `maxGain(node)`，算某个节点的「最大贡献值」，即，以该节点为根的子树中，以该节点为起点，向下的一条路径，使该路径上的节点值之和最大。
+辅助函数 `maxGain(node)`，算某个节点的「最大贡献值」，即，以该节点为根的子树中，以该节点为起点，向下的某一条路径（左或右），使该路径上的节点值之和最大。
 - 空节点：0
 - 叶节点：自己的值
-- 内部节点：自己的值 + max(各 child 的「最大贡献值」) <font color="red">若每个 child 的最大贡献值都是负的，能不能不往下走，只要自己的？</font>
+- 内部节点：自己的值 + max{ 各 child 的「最大贡献值」} <font color="red">若每个 child 的最大贡献值都是负的，能不能不往下走，只要自己的？</font>
 
 这是个递归过程；对 root 调用，可得到每个子节点的。
 
@@ -26,11 +26,9 @@
         int left_gain = max(maxGain(node->left, max_sum), 0);
         int right_gain = max(maxGain(node->right, max_sum), 0);
 
-        // 节点的最大路径和，取决于：该节点的值，与该节点的左右子节点的最大贡献值
-        int priceNewpath = node->val + left_gain + right_gain;
-
-        // 更新答案
-        max_sum = max(max_sum, priceNewpath);
+        // 本 node 的最大路径和，并用于更新 global 最大路径和
+        int t_sum = node->val + left_gain + right_gain;
+        max_sum = max(max_sum, t_sum);
 
         // 返回节点的最大贡献值
         return node->val + max(left_gain, right_gain);

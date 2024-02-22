@@ -3,8 +3,11 @@
 #include <algorithm> // max()
 using namespace std;
 
+// 2024.02.22 luogu ac
+
 int dp[6000 + 1][2];
 
+// dp[i][0]: i 自己不参加；dp[i][1]: i 参加
 void happiest(int i, int n, vector<int> children[], int r[]) {
     dp[i][0] = 0;
     dp[i][1] = r[i];
@@ -21,9 +24,9 @@ int main() {
     for (int i = 1; i <= n; i++) {
         scanf("%d", &r[i]);
     }
-    vector<int> children[n + 1];
+    vector<int> children[n + 1]; // 每个人的 child 列表
     int is_child[n + 1];
-    memset(is_child, 0, sizeof is_child); // 初始化：都不是 son
+    fill_n(is_child, n + 1, 0); // 初始化：都不是 child
 
     for (int i = 1; i <= n - 1; i++) {
         int child, parent;
@@ -38,7 +41,7 @@ int main() {
             rt = i;
             break;
         }
-    } // rt 是最大的上级、整棵树的 root
+    } // rt 是最大的上级、整棵树的 root，唯一一个 is_child == 0 的
 
     happiest(rt, n, children, r);
     int ans = max(dp[rt][0], dp[rt][1]);
