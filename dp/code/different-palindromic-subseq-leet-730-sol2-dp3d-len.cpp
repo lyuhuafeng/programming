@@ -12,7 +12,7 @@ using namespace std;
         }
 
         for (int len = 2; len <= n; len++) { // len == 1 的情况，已经在初始化时处理了
-            for (int i = 0, j = i + len - 1; j <= n - 1; i++, j++) {
+            for (int i = 0, j = 0 + len - 1; j <= n - 1; i++, j++) { // 注意 j 的初值是 0+l-1 而不是 i+l-1，且 j 随 i 一起++
                 for (char k = 0, c = 'a'; c <= 'd'; k++, c++) {
                     if (s[i] == c && s[j] == c) {
                         dp[k][i][j] = 2;

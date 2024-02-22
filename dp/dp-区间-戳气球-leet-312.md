@@ -41,7 +41,7 @@ c++ 代码
     }
 ```
 
-go 代码：[stab-ballons-leet-312.go)](code/stab-ballons-leet-312.go)
+go 代码：[`stab-ballons-leet-312.go`](code/stab-ballons-leet-312.go)
 
 ```go
 func maxCoins(nums []int) int {

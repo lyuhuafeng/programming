@@ -19,10 +19,10 @@
 
 - 循环顺序：i 从小到大, j 从小到大
 - 递推初始值：`dp[0][j] = 1 或 0`, `dp[i][0] = 1 或 0`，根据具体推算
-- 要求的是最大长度，所以每次得到一个 dp 值，都要打擂台。当然，最后遍历一遍dp数组也行。
+- 要求的是最大长度，所以每次得到一个 dp 值，都要打擂台。当然，最后遍历一遍 dp 数组也行。
 
 ```cpp
-//// 法一：dp[][] 下标从 0 开始，初始化 dp[0][.]、dp[.][0] 时需要计算。
+// 法一：dp[][] 下标从 0 开始，初始化 dp[0][.]、dp[.][0] 时需要计算。
     int findLength(vector<int>& nums1, vector<int>& nums2) {
         int l1 = nums1.size();
         int l2 = nums2.size();
@@ -57,25 +57,19 @@
 ```
 
 ```cpp
-//// 法一：dp[][] 下标从 1 开始，初始化 dp[0][.]、dp[.][0] 时不用算，都是 0。
+// 法二：dp[][] 下标从 1 开始，初始化 dp[0][.]、dp[.][0] 时不用算，都是 0。代码也精简了些。
     int findLength(vector<int>& nums1, vector<int>& nums2) {
-        int l1 = nums1.size();
-        int l2 = nums2.size();
+        int l1 = nums1.size(), l2 = nums2.size();
         int dp[l1 + 1][l2 + 1];
+        fill_n(&dp[0][0], l2 + 1, 0); // dp[0][j] = 0;
 
         int maxl = 0;
-        for (int j = 0; j <= l2; j++) {
-            dp[0][j] = 0;
-        }
-
         for (int i = 1; i <= l1; i++) {
             dp[i][0] = 0;
             for (int j = 1; j <= l2; j++) {
                 if (nums1[i - 1] == nums2[j - 1]) {
                     dp[i][j] = dp[i - 1][j - 1] + 1;
-                    if (maxl < dp[i][j]) {
-                        maxl = dp[i][j];
-                    }
+                    maxl = max(maxl, dp[i][j]);
                 } else {
                     dp[i][j] = 0;
                 }

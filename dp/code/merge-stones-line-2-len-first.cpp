@@ -29,7 +29,7 @@ int main() {
         dp[i][i] = 0;
     } // 处理 len = 1 的情况
     for (int len = 2; len <= n; len++) { // 枚举 len，从 2 开始
-        for (int i = 0, j = i + len - 1; j <= n - 1; i++, j++) {
+        for (int i = 0, j = 0 + len - 1; j <= n - 1; i++, j++) {
             dp[i][j] = INT_MAX;
             for (int k = i; k < j; k++) {
                 dp[i][j] = min(dp[i][j], dp[i][k] + dp[k + 1][j] + ps[j + 1] - ps[i]);

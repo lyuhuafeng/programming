@@ -4,7 +4,7 @@
   - [luogu P1775](https://www.luogu.com.cn/problem/P1775)
   - [luogu P5569](https://www.luogu.com.cn/problem/P5569)
 - 合并石头，直线，每次合并k堆
-  - [leetcode 1000](https://leetcode.cn/problems/minimum-cost-to-merge-stones/)
+  - [leetcode 1000](https://leetcode.cn/problems/minimum-cost-to-merge-stones/)：[题解](leet-1000-合并石头每次k堆.md)
 - [NOI1995]石子合并；环形，每次合并两堆
   - [luogu P1880](https://www.luogu.com.cn/problem/P1880)
   - [l5-u17-ex1](https://oj.youdao.com/course/37/286/1#/1/14362)
@@ -43,7 +43,7 @@
     int dp[n][n];
     for (int i = 0; i < n; i++) { dp[i][i] = 0; } // 处理 len = 1 的情况
     for (int len = 2; len <= n; len++) { // 枚举 len，从 2 开始
-        for (int i = 0, j = i + len - 1; j <= n - 1; i++, j++) { // 枚举 (i,j)。只有这三句与上法不同
+        for (int i = 0, j = 0 + len - 1; j <= n - 1; i++, j++) { // 枚举 (i,j)。只有这三句与上法不同
             dp[i][j] = INT_MAX;
             for (int k = i; k < j; k++) {
                 dp[i][j] = min(dp[i][j], dp[i][k] + dp[k + 1][j] + ps[j + 1] - ps[i]);

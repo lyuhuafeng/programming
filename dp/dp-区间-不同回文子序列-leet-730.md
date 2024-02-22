@@ -8,7 +8,7 @@
 
 状态转移
 
-- 若 `s[i] == c` 且 `s[j] == c`，则 `s[i+1 .. j-1]` 中任何一个回文子序列在首尾加上 c，都构成一个以 c 为首尾的回文子序列。再额外加上 cc 和 c 这两个。所以，`dp(c, i, j) = 2 + sum{ dp(k, i+1, j-1) }, ∀ k ∈ 字符集`。注意，是求和！<font color="green">（问题：额外的 cc 和 c，可能重复，因为 `[i+1 .. j-1]` 范围内肯定已经有 c，也可能有 cc。想明白了：原范围内的 c 和 cc，在收尾加上 c 后，就不是 c 和 cc 了。新来的 cc 和 c，恰好不会重复。）</font>
+- 若 `s[i] == c` 且 `s[j] == c`，则 `s[i+1 .. j-1]` 中任何一个回文子序列在首尾加上 c，都构成一个以 c 为首尾的回文子序列。再额外加上 cc 和 c 这两个。所以，`dp(c, i, j) = 2 + sum{ dp(k, i+1, j-1) }, ∀ k ∈ 字符集`。注意，是求和！<font color="green">（问题：额外的 cc 和 c，可能重复，因为 `[i+1 .. j-1]` 范围内肯定已经有 c，也可能有 cc？想明白了：原范围内的 c 和 cc，在首尾加上 c 后，就不是 c 和 cc 了。新来的 cc 和 c，恰好不会重复。）</font>
 
 - 若 `s[i] == c` 且 `s[j] != c`，则 `dp(c, i, j) = dp(c, i, j-1)`
 
@@ -72,7 +72,8 @@
             for (int j = i + 1; j <= n - 1; j++) { // j == i 的情况，已经在初始化时处理了
 // 解法二
         for (int len = 2; len <= n; len++) { // len == 1 的情况，已经在初始化时处理了
-            for (int i = 0, j = i + len - 1; j <= n - 1; i++, j++) {
+            for (int i = 0, j = 0 + len - 1; j <= n - 1; i++, j++) {
+                // 注意 j 的初值是 0+l-1 而不是 i+l-1，且 j 随 i 一起++
 ```
 
 代码：[different-palindromic-subseq-leet-730-sol2-dp3d-len.cpp](code/different-palindromic-subseq-leet-730-sol2-dp3d-len.cpp)

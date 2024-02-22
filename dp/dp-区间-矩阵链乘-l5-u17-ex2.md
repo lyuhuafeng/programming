@@ -5,7 +5,7 @@
 
 区间 dp
 
-重点：`p*q` 的矩阵 x `q*r` 的矩阵，需要 `p*q*r` 次乘法。
+重点：`p*q` 的矩阵 × `q*r` 的矩阵，需要 `p*q*r` 次乘法。
 
 完整代码：
 - 标准做法，依次遍历长度、左边界、分割点 [matrix-chain-multiply-l5-u17-ex2-official.cpp](code/matrix-chain-multiply-l5-u17-ex2-official.cpp) youdao ac
