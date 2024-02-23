@@ -21,7 +21,7 @@ https://www.digitalocean.com/community/tutorials/thread-safety-in-java-singleton
 - public static factory method: 供外界得到其唯一实例。
 
 instance为什么一定要是static的？
-- 通过静态的类方法（getInstance) 获取instance，该方法是静态方法，instance由该方法返回（被该方法使用），如果instance非静态，无法被getInstance调用；
+- 通过静态的类方法 (getInstance) 获取instance，该方法是静态方法，instance由该方法返回（被该方法使用），如果instance非静态，无法被getInstance调用；
 - instance需要在调用getInstance时候被初始化，只有static的成员才能在没有创建对象时进行初始化。且类的静态成员在类第一次被使用时初始化后就不会再被初始化，保证了单例；
 - static类型的instance存在静态存储区，每次调用时，都指向的同一个对象。其实存放在静态区中的是引用，而不是对象。而对象是存放在堆中的。
 
@@ -41,18 +41,21 @@ instance为什么一定要是static的？
         private Singleton() { /* do something */ }
         public static Singleton getInstance() { return instance; }
     }
+
+    // 使用
+    Singleton x = Singleton.getInstance();
 ```
 
 static block 法，可处理创建单例时发生的 exception
 
-static block 中的语句，在类（被 Java ClassLoader）加载到内存时执行，而且只执行一次。通常用来创建静态资源。无法访问非静态变量。类中可以有多个 static block，但无意义。
+static block 中的语句，在类（被 Java ClassLoader）加载到内存时执行，而且只执行一次。在构造函数之前被执行。通常用来创建静态资源。无法访问非静态变量。类中可以有多个 static block，但无意义。
 
 ```java
     public class Singleton {
-        private static Singleton instance;
+        private static final Singleton instance;
         private Singleton() { /* do something */ }
 
-        // static block initialization for exception handling
+        // static block initialization for exception handling。在 constructor 之前执行。
         static {
             try { instance = new Singleton(); }
             catch (Exception e) { throw new RuntimeException("exception occurred"); }
@@ -65,10 +68,10 @@ static block 中的语句，在类（被 Java ClassLoader）加载到内存时�
 饿汉式单例优缺点：
 
 优点：
-单例对象的创建是线程安全的；
-获取单例对象时不需要加锁。
-缺点：单例对象的创建，不是延时加载。
-一般认为延时加载可以节省内存资源。但是延时加载是不是真正的好，要看实际的应用场景，而不一定所有的应用场景都需要延时加载。
+- 单例对象的创建是线程安全的；
+- 获取单例对象时不需要加锁。
+缺点：
+- 单例对象的创建，不是延时加载。（一般认为延时加载可节省内存资源。但也要看实际应用场景，不一定所有场景都要延时加载。）
 
 # 懒汉式 Lazy Initialization
 
@@ -90,14 +93,11 @@ static block 中的语句，在类（被 Java ClassLoader）加载到内存时�
     }
 ```
 
-懒汉式单例优缺点：
-
 优点：
-对象的创建是线程安全的。
-支持延时加载。
-缺点：获取对象的操作被加上了锁，影响了并发度。
-如果单例对象需要频繁使用，那这个缺点就是无法接受的。
-如果单例对象不需要频繁使用，那这个缺点也无伤大雅。
+- 对象的创建是线程安全的。
+- 支持延时加载。
+缺点：
+- 获取对象的操作，也被加上了锁，影响了并发度。（若需频繁使用单例对象，则此缺点无法接受；否则无伤大雅。）
 
 # 双重检测
 
@@ -107,39 +107,34 @@ static block 中的语句，在类（被 Java ClassLoader）加载到内存时�
 
 double-checked locking
 
-利用synchronized关键字 + volatile实现双重校验.
+利用 synchronized 关键字 + volatile 实现双重校验.
 
 further reading: https://www.digitalocean.com/community/tutorials/thread-safety-in-java-singleton-classes
 
 ```java
-public class Singleton {
-  private static Singleton instance = null; // 不实例化 (my question: default value 是啥)
-  private Singleton () { /* do something */ }
-
-  public static Singleton getInstance() {
-    if (instance == null) { // 第一次判断
-      synchronized(Singleton.class) { // 类级别的锁
-        if (instance == null) {       // 第二次判断，避免多线程并发时多次创建对象
-          instance = new Singleton();
+    public class Singleton {
+        private static Singleton instance = null; // 不实例化 (my question: default value 是啥)
+        private Singleton () { /* do something */ }
+    
+        public static Singleton getInstance() {
+            if (instance == null) { // 第一次判断
+                synchronized(Singleton.class) { // 类级别的锁
+                    if (instance == null) {     // 第二次判断，避免多线程并发时多次创建对象
+                        instance = new Singleton();
+                    }
+                }
+            }
+            return instance;
         }
-      }
     }
-    return instance;
-  }
-}
 ```
 
-这种实现方式在 Java 1.4 及更早的版本中有些问题，就是指令重排序，可能会导致 Singleton 对象被 new 出来，并且赋值给 instance 之后，还没来得及初始化，就被另一个线程使用了。
-
-要解决这个问题，需要给 instance 成员变量加上 volatile 关键字，从而禁止指令重排序。
-
-而高版本的 Java 已在 JDK 内部解决了这个问题，所以高版本的 Java 不需要关注这个问题。
+这种实现方式在 Java 1.4 及更早的版本中有些问题，就是指令重排序，可能会导致 Singleton 对象被 new 出来，并且赋值给 instance 之后，还没来得及初始化，就被另一个线程使用了。要解决这个问题，需给 instance 成员变量加上 volatile 关键字，以禁止指令重排序。高版本 Java 已在 JDK 内部解决了这个问题，不再需要关注。
 
 双重检测单例优点：
-
-对象的创建是线程安全的。
-支持延时加载。
-获取对象时不需要加锁。
+- 对象的创建是线程安全的
+- 支持延时加载
+- 获取对象时不需要加锁
 
 # 使用静态内部类 inner static helper class
 
@@ -147,10 +142,11 @@ Bill Pugh (William Pugh) 提出。Prior to Java 5, the Java memory model had a l
 
 https://www.digitalocean.com/community/tutorials/java-inner-class
 
-用静态内部类的方式实现单例类，利用了Java 静态内部类的特性：
+instance 作为静态内部类的成员。
 
-Java 加载外部类的时候，不会创建内部类的实例，只有在外部类使用到内部类的时候才会创建内部类实例。
-代码如下：
+利用特性：Java 加载外部类的时候，不会创建内部类的实例，只有在外部类使用到内部类的时候才会创建内部类实例。这样也不用考虑线程安全问题。
+
+不过，内部类的成员，是外部类的实例，直观感觉有点怪异。
 
 ```java
     public class Singleton {
@@ -173,18 +169,88 @@ SingletonInner 是一个静态内部类，当外部类 Singleton 被加载的时
 只有当调用 getInstance() 方法时，SingletonInner 才会被加载，这个时候才会创建 instance。instance 的唯一性、创建过程的线程安全性，都由 JVM 来保证。
 
 静态内部类单例优点：
+- 对象的创建是线程安全的
+- 支持延时加载
+- 获取对象时不需要加锁
 
-对象的创建是线程安全的。
-支持延时加载。
-获取对象时不需要加锁。
+# 反射攻击
 
-# 枚举
+<font color="red">以上各种方法，都不能抵抗「反射攻击」using reflection to destroy the Singleton pattern.</font>
 
-Joshua Bloch,  Effective Java 作者
+根据 java 反射，获取类 class 对象后，可用其构造函数创建新的实例。即使其构造函数是私有的，也可以调用。
+
+攻击代码，来自[这里](https://www.digitalocean.com/community/tutorials/java-singleton-design-pattern-best-practices-examples)。
+
+```java
+    import java.lang.reflect.Constructor;
+
+    // public class Singleton 代码略，用上面任何一种实现都可以
+
+    class single_test {
+        public static void main(String[] args) {
+            Singleton inst1 = Singleton.getInstance(); // 正常生成
+            Singleton inst2 = null, inst3 = null; // 下面根据反射生成
+            try {
+                Constructor[] constructors = Singleton.class.getDeclaredConstructors();
+                Constructor c = constructors[0];
+                c.setAccessible(true);
+                inst2 = (Singleton) c.newInstance();
+                inst3 = (Singleton) c.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.println(inst1);
+            System.out.println(inst2);
+            System.out.println(inst3); // 以上三个不同
+            System.out.println(inst1.hashCode());
+            System.out.println(inst2.hashCode());
+            System.out.println(inst3.hashCode()); // 以上三个不同
+        }
+    }
+```
+
+对抗方法：在私有的构造函数中，判断属性是否 null，若不是，则有问题，直接抛出异常。两种实现的代码如下。新增的判断，见注释所在行。
+
+但这种方法会显式抛出 exception，不够优雅。最好还是好像什么都没发生一样。
+
+```java
+    public class Singleton {
+        private static Singleton instance = null;
+        private Singleton () {
+            if (instance != null) { throw new RuntimeException(); } // 新增此句，对抗「反射攻击」
+        }
+        public static Singleton getInstance() {
+            if (instance == null) {
+                synchronized(Singleton.class) { if (instance == null) { instance = new Singleton(); } }
+            }
+            return instance;
+        }
+    }
+    
+    public class Singleton {
+        private Singleton() {}
+        private static class SingletonInner { private static final Singleton instance = new Singleton(); }
+    
+        public static Singleton getInstance() {
+            if (SingletonInner.instance != null) { throw new RuntimeException(); } // 新增此句，对抗「反射攻击」
+            return SingletonInner.instance;
+        }
+    }
+```
+
+# 枚举法
+
+Joshua Bloch, Effective Java 作者
 
 Java ensures that any enum value is instantiated only once in a Java program. Since Java Enum values are globally accessible, so is the singleton. The drawback is that the enum type is somewhat inflexible (for example, it does not allow lazy initialization).
 
 用枚举来实现单例，是最简单的方式。这种实现方式通过 Java 枚举类型本身的特性，保证了实例创建的线程安全性和实例的唯一性。
+
+与其他方法的明显区别：`Singleton.INSTANCE.getInstance()` 而不是 `Singleton.getInstance()`。
+
+枚举对抗攻击：
+- 天然可以对抗「反射攻击」：反射在通过 newInstance 创建对象时，会检查该类是否 enum 修饰，若是则抛出异常 (java.lang.IllegalArgumentException: Cannot reflectively create enum objects)，反射失败。
+- 天然可以对抗「反序列化攻击」：甚至不会抛出异常，很优雅，就像什么都没发生一样。
 
 ```java
     public enum Singleton {
@@ -192,79 +258,101 @@ Java ensures that any enum value is instantiated only once in a Java program. Si
         private String info;
         private Singleton(String info) { this.info = info; }
         public Singleton getInstance() { return INSTANCE; }
+
         // getters and setters
+        public String getInfo() { return info; }
+        public void setInfo(String info) { this.info = info; }
         public static void doSomething() { /* do something */ }
     }
 
     Singleton obj1 = Singleton.INSTANCE.getInstance();
-    System.out.println(obj1.getInfo()); //Initial enum info
+    System.out.println(obj1.getInfo()); // Initial enum info
     Singleton obj2 = Singleton.INSTANCE.getInstance();
     obj2.setInfo("New enum info");
+    // 下面两句输出结果一样，说明两个对象其实是同一个
     System.out.println(obj1.getInfo()); // New enum info
     System.out.println(obj2.getInfo()); // New enum info
+
+    // 下面试图用反射创建 inst2，失败并抛出异常
+    Singleton inst2 = null;
+    try {
+        Constructor[] constructors = Singleton.class.getDeclaredConstructors();
+        Constructor c = constructors[0];
+        c.setAccessible(true);
+        inst2 = (Singleton) c.newInstance();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
 ```
+
+简化版本，去掉了 info 字段，直接看地址是否一样。
+
+```java
+    public enum Singleton {
+        INSTANCE();
+        private Singleton() {};
+        public Singleton getInstance() { return INSTANCE; }
+    }
+
+    Singleton x = Singleton.INSTANCE.getInstance();
+    Singleton y = Singleton.INSTANCE.getInstance();
+    Singleton z = Singleton.INSTANCE.getInstance();
+    if (x == y && y == z) {
+        System.out.println("same object");
+    } else {
+        System.out.println("different objects");
+    }
+```
+
+更简化，连构造函数和 `getInstance()` 都不要了，实际上只有一个 `INSTANCE` 成员。调用时用 `Singleton.INSTANCE`，也省了。
+
+```java
+    public enum Singleton {
+        INSTANCE;
+        public void doSomething() { /* 你想要通过单例做什么, 就可以在这里面实现 */ }
+    }
+    // 使用
+    Singleton x = Singleton.INSTANCE;
+    x.doSomething();
+```
+
 
 https://juejin.cn/post/6955698964993671182
 
 方式1
-这种方式是将枚举作为内部类来使用, 毕竟枚举也是一个类, 因此枚举类也具有延迟加载的能力, 不同的是, 枚举类是通过jvm会保证枚举类的构造函数只会执行一次这个特点, 来保证单例的.
-写法
-csharp复制代码public class Singleton {
+这种方式是将枚举作为内部类来使用, 毕竟枚举也是一个类, 因此枚举类也具有延迟加载的能力, 不同的是, 
 
-    // 构造方法私有化 防止直接通过类创建实例
-    private Singleton() {
-    }
+利用特性：枚举类的构造函数，只会执行一次。用这个特点来保证单例。
 
-    public static Singleton getInstance() {
-        return SinletonHolder.INSTANCE.getInstance();
-    }
-
+```java
+    public class Singleton {
+        private Singleton() {}
     
-    // 枚举类
-    private enum SinletonHolder {
-        
-        INSTANCE;
-        
-        private Singleton instance;
-
-        // jvm会保证枚举类的构造函数只被执行一次
-        SinletonHolder() {
-            instance = new Singleton();
+        public static Singleton getInstance() {
+            return SinletonHolder.INSTANCE.getInstance();
         }
 
-        // 枚举类里的方法需要通过枚举值进行调用
-        private Singleton getInstance() {
-            return instance;
+        private enum SinletonHolder {
+            INSTANCE;
+            private Singleton instance;
+            SinletonHolder() { instance = new Singleton(); } // 枚举类的构造函数，只被执行一次
+            private Singleton getInstance() { return instance; } // 枚举类里的方法，要通过枚举值进行调用
         }
-        
     }
-}
+```
 
-方式2
-第二种方式, 就是直接将枚举类认为是我们的单例的类,
-写法
-csharp复制代码public enum Singleton {
+方式2 第二种方式, 就是直接将枚举类认为是我们的单例的类,
 
-    INSTANCE;
 
-    public void doSomething() {
-        // 你想要通过单例做什么, 就可以在这里面实现
-    }
-    
-}
 
 缺点
 首先强调下, 这两种写法功能性上没什么差别, 都是通过枚举类的特点来保证单例和线程安全
 (1) 没啥缺点, 这种方式是Effective Java作者Josh Bloch 提倡的方式，它不仅能避免多线程同步问题，而且还能防止反序列化重新创建新的对象，可谓是很坚强的壁垒啊.
 (2) 也解决了反射攻击的问题
 
+# 序列化攻击 serialization 
 
-
-
-
-# serialization
-
-你序列化一个单例类的对象，接下来复原多个那个对象，那你就会有多个单例类的实例。
+序列化一个单例类的对象，接下来复原多个那个对象，那你就会有多个单例类的实例。
 
 任何一个readObject方法，不管是显式的还是默认的，它都会返回一个新建的实例，这个新建的实例不同于该类初始化时创建的实例。”
 
@@ -278,98 +366,75 @@ csharp复制代码public enum Singleton {
 https://www.digitalocean.com/community/tutorials/java-singleton-design-pattern-best-practices-examples
 
 ```java
-    import java.io.Serializable;
+    public class Singleton implements Serializable {
+        private Singleton() {}
+        private static class SingletonHelper { private static final Singleton instance = new Singleton(); }
+        public static Singleton getInstance() { return SingletonHelper.instance; }
 
-    public class SerializedSingleton implements Serializable {
-        private static final long serialVersionUID = -7604766932017737115L;
-        private SerializedSingleton(){}
-        private static class SingletonHelper {
-            private static final SerializedSingleton instance = new SerializedSingleton();
-        }
-        public static SerializedSingleton getInstance() {
-            return SingletonHelper.instance;
-        }
+        // 以下新增，用于对抗「反序列化攻击」
+        private static final long serialVersionUID = -7604766932017737115L; // 这句似乎也可以不要
         protected Object readResolve() {
             return getInstance();
-       }
+        }
     }
 
-    public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException {
-        SerializedSingleton instanceOne = SerializedSingleton.getInstance();
-        ObjectOutput out = new ObjectOutputStream(new FileOutputStream("filename.ser"));
-        out.writeObject(instanceOne);
-        out.close();
+    // 以下为攻击方式
+    final String filename = "singleton.serialized";
+    Singleton inst1 = Singleton.getInstance(); // 正常创建 inst1
+    ObjectOutput out = new ObjectOutputStream(new FileOutputStream(filename));
+    out.writeObject(inst1);
+    out.close();
 
-        // deserialize from file to object
-        ObjectInput in = new ObjectInputStream(new FileInputStream( "filename.ser"));
-        SerializedSingleton instanceTwo = (SerializedSingleton) in.readObject();
-        in.close();
+    ObjectInput in = new ObjectInputStream(new FileInputStream(filename));
+    Singleton inst2 = (Singleton) in.readObject(); // 通过反序列化创建 inst2
+    in.close();
 
-        System.out.println("instanceOne hashCode="+instanceOne.hashCode());
-        System.out.println("instanceTwo hashCode="+instanceTwo.hashCode());
-    }
+    System.out.println("inst1 hashCode=" + inst1.hashCode());
+    System.out.println("inst2 hashCode=" + inst2.hashCode());
 ```
 
 https://howtodoinjava.com/design-patterns/creational/singleton-design-pattern-in-java/
 5. Best Practice: Add readResolve() to Singleton Instance
 6. Best Practice: Add SerialVersionUId to Singleton Instance
 
-# 反射的攻击 Using Reflection to destroy Singleton Pattern
+# 利用 CAS
 
-https://www.digitalocean.com/community/tutorials/java-singleton-design-pattern-best-practices-examples
+CAS: compare and swap。设计并发算法时常用的技术。
 
-
-
-链接：https://juejin.cn/post/6955698964993671182
-普通类方式实现枚举为啥有反射问题?
-根据java的反射, 获取到类的class对象后, 可以利用它的构造函数创建新的实例, 即使它的构造函数是私有的, 依然可以调用
-普通单例模式如何解决反射问题?
-可以在私有的构造函数中判断一下属性是不是null, 如果不是null, 就抛出异常.
-public class Singleton {
-    private static Singleton instance;
-    private Singleton() {
-        if (instance != null) {
-            // 这样就避免了反射攻击的问题
-            throw new RuntimeException();
-        }
-    }
-}
-
-枚举为啥没有反射问题?
-反射在通过newInstance创建对象时，会检查该类是否ENUM修饰，如果是则抛出异常，反射失败。
-
-# 利用CAS实现单例模式
 链接：https://juejin.cn/post/6955698964993671182
 
 如果我不想使用synchronized关键字来实现单例模式呢? 即使是类加载保证的线程安全, 底层也是加了锁的, 那么就可以采用CAS实现.
 CAS的好处在于不需要使用传统的锁机制来保证线程安全,CAS是一种基于忙等待的算法,依赖底层硬件的实现,相对于锁它没有线程切换和阻塞的额外消耗,可以支持较大的并行度。
-写法
-csharp复制代码public class Singleton {
-    private static final AtomicReference<Singleton> INSTANCE = new AtomicReference<Singleton>(); 
-
-    private Singleton() {}
-
-    public static Singleton getInstance() {
-        for (;;) {
-            Singleton singleton = INSTANCE.get();
-            if (null != singleton) {
-                return singleton;
-            }
-
-            // CAS操作
-            singleton = new Singleton();
-            if (INSTANCE.compareAndSet(null, singleton)) {
-                return singleton;
+```java
+    public class Singleton {
+        private static final AtomicReference<Singleton> INSTANCE = new AtomicReference<Singleton>(); 
+    
+        private Singleton() {}
+    
+        public static Singleton getInstance() {
+            for (;;) {
+                Singleton singleton = INSTANCE.get();
+                if (null != singleton) {
+                    return singleton;
+                }
+    
+                // CAS 操作
+                singleton = new Singleton();
+                if (INSTANCE.compareAndSet(null, singleton)) {
+                    return singleton;
+                }
             }
         }
     }
-}
+```
 
-缺点(1) 如果忙等待一直执行不成功(一直在死循环中),会对CPU造成较大的执行开销。  标签： 设计模式   
+缺点：
+- 若忙等待一直执行不成功，一直死循环中，开销大。
 
 
 
 # 多例模式
+
 上面介绍了5 种单例模式的实现方式，下面作为对单例模式的扩展，再来介绍一下多例模式以及线程间唯一的单例模式。先来看下多例模式。
 
 单例模式是指，一个类只能创建一个对象。那么多例模式就是，一个类可以创建多个对象，但是对象个数可以控制。
@@ -378,35 +443,36 @@ csharp复制代码public class Singleton {
 
 代码如下：
 
-public class MultiInstance {
-    // 实例编号
-    private long instanceNum;
-
-    // 用于存放实例
-    private static final Map<Long, MultiInstance> ins = new HashMap<>();
-
-    static {
-        // 存放 3 个实例
-        ins.put(1L, new MultiInstance(1));
-        ins.put(2L, new MultiInstance(2));
-        ins.put(3L, new MultiInstance(3));
+```java
+    public class MultiInstance {
+        private long instanceNum; // 实例编号
+        private static final Map<Long, MultiInstance> ins = new HashMap<>(); // 用于存放实例
+    
+        static { // 存放 3 个实例
+            ins.put(1L, new MultiInstance(1));
+            ins.put(2L, new MultiInstance(2));
+            ins.put(3L, new MultiInstance(3));
+        }
+    
+        private MultiInstance(long n) {
+            this.instanceNum = n;
+        }
+    
+        public MultiInstance getInstance(long n) {
+            return ins.get(n);
+        }
     }
+```
 
-    private MultiInstance(long n) {
-        this.instanceNum = n;
-    }
-
-    public MultiInstance getInstance(long n) {
-        return ins.get(n);
-    }
-}
 实际上，Java 中的枚举就是一个“天然”的多例模式，其中的每一项代表一个实例，如下：
 
-public enum MultiInstance {
-    ONE,
-    TWO,
-    THREE;
-}
+```java
+    public enum MultiInstance {
+        ONE,
+        TWO,
+        THREE;
+    }
+```
 
 # 线程唯一的单例
 
@@ -418,19 +484,19 @@ public enum MultiInstance {
 
 我们同样可以用 Map 来实现，代码如下：
 
-public class ThreadSingleton {
-    private static final ConcurrentHashMap<Long, ThreadSingleton> instances
-            = new ConcurrentHashMap<>();
-
-    private ThreadSingleton() {}
-
-    public static ThreadSingleton getInstance() {
-        Long id = Thread.currentThread().getId();
-        instances.putIfAbsent(id, new ThreadSingleton());
-        return instances.get(id);
+```java
+    public class ThreadedSingleton {
+        private static final ConcurrentHashMap<Long, ThreadSingleton> instances = new ConcurrentHashMap<>();
+    
+        private ThreadedSingleton() {}
+    
+        public static ThreadedSingleton getInstance() {
+            Long id = Thread.currentThread().getId();
+            instances.putIfAbsent(id, new ThreadedSingleton());
+            return instances.get(id);
+        }
     }
-}
-
+```
 
 # private constructor
 
