@@ -8,7 +8,7 @@
 
 - [leetcode 1475. 商品折扣后的最终价格](https://leetcode.cn/problems/final-prices-with-a-special-discount-in-a-shop/) 基本模版 next smaller or equal
 
-- [901. 股票价格跨度](https://leetcode.cn/problems/online-stock-span/) 简单找 previous greater，代码略
+- `901.` 股票价格跨度。初看是简单找 previous greater，再看发现是分布式的，有点意思。[题解](leet-901-股票价格跨度.md)
 
 - [leetcode 503. 下一个更大元素II](https://leetcode.cn/problems/next-greater-element-ii/) 环形
 
