@@ -8,15 +8,15 @@
 
 - [leetcode 1475. 商品折扣后的最终价格](https://leetcode.cn/problems/final-prices-with-a-special-discount-in-a-shop/) 基本模版 next smaller or equal
 
-- `901.` 股票价格跨度。初看是简单找 previous greater，再看发现是分布式的，有点意思。[题解](leet-901-股票价格跨度.md)
-
-- [leetcode 503. 下一个更大元素II](https://leetcode.cn/problems/next-greater-element-ii/) 环形
-
-- [2023C-回转寿司](https://oj.algomooc.com/problem.php?id=2655) 环形 [`od-2655-sushi-2023c.cpp`](code/od-2655-sushi-2023c.cpp)
-
 - [962. 最大宽度坡](https://leetcode.cn/problems/maximum-width-ramp/) next greater 模版
 
-- [1019. 链表中的下一个更大节点](https://leetcode.cn/problems/next-greater-node-in-linked-list/) 链表，非常有价值。[解法笔记](leet-1019-链表中的下一个更大节点.md)
+- `503.` 下一个更大元素II。环形 next greater。[题解](leet-503-下一个更大元素ii.md)
+
+- [2023C-回转寿司](https://oj.algomooc.com/problem.php?id=2655) 环形 next smaller，与上题略有不同，没有取模。[代码：`od-2655-sushi-2023c.cpp`](code/od-2655-sushi-2023c.cpp)
+
+- `901.` 股票价格跨度。初看是简单找 previous greater，再看发现是分布式的，有点意思。[题解](leet-901-股票价格跨度.md)
+
+- `1019.` 链表中的下一个更大节点。链表元素的 next greater，非常有价值。[解法笔记](leet-1019-链表中的下一个更大节点.md)
 
 ## 雨水
 
@@ -33,24 +33,19 @@
 
 - [85. 最大矩形](https://leetcode.cn/problems/maximal-rectangle) 是 84 的扩展。[解法笔记](leet-85-最大矩形.md)
 
-1504. 统计全 1 子矩形 1845
+1504. 统计全 1 子矩形
 
 - [1856. 子数组最小乘积的最大值](https://leetcode.cn/problems/maximum-subarray-min-product/) 跟 84 很像，多了个前缀和。代码：[`leet-1856-max-subarray-min-product.cpp`](code/leet-1856-max-subarray-min-product.cpp)
 
+- [907. 子数组最小值之和](https://leetcode.cn/problems/sum-of-subarray-minimums/) 以每个 i 为最低点，看左右两边能延伸到哪里。为防重复计算，一边找 greater，另一边找 greater-or-equal，故一遍遍历即可。[`leet-907-sum-of-subarray-minsums.cpp`](code/leet-907-sum-of-subarray-minsums.cpp)
 
-[907. 子数组最小值之和](https://leetcode.cn/problems/sum-of-subarray-minimums/) 以每个 i 为最低点，看左右两边能延伸到哪里。为防重复计算，一边找 greater，另一边找 greater-or-equal，故一遍遍历即可。[`leet-907-sum-of-subarray-minsums.cpp`](code/leet-907-sum-of-subarray-minsums.cpp)
+- [2104. 子数组范围和](https://leetcode.cn/problems/sum-of-subarray-ranges/) 在上题 907 基础上扩展，很巧妙。[题解笔记](leet-2104-子数组范围和.md)
 
-[2104. 子数组范围和](https://leetcode.cn/problems/sum-of-subarray-ranges/) 在上题 907 基础上扩展，很巧妙。[题解笔记](leet-2104-子数组范围和.md)
-
-[`2818.` 操作使得分最大](https://leetcode.cn/problems/apply-operations-to-maximize-score/)
+- [`2818.` 操作使得分最大](https://leetcode.cn/problems/apply-operations-to-maximize-score/)
 题解一（贪心 + 排序 + 中心扩展 + 单调栈 + 快速幂）
 https://cloud.tencent.com/developer/article/2313991?areaId=106001
 
-2281. 巫师的总力量和（最小值×和） 2621
-
-
-
-
+- 2281. 巫师的总力量和（最小值×和） 2621
 
 
 ## 字典序最小
