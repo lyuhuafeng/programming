@@ -28,7 +28,7 @@ using namespace std;
                     visited[i][j] = true;
                 }
             }
-        }
+        } // 以上：把边界四条边的柱子放入 pq
 
         int res = 0;
         int dirs[] = {-1, 0, 1, 0, -1}; // 这个 trick 有点意思
