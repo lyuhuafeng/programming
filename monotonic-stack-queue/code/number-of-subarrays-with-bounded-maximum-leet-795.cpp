@@ -2,9 +2,6 @@
 #include <stack>
 using namespace std;
 
-class Solution {
-public:
-
 // 法一，单调栈，持锤找钉。使用单调下降栈，存放下标。
     int numSubarrayBoundedMax_sol(vector<int>& nums, int left, int right) {
         int n = nums.size();
@@ -66,6 +63,5 @@ public:
         }
         return ans;
     }
-};
 
 int main() {}

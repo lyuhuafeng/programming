@@ -59,13 +59,13 @@
 
 还是单调（不严格）递增栈。
 
-每来一个新柱 i，若比栈顶柱（用「top」表示）高或等，则直接入栈。否则，若低于 top，则 i 就是 top 的 next smaller，而「栈顶-1」（用「top_1」表示）就是 top 的 prev smaller，可得到「以 top 为最低」的最宽矩形。top 被弹出后，新的 top （原来的 top_1）仍然适用这个逻辑，可得到「以 top_1 为最低」的最宽矩形。依次弹出所有比 i 高的，然后 i 入栈。
+每来一个新柱 i，若比栈顶柱（用「top」表示）高或等，则直接入栈。否则，若低于 top，则 i 就是 top 的 next smaller，而「栈顶-1」（用「top_1」表示）就是 top 的 prev smaller，可得到「以 top 为最低」的最宽矩形。top 被弹出后，新的 top （原来的 top_1）仍然适用这个逻辑，可得到「以 top_1 为最低」的最宽矩形。依次弹出所有比 i 高的，然后 i 入栈。<font color="green">重点：第每个被弹出的 top，可同时得到它的 next smaller 和 previous smaller。</font>
 
 所有柱都处理完后，栈可能还不为空。栈内各柱都是没有「next smaller」的，每个柱子的右边都比它高，其「右边最远的不高于」就是「右边界」。栈内各柱是有「prev smaller」的，就是栈内比自己减 1 的位置。依次弹出栈内每个柱，计算即可。特殊地，剩下的最后一个柱，没有「prev smaller」，其「左边最远的不高于」就是「左边界」。
 
 ![pic](pics/leet-84-largest-rectangle.png)
 
-如图。注意，栈内元素是不严格递增的，可能有相邻元素相等的情况，如图中 t1、t2。可见，「以 t1 为最低点」算出来的其实是错的，但被「以 t2 为最低点」的正确结果弥补了。事实上，若有多个相邻元素相等的情况，只有最靠近栈底（离新来的 i 最远）的 tx 算出来的是正确的。这就是前面说的「歪打正着」。
+如图。注意，栈内元素是不严格递增的，可能有相邻元素相等的情况，如图中 t1、t2。可见，「以 t1 为最低点」算出来的其实是错的，但被「以 t2 为最低点」的正确结果弥补了。<font color="green">事实上，若有多个相邻元素相等的情况，只有最靠近栈底（离新来的 i 最远）的 tₓ 算出来的是正确的。这就是前面说的「歪打正着」。</font>
 
 代码如下。[`largest-rectangle-in-histogram-leet-84-running.cpp`](code/largest-rectangle-in-histogram-leet-84-running.cpp)
 
@@ -116,7 +116,7 @@
                 int ti = st.top();
                 int h = heights[st.top()];
                 st.pop();
-                int w = st.empty() ? i : i - st.top() - 1;
+                int w = st.empty() ? i : i - st.top() - 1; // st.empty(), 对应的 st.top() 可认为值为 -1.
                 res = max(res, h * w);
             }
             st.push(i);

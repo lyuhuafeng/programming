@@ -1,5 +1,7 @@
-class Solution {
-public:
+#include <vector>
+#include <stack>
+using namespace std;
+
     int largestRectangleArea(vector<int> &heights) {
         heights.push_back(-1); // 只用尾哨兵，不用首哨兵
         unsigned long n = heights.size();
@@ -23,7 +25,7 @@ public:
             return 0;
         }
         int cols = matrix[0].size();
-        vector<int> heights(cols);
+        vector<int> heights(cols, 0);
         int max_area = 0;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -37,4 +39,5 @@ public:
         }
         return max_area;
     }
-};
+
+int main() {}

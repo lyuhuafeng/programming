@@ -15,7 +15,7 @@ using namespace std;
                 int ti = st.top();
                 int h = heights[st.top()];
                 st.pop();
-                int w = st.empty() ? i : i - st.top() - 1;
+                int w = st.empty() ? i : i - st.top() - 1; // st.empty(), 对应的 st.top() 可认为值为 -1.
                 res = max(res, h * w);
             }
             st.push(i);

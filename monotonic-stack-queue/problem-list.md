@@ -33,9 +33,9 @@
 
 - [85. 最大矩形](https://leetcode.cn/problems/maximal-rectangle) 是 84 的扩展。[解法笔记](leet-85-最大矩形.md)
 
-1504. 统计全 1 子矩形
+- `1504.` 统计全 1 子矩形。[解法笔记]()
 
-- [1856. 子数组最小乘积的最大值](https://leetcode.cn/problems/maximum-subarray-min-product/) 跟 84 很像，多了个前缀和。代码：[`leet-1856-max-subarray-min-product.cpp`](code/leet-1856-max-subarray-min-product.cpp)
+- [1856. 子数组最小乘积的最大值](https://leetcode.cn/problems/maximum-subarray-min-product/) 跟 84 很像，多了个前缀和。注意中间结果用 int64_t 类型存储。代码：[`leet-1856-max-subarray-min-product.cpp`](code/leet-1856-max-subarray-min-product.cpp)
 
 - [907. 子数组最小值之和](https://leetcode.cn/problems/sum-of-subarray-minimums/) 以每个 i 为最低点，看左右两边能延伸到哪里。为防重复计算，一边找 greater，另一边找 greater-or-equal，故一遍遍历即可。[`leet-907-sum-of-subarray-minsums.cpp`](code/leet-907-sum-of-subarray-minsums.cpp)
 
@@ -45,13 +45,11 @@
 题解一（贪心 + 排序 + 中心扩展 + 单调栈 + 快速幂）
 https://cloud.tencent.com/developer/article/2313991?areaId=106001
 
-- 2281. 巫师的总力量和（最小值×和） 2621
-
+- [`2281.` 巫师的总力量和](https://leetcode.cn/problems/sum-of-total-strength-of-wizards/) （最小值×和）
 
 ## 字典序最小
 
-- [leetcode 1673. 最具竞争力的子序列](https://leetcode.cn/problems/find-the-most-competitive-subsequence/)
-  - [两种解法](leet-1673-竞争力子序列.md)，分别用单调栈和单调队列。前者简单得多，且只用到 stack 本身，不用求 next greater 之类的
+- `1673. 最具竞争力的子序列。[两种解法](leet-1673-竞争力子序列.md)，分别用单调栈和单调队列。前者简单得多，且只用到 stack 本身，不用求 next greater 之类的
 
 - [leetcode 402. 移掉K位数字](https://leetcode.cn/problems/remove-k-digits/) 跟上题一样 [`remove-k-digits-leet-402.cpp`](code/remove-k-digits-leet-402.cpp)
 
@@ -59,7 +57,7 @@ https://cloud.tencent.com/developer/article/2313991?areaId=106001
 
 - [316.hard 去除重复字母](https://leetcode.cn/problems/remove-duplicate-letters/)，[`1081.` 不同字符的最小子序列](https://leetcode.cn/problems/smallest-subsequence-of-distinct-characters) 两道题目相同 [`od 2651.` 2023Q1A-删除重复数字后的最大数字](https://oj.algomooc.com/problem.php?id=2651) 只是由最小改成最大 [题解笔记](leet-316-1081-od-2651-去除重复字母.md)
 
-316 扩展：重复个数不超过 limit  https://leetcode.cn/contest/tianchi2022/problems/ev2bru/
+- 316 扩展：重复个数不超过 limit  https://leetcode.cn/contest/tianchi2022/problems/ev2bru/
 
 - [795. 区间子数组个数](https://leetcode.cn/problems/number-of-subarrays-with-bounded-maximum/) [单调栈解法、非单调栈解法](leet-795-区间子数组个数.md)
 
@@ -71,19 +69,19 @@ https://cloud.tencent.com/developer/article/2313991?areaId=106001
 
 - [1944. 队列中可以看到的人数](https://leetcode.cn/problems/number-of-visible-people-in-a-queue/) 一眼看上去，跟上题差不多，其实有些差异。[题解笔记](leet-1994-队列中可以看到的人数.md)
 
-- [121. 买卖股票的最佳时机](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock/) 其实没用到单调栈，但感觉还是有点那意思。[我的题解](买卖股票最佳时机-leet-121.md)
+- [121. 买卖股票的最佳时机](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock/) 其实没用到单调栈，但感觉还是有点那意思。[我的题解](leet-121-买卖股票最佳时机.md)
 
 
 
 - [百度2022秋招-士兵的序列](https://oj.algomooc.com/problem.php?id=5151) 有点巧妙。[`od-5151-soldiers-baidu-2022.cpp`](code/od-5151-soldiers-baidu-2022.cpp)
 
-- [Bilibili2021秋招-大鱼吃小鱼](https://oj.algomooc.com/problem.php?id=5153) 单调栈法精妙，以及直观模拟、及其派生的递归法 [题解笔记](od-5153-大鱼吃小鱼.md)
+- [Bilibili2021秋招-大鱼吃小鱼](https://oj.algomooc.com/problem.php?id=5153) 单调栈法精妙但很难理解；以及直观模拟、及其派生的递归法 [题解笔记](od-5153-大鱼吃小鱼.md)
 
 - [769. 最多能完成排序的块](https://leetcode.cn/problems/max-chunks-to-make-sorted/) 及 [768. II](https://leetcode.cn/problems/max-chunks-to-make-sorted-ii) 两道递进 [题解笔记](leet-769-768-最多能完成排序的块.md)
 
 - [581. 最短无序连续子数组](https://leetcode.cn/problems/shortest-unsorted-continuous-subarray/) [题解笔记](leet-581-最短无序连续子数组.md)
 
-- [`456.` 132 模式](https://leetcode.cn/problems/132-pattern/) [题解笔记](leet-456-模式123.md)
+- [`456.` 132 模式](https://leetcode.cn/problems/132-pattern/) [题解笔记](leet-456-模式132.md)
 
 https://cloud.tencent.com/developer/article/2313991?areaId=106001 LeetCode 周赛上分之旅 #39 结合中心扩展的单调栈贪心问题
 
