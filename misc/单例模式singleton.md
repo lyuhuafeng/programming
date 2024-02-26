@@ -43,12 +43,12 @@ instance为什么一定要是static的？
     }
 
     // 使用
-    Singleton x = Singleton.getInstance();
+    Singleton si = Singleton.getInstance();
 ```
 
 static block 法，可处理创建单例时发生的 exception
 
-static block 中的语句，在类（被 Java ClassLoader）加载到内存时执行，而且只执行一次。在构造函数之前被执行。通常用来创建静态资源。无法访问非静态变量。类中可以有多个 static block，但无意义。
+static block 中的语句，在类（被 Java ClassLoader）加载到内存时执行，而且只执行一次。<font color="green">在构造函数之前被执行。</font>通常用来创建静态资源。无法访问非静态变量。类中可以有多个 static block，但无意义。
 
 ```java
     public class Singleton {
@@ -114,7 +114,7 @@ further reading: https://www.digitalocean.com/community/tutorials/thread-safety-
 ```java
     public class Singleton {
         private static Singleton instance = null; // 不实例化 (my question: default value 是啥)
-        private Singleton () { /* do something */ }
+        private Singleton() { /* do something */ }
     
         public static Singleton getInstance() {
             if (instance == null) { // 第一次判断
@@ -252,9 +252,41 @@ Java ensures that any enum value is instantiated only once in a Java program. Si
 - 天然可以对抗「反射攻击」：反射在通过 newInstance 创建对象时，会检查该类是否 enum 修饰，若是则抛出异常 (java.lang.IllegalArgumentException: Cannot reflectively create enum objects)，反射失败。
 - 天然可以对抗「反序列化攻击」：甚至不会抛出异常，很优雅，就像什么都没发生一样。
 
+最简方法。只用一个 `INSTANCE` 成员，连构造函数和 `getInstance()` 都不要了。调用时用 `Singleton.INSTANCE`。
+
 ```java
     public enum Singleton {
-        INSTANCE("Initial class info");
+        INSTANCE; // 或加一对括号：INSTANCE();
+        public void doSomething() { /* 想通过单例做什么, 就放在这里 */ }
+    }
+    // 使用
+    Singleton obj = Singleton.INSTANCE;
+    obj.doSomething();
+```
+
+稍啰嗦版本，增加构造函数、`getInstance()`。简化版本，去掉了 info 字段，直接看地址是否一样。
+
+```java
+    public enum Singleton {
+        INSTANCE();
+        private Singleton() {};
+        public Singleton getInstance() { return INSTANCE; }
+    }
+
+    Singleton obj1 = Singleton.INSTANCE.getInstance(); // 使用方法，与上面不同
+    Singleton obj2 = Singleton.INSTANCE.getInstance();
+    if (obj1 == obj2) {
+        System.out.println("same object");
+    } else {
+        System.out.println("different objects");
+    }
+```
+
+更啰嗦版本：
+
+```java
+    public enum Singleton {
+        INSTANCE("initial class info");
         private String info;
         private Singleton(String info) { this.info = info; }
         public Singleton getInstance() { return INSTANCE; }
@@ -268,7 +300,7 @@ Java ensures that any enum value is instantiated only once in a Java program. Si
     Singleton obj1 = Singleton.INSTANCE.getInstance();
     System.out.println(obj1.getInfo()); // Initial enum info
     Singleton obj2 = Singleton.INSTANCE.getInstance();
-    obj2.setInfo("New enum info");
+    obj2.setInfo("updated enum info");
     // 下面两句输出结果一样，说明两个对象其实是同一个
     System.out.println(obj1.getInfo()); // New enum info
     System.out.println(obj2.getInfo()); // New enum info
@@ -285,44 +317,7 @@ Java ensures that any enum value is instantiated only once in a Java program. Si
     }
 ```
 
-简化版本，去掉了 info 字段，直接看地址是否一样。
-
-```java
-    public enum Singleton {
-        INSTANCE();
-        private Singleton() {};
-        public Singleton getInstance() { return INSTANCE; }
-    }
-
-    Singleton x = Singleton.INSTANCE.getInstance();
-    Singleton y = Singleton.INSTANCE.getInstance();
-    Singleton z = Singleton.INSTANCE.getInstance();
-    if (x == y && y == z) {
-        System.out.println("same object");
-    } else {
-        System.out.println("different objects");
-    }
-```
-
-更简化，连构造函数和 `getInstance()` 都不要了，实际上只有一个 `INSTANCE` 成员。调用时用 `Singleton.INSTANCE`，也省了。
-
-```java
-    public enum Singleton {
-        INSTANCE;
-        public void doSomething() { /* 你想要通过单例做什么, 就可以在这里面实现 */ }
-    }
-    // 使用
-    Singleton x = Singleton.INSTANCE;
-    x.doSomething();
-```
-
-
-https://juejin.cn/post/6955698964993671182
-
-方式1
-这种方式是将枚举作为内部类来使用, 毕竟枚举也是一个类, 因此枚举类也具有延迟加载的能力, 不同的是, 
-
-利用特性：枚举类的构造函数，只会执行一次。用这个特点来保证单例。
+最啰嗦版本，将枚举作为内部类。枚举类的构造函数，只会执行一次。用这个特点来保证单例。
 
 ```java
     public class Singleton {
@@ -341,14 +336,7 @@ https://juejin.cn/post/6955698964993671182
     }
 ```
 
-方式2 第二种方式, 就是直接将枚举类认为是我们的单例的类,
-
-
-
-缺点
-首先强调下, 这两种写法功能性上没什么差别, 都是通过枚举类的特点来保证单例和线程安全
-(1) 没啥缺点, 这种方式是Effective Java作者Josh Bloch 提倡的方式，它不仅能避免多线程同步问题，而且还能防止反序列化重新创建新的对象，可谓是很坚强的壁垒啊.
-(2) 也解决了反射攻击的问题
+https://juejin.cn/post/6955698964993671182
 
 # 序列化攻击 serialization 
 

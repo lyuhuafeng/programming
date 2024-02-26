@@ -9,8 +9,8 @@
 
 # [byte dance list](https://mp.weixin.qq.com/s/Mczq-QdgQ7UwFlCika09Vg)
 
-- [15. 三数之和](https://leetcode.cn/problems/3sum/) 代码：[`leet-15-3sum.cpp`](code/leet-15-3sum.cpp)
-3. 无重复字符的最长子串
+- [15. 三数之和](sliding-window/leet-15-16-三数之和.md)
+- 3. 无重复字符的最长子串
 - [146. LRU缓存机制](https://leetcode.cn/problems/lru-cache/) 代码：[`leet-146-lru-cache.cpp`](code/leet-146-lru-cache.cpp)
 - [25. K个一组翻转链表](https://leetcode.cn/problems/reverse-nodes-in-k-group/) 代码：[``]()
 - [206. 反转链表](https://leetcode.cn/problems/reverse-linked-list/) 代码：[`leet-206-reverse-linked-list.cpp`](code/leet-206-reverse-linked-list.cpp)
