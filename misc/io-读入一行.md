@@ -5,19 +5,19 @@
 # 法一：用 `scanf()` 读入 `char[]`
 
 ```cpp
-  char a[256 + 1];
-  char c;
-  scanf("%[^\n]", a);  // 读入一行，含空格，不含结尾换行符
-  scanf("%c", &c);     // 读入后续的换行符 (new line, 10)
+    char a[256 + 1];
+    char c;
+    scanf("%[^\n]", a);    // 读入一行，含空格，不含结尾换行符
+    scanf("%c", &c);         // 读入后续的换行符 (new line, 10)
 ```
 
 但若一行长度超过 256，则内存越界，出错。(与 `gets()` 同样的问题)
 
 更好的做法
 ```cpp
-  char a[256 + 1], c;
-  scanf("%256[^\n]", a);  // 读入最多256个非'\n'字符
-  scanf("%c", &c);        // 读入并扔掉换行符
+    char a[256 + 1], c;
+    scanf("%256[^\n]", a);    // 读入最多256个非'\n'字符
+    scanf("%c", &c);                // 读入并扔掉换行符
 ```
 
 注意，`"%256[^\n]"`，不用加 `s`。如果加了 `s` (`"%256[^\n]s"`)，会在换行符之前停下来，然后期待后面是字符 `'s'`。这是不可能的。
@@ -25,21 +25,21 @@
 其实还应该根据 `scanf()` 的返回值分别处理。最全面的做法
 
 ```cpp
-  char a[256 + 1];
-  int n = scanf("%256[^\n]", a);
-  switch (n) {
-    case 1:
-      break;
-    case 0:
-      a[0] = 0;
-      break;
-    case EOF:
-      // 做些错误处理
-      break;
-  }
+    char a[256 + 1];
+    int n = scanf("%256[^\n]", a);
+    switch (n) {
+        case 1:
+            break;
+        case 0:
+            a[0] = 0;
+            break;
+        case EOF:
+            // 做些错误处理
+            break;
+    }
 
-  char c;
-  scanf("%c", &c);
+    char c;
+    scanf("%c", &c);
 ```
 
 若 `n == 1`，说明读入成功，什么也不用做。
@@ -53,16 +53,16 @@
 或者在格式字符串里再加个 `\n`，也可以把换行符读入但并不使用。
 
 ```cpp
-  char s[256 + 1];
-  int n = scanf("%256[^\n]\n", s);
-  // 若 n == 1: 成功。与上面处理一致，这里省略
+    char s[256 + 1];
+    int n = scanf("%256[^\n]\n", s);
+    // 若 n == 1: 成功。与上面处理一致，这里省略
 ```
 
 或者在格式字符串里再加个 `%*c`：再读入一个字符（即换行符）但丢弃（`*`的作用）：
 
 ```cpp
-   char str[256 + 1];
-   scanf("%256[^\n]%*c", str);
+    char str[256 + 1];
+    scanf("%256[^\n]%*c", str);
 ```
 
 # 法二：使用 `std::getline()` 读入 `std::string`
@@ -70,13 +70,13 @@
 换行符被读了并扔掉。
 
 ```cpp
-  #include <iostream>
-  #include <string>
-  using namespace std;
+    #include <iostream>
+    #include <string>
+    using namespace std;
 
-  string s;
-  getline(cin, s);        // 默认遇到 '\n' 停止
-  getline(cin, s, '\n');  // 显式指定遇到 '\n' 停止
+    string s;
+    getline(cin, s);                // 默认遇到 '\n' 停止
+    getline(cin, s, '\n');    // 显式指定遇到 '\n' 停止
 ```
 
 # 法三：用 `std::cin.getline()` 读入 `char[]`
@@ -84,19 +84,19 @@
 换行符被读了并扔掉。为安全，需要指定最多读入多少字符。
 
 ```cpp
-  #include <iostream>
-  using namespace std;
+    #include <iostream>
+    using namespace std;
 
-  char str[20];
-  cin.getline(str, 20);        // 默认遇到 '\n' 停止
-  cin.getline(str, 20, '\n');  // 显式指定遇到 '\n' 停止
+    char str[20];
+    cin.getline(str, 20);                // 默认遇到 '\n' 停止
+    cin.getline(str, 20, '\n');    // 显式指定遇到 '\n' 停止
 ```
 
 # 法四：使用 `gets()` 读入 `char[]`。已被废弃。
 
 ```cpp
-  char name[100];
-  gets(name);
+    char name[100];
+    gets(name);
 ```
 
 换行符被读入并扔掉。

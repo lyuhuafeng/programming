@@ -22,10 +22,7 @@
 
 - [leetcode 42. 接雨水](https://leetcode.cn/problems/trapping-rain-water/) [解法笔记](leet-42-接雨水多种方法.md)
 
-- [2654: 2023Q1A-天然蓄水池](https://oj.algomooc.com/problem.php?id=2654) 类似接雨水，但要找出哪个凹槽盛水最多。（各凹槽是不相连的）通过此题，发现接雨水的特点，（看图），是阶梯状的凹槽，两边向中间，逐步升高。但不是「单调递增或递降栈」，而是「保旧、可舍弃新」的，从两边往中间逼近即可。
-  - 不用栈，两边往中间逼近。超时。[`od-2654-mine-tle.cpp`](code/od-2654-mine-tle.cpp) 能加速吗？不能用「单调栈」。
-  - 类似接雨水官方解法 running 版本，但要从两边分别求 [`od-2654-water-official.cpp`](code/od-2654-water-official.cpp) 如何判断凹槽结束？stack empty，说明新来的是目前最高柱，是新凹槽的开始。（考虑图：阶梯上升凹槽）。但这只是左半边；右半边是阶梯下降的，得逆序来一遍。
-  - 不 running 的版本？
+- [2654: 2023Q1A-天然蓄水池](https://oj.algomooc.com/problem.php?id=2654) 类似接雨水，但要找出哪个凹槽盛水最多。[解法笔记](od-2654-天然蓄水池-接雨水单槽.md)
 
 - `407. 接雨水 II`：二维方格上接，[题解笔记](leet-407-接雨水II.md)
 
