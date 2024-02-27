@@ -24,7 +24,7 @@ k，通常从 1 开始，但若使用 quick select，则从 0 开始比较方便
 
 若 `m` 就是所求 `kth smallest`，且无重复的，则“数组中 <=m 的元素个数" 恰好为 `k`；若有重复的，个数 `>k` 但不会有等于 `k` 的。所以 `predicate(m)` 里要用 `>= k`。
 
-C++ 代码：[kth-smallest-binary-search.cpp](kth-smallest-binary-search.cpp)
+C++ 代码：[kth-smallest-binary-search.cpp](code/kth-smallest-binary-search.cpp)
 
 <font color=red>
 思考：如何保证二分的结果是数组的某个元素？
@@ -46,7 +46,7 @@ C++ 代码：[kth-smallest-binary-search.cpp](kth-smallest-binary-search.cpp)
 
 遍历完成后，堆中保存的就是最大的 k 个元素，堆顶就是 k-th largest 的。
 
-C++ 代码：[kth-largest-priority-queue.cpp](kth-largest-priority-queue.cpp)
+C++ 代码：[kth-largest-priority-queue.cpp](code/kth-largest-priority-queue.cpp)
 
 若求 k-th smallest，则
 * 改为 max-heap。
@@ -57,7 +57,7 @@ C++ 代码：[kth-largest-priority-queue.cpp](kth-largest-priority-queue.cpp)
 
 <font color=red>代码中没有处理元素值相同的情况。好像 heap 的定义也要求元素不重复。to check later.</font>
 
-C++ 代码：[kth-smallest-priority-queue.cpp](kth-smallest-priority-queue.cpp)
+C++ 代码：[kth-smallest-priority-queue.cpp](code/kth-smallest-priority-queue.cpp)
 
 时间复杂度：总共执行了 `n` 轮入堆和出堆，堆的最大长度为 `k`，因此时间复杂度为 `O(nlogk)`。
 
@@ -86,9 +86,9 @@ k在 [0, len-1] 范围内。
 
 <font color=red>注意，partition 过程中，交换元素位置，改动了数组内容。如果用 vector，则 qselect() 和 partition() 两个函数的参数里都要用引用类型。（用数组则没有这个问题）</font>
 
-C++ 代码，kth smallest，数组序列：[kth-smallest-quick-select.cpp](kth-smallest-quick-select.cpp)
+C++ 代码，kth smallest，数组序列：[kth-smallest-quick-select.cpp](code/kth-smallest-quick-select.cpp)
 
-C++ 代码，kth largest，vector 序列：[kth-largest-quick-select-vector.cpp](kth-largest-quick-select-vector.cpp)
+C++ 代码，kth largest，vector 序列：[kth-largest-quick-select-vector.cpp](code/kth-largest-quick-select-vector.cpp)
 
 时间复杂度：partition 过程耗时 O(n)。若 pivot 选得好，每次砍掉一半，则总次数为 n + n/2 + n/4 + … + 1 = 2n。故平均耗时 O(n).
 

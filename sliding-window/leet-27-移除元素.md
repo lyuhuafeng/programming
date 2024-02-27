@@ -93,7 +93,8 @@
         }
         return l;
     }
-// r 为 闭区间
+// r 为 闭区间。
+// 注意，while 为何 (l <= r) 而不是 (l < r)？l==r 时，若 nums[l] == val，无影响；但若 nums[l] != val，则 l++ 有影响。
     int removeElement(vector<int>& nums, int val) {
         int l = 0, r = nums.size() - 1;
         while (l <= r) {
