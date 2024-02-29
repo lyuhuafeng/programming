@@ -126,10 +126,18 @@ https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
 
 # Turing problems
 
+## monotic stack
 - `l5, u7, ex2. luogu p1901.` 发射站。基础，看点是用数组模拟栈。[题解](luogu-p1901-发射站.md)
 - `l5, u7, ex3. luogu p2422.` 良好的感觉。基础，看点是用数组模拟栈。[题解](luogu-p2422-良好的感觉.md)
 
 - `l5, u7, hw1. luogu p1165.` 日志分析。其实不是单调栈问题，但有点巧妙。[题解](luogo-p1165-日志分析.md)
 
 - `l5, u9, ex1. luogu p1823.` Patrik 音乐会的等待。[题解](luogu-p1823-Patrik音乐会的等待.md)
+- `l5, u9, ex2. luogu p1198.` 最大数。[题解](luogu-p1198-最大数.md)
+
 - `l5, u9, ex3. luogu p2629.` 好消息坏消息。[题解](luogu-p2629-好消息坏消息.md)
+
+## monotonic queue
+- `l5, u8, ex3.` 单调队列-最大不定长子段和-L5-单元8-队列进阶-题3-切蛋糕.md
+- `l5, u8, ex4.` 单调队列-L5-单元8-队列进阶-题4-奶牛拥挤.md
+- `l5, u10, ex3.` 单调队列-矩形窗口-l5-u10-ex3.md
