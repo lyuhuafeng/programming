@@ -1,4 +1,8 @@
-## [单调队列：奶牛拥挤（L5，单元8，队列进阶，题4）](https://oj.youdao.com/course/37/276/1#/1/14201)
+# [luogu p3088, usaco nov 2013. 奶牛拥挤](https://www.luogu.com.cn/problem/P3088)
+
+- [l5, u8, ex4](https://oj.youdao.com/course/37/276/1#/1/14201)
+
+单调队列
 
 `n` 头奶牛沿着一维栅栏吃草，第 `i` 头奶身高是 `h(i)`，在目标点 `x(i)`。当某奶牛左边 `d` 距离内、且右边 `d` 距离内都有牛身高至少是它两倍，它就会觉得拥挤。请计算觉得拥挤的奶牛的数量。
 
@@ -14,7 +18,7 @@
 
 <font color=red>注意，逆序遍历时，处理队头时的 condition：`q2.front().x - a[i].x > d`。to think more.</font>
 
-完整代码：[mono-queue-crowded-cows.cpp](code/mono-queue-crowded-cows.cpp)
+完整代码，luogu ac：[mono-queue-crowded-cows.cpp](code/mono-queue-crowded-cows.cpp)
 
 ```cpp
 struct cow {

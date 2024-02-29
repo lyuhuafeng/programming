@@ -134,10 +134,11 @@ https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
 
 - `l5, u9, ex1. luogu p1823.` Patrik 音乐会的等待。[题解](luogu-p1823-Patrik音乐会的等待.md)
 - `l5, u9, ex2. luogu p1198.` 最大数。[题解](luogu-p1198-最大数.md)
-
 - `l5, u9, ex3. luogu p2629.` 好消息坏消息。[题解](luogu-p2629-好消息坏消息.md)
+- `l5, u9, ex4. luogu p3957.` 跳房子
+- `l5, u9, ex5. luogu p3668.` 现代艺术2
 
 ## monotonic queue
-- `l5, u8, ex3.` 单调队列-最大不定长子段和-L5-单元8-队列进阶-题3-切蛋糕.md
-- `l5, u8, ex4.` 单调队列-L5-单元8-队列进阶-题4-奶牛拥挤.md
-- `l5, u10, ex3.` 单调队列-矩形窗口-l5-u10-ex3.md
+- `l5, u8, ex3. luogu p1714.` 切蛋糕。[题解](luogu-p1714-切蛋糕-最大不定长子段和.md)
+- `l5, u8, ex4. luogu p3088.` 奶牛拥挤。[题解](luogu-p3088-奶牛拥挤.md)
+- `l5, u10, ex3.` [题解]单调队列-矩形窗口-l5-u10-ex3.md

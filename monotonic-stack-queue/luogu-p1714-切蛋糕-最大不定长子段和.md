@@ -1,6 +1,8 @@
-# 单调队列，最大不定长子段和
+# [`luogu p1714.` 切蛋糕](https://www.luogu.com.cn/problem/P1714)
 
-[切蛋糕（L5，单元8，队列进阶，题3）](https://oj.youdao.com/course/37/276/1#/1/14200)
+- [l5, u8, ex3](https://oj.youdao.com/course/37/276/1#/1/14200)
+
+单调队列，最大不定长子段和
 
 长度为 `n` 的序列，不定长子段，长度最大为 `m`，求子段最大和
 
