@@ -93,7 +93,6 @@ https://leetcode.cn/tag/monotonic-stack/problemset/
 
 https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
 
-单调栈-音乐会等待.docx
 
 1124. 表现良好的最长时间段 1908
 
@@ -106,7 +105,9 @@ https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
 
 
 
-
+1425. 带限制的子序列和
+334. 递增的三元子序列
+856. 括号的分数
 
 
 
@@ -127,10 +128,12 @@ https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
 # Turing problems
 
 ## monotic stack
+- `l5, u7, ex1.` 出栈合法性。其实不是单调栈问题。[题解](l5-u7-ex1-出栈合法性.md)
 - `l5, u7, ex2. luogu p1901.` 发射站。基础，看点是用数组模拟栈。[题解](luogu-p1901-发射站.md)
 - `l5, u7, ex3. luogu p2422.` 良好的感觉。基础，看点是用数组模拟栈。[题解](luogu-p2422-良好的感觉.md)
-
+- `l5, u7, ex4. luogu p1044. NOIP 2003 普及组.` 栈的输出序列。其实不是单调栈问题，是 dp 或直接 catalan 数问题。[题解](../dp/luogu-p1044-栈的输出序列有多少种.md)
 - `l5, u7, hw1. luogu p1165.` 日志分析。其实不是单调栈问题，但有点巧妙。[题解](luogo-p1165-日志分析.md)
+- `l5, u7, hw2.` 合法括号数。catalan number。
 
 - `l5, u9, ex1. luogu p1823.` Patrik 音乐会的等待。[题解](luogu-p1823-Patrik音乐会的等待.md)
 - `l5, u9, ex2. luogu p1198.` 最大数。[题解](luogu-p1198-最大数.md)
