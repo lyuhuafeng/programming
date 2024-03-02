@@ -115,7 +115,7 @@ further reading: https://www.digitalocean.com/community/tutorials/thread-safety-
     public class Singleton {
         private static Singleton instance = null; // 不实例化 (my question: default value 是啥)
         private Singleton() { /* do something */ }
-    
+
         public static Singleton getInstance() {
             if (instance == null) { // 第一次判断
                 synchronized(Singleton.class) { // 类级别的锁
@@ -226,17 +226,61 @@ SingletonInner 是一个静态内部类，当外部类 Singleton 被加载的时
             return instance;
         }
     }
-    
+
     public class Singleton {
         private Singleton() {}
         private static class SingletonInner { private static final Singleton instance = new Singleton(); }
-    
+
         public static Singleton getInstance() {
             if (SingletonInner.instance != null) { throw new RuntimeException(); } // 新增此句，对抗「反射攻击」
             return SingletonInner.instance;
         }
     }
 ```
+
+# 序列化攻击 serialization
+
+序列化一个单例类的对象，接下来复原（反序列化）多个该对象，就会得到多个的实例。
+
+反序列化，是通过 `ObjectInput.readObject()` 实现的。它返回一个新建的实例，该实例与原实例不同。
+
+`readObject()`，正常情况下，最终是用反射方式，调用类的无参（缺省）构造函数，创建一个新的实例。
+
+但，若目标类有 `readResolve()` 方法，则通过反射方式，调用要被该 `readResolve()` 方法，返回一个对象，并将其复制给此前用午餐构造函数创建的obj（即最终返回的对象）。
+
+所以，若直接在 `readResolve()` 方法中返回单例对象，就能防止反序列化攻击。而且不会抛出异常。
+
+serial version ID：若序列化之后，类结构有变化，则反序列化时会抛出 `java.io.InvalidClassException` 异常。给类增加一个独特的 serial version ID，可告诉编译器，这两个类是同一个，即可解决此问题。
+
+```java
+    public class Singleton implements Serializable {
+        private Singleton() {}
+        private static class SingletonHelper { private static final Singleton instance = new Singleton(); }
+        public static Singleton getInstance() { return SingletonHelper.instance; }
+
+        // 以下新增，用于对抗「反序列化攻击」
+        private static final long serialVersionUID = -7604766932017737115L;
+        protected Object readResolve() {
+            return getInstance();
+        }
+    }
+
+    // 以下为攻击方式
+    final String filename = "singleton.serialized";
+    Singleton inst1 = Singleton.getInstance(); // 正常创建 inst1
+    ObjectOutput out = new ObjectOutputStream(new FileOutputStream(filename));
+    out.writeObject(inst1);
+    out.close();
+
+    ObjectInput in = new ObjectInputStream(new FileInputStream(filename));
+    Singleton inst2 = (Singleton) in.readObject(); // 通过反序列化创建 inst2
+    in.close();
+
+    System.out.println("inst1 hashCode=" + inst1.hashCode());
+    System.out.println("inst2 hashCode=" + inst2.hashCode());
+```
+
+完整的代码，能处理同步、对抗反射攻击、对抗反序列化攻击：[`Singleton.java`](code/Singleton.java)。
 
 # 枚举法
 
@@ -250,7 +294,7 @@ Java ensures that any enum value is instantiated only once in a Java program. Si
 
 枚举对抗攻击：
 - 天然可以对抗「反射攻击」：反射在通过 newInstance 创建对象时，会检查该类是否 enum 修饰，若是则抛出异常 (java.lang.IllegalArgumentException: Cannot reflectively create enum objects)，反射失败。
-- 天然可以对抗「反序列化攻击」：甚至不会抛出异常，很优雅，就像什么都没发生一样。
+- 天然可以对抗「反序列化攻击」：enum 与普通类的机制不同。甚至不会抛出异常，很优雅，就像什么都没发生一样。
 
 最简方法。只用一个 `INSTANCE` 成员，连构造函数和 `getInstance()` 都不要了。调用时用 `Singleton.INSTANCE`。
 
@@ -322,7 +366,7 @@ Java ensures that any enum value is instantiated only once in a Java program. Si
 ```java
     public class Singleton {
         private Singleton() {}
-    
+
         public static Singleton getInstance() {
             return SinletonHolder.INSTANCE.getInstance();
         }
@@ -338,48 +382,8 @@ Java ensures that any enum value is instantiated only once in a Java program. Si
 
 https://juejin.cn/post/6955698964993671182
 
-# 序列化攻击 serialization 
-
-序列化一个单例类的对象，接下来复原多个那个对象，那你就会有多个单例类的实例。
-
-任何一个readObject方法，不管是显式的还是默认的，它都会返回一个新建的实例，这个新建的实例不同于该类初始化时创建的实例。”
-
-当然，这个问题也是可以解决的，可以通过对序列化机制进行定制, 主要就是readResolve方法
-
-枚举类为啥没有反序列化的问题?
-在序列化的时候Java仅仅是将枚举对象的name属性输出到结果中，反序列化的时候则是通过java.lang.Enum的valueOf方法来根据名字查找枚举对象。
-同时，编译器是不允许任何对这种序列化机制的定制的，因此禁用了writeObject、readObject、readObjectNoData、writeReplace和readResolve等方法。
-
-
 https://www.digitalocean.com/community/tutorials/java-singleton-design-pattern-best-practices-examples
 
-```java
-    public class Singleton implements Serializable {
-        private Singleton() {}
-        private static class SingletonHelper { private static final Singleton instance = new Singleton(); }
-        public static Singleton getInstance() { return SingletonHelper.instance; }
-
-        // 以下新增，用于对抗「反序列化攻击」
-        private static final long serialVersionUID = -7604766932017737115L; // 这句似乎也可以不要
-        protected Object readResolve() {
-            return getInstance();
-        }
-    }
-
-    // 以下为攻击方式
-    final String filename = "singleton.serialized";
-    Singleton inst1 = Singleton.getInstance(); // 正常创建 inst1
-    ObjectOutput out = new ObjectOutputStream(new FileOutputStream(filename));
-    out.writeObject(inst1);
-    out.close();
-
-    ObjectInput in = new ObjectInputStream(new FileInputStream(filename));
-    Singleton inst2 = (Singleton) in.readObject(); // 通过反序列化创建 inst2
-    in.close();
-
-    System.out.println("inst1 hashCode=" + inst1.hashCode());
-    System.out.println("inst2 hashCode=" + inst2.hashCode());
-```
 
 https://howtodoinjava.com/design-patterns/creational/singleton-design-pattern-in-java/
 5. Best Practice: Add readResolve() to Singleton Instance
@@ -395,17 +399,17 @@ CAS: compare and swap。设计并发算法时常用的技术。
 CAS的好处在于不需要使用传统的锁机制来保证线程安全,CAS是一种基于忙等待的算法,依赖底层硬件的实现,相对于锁它没有线程切换和阻塞的额外消耗,可以支持较大的并行度。
 ```java
     public class Singleton {
-        private static final AtomicReference<Singleton> INSTANCE = new AtomicReference<Singleton>(); 
-    
+        private static final AtomicReference<Singleton> INSTANCE = new AtomicReference<Singleton>();
+
         private Singleton() {}
-    
+
         public static Singleton getInstance() {
             for (;;) {
                 Singleton singleton = INSTANCE.get();
                 if (null != singleton) {
                     return singleton;
                 }
-    
+
                 // CAS 操作
                 singleton = new Singleton();
                 if (INSTANCE.compareAndSet(null, singleton)) {
@@ -435,17 +439,17 @@ CAS的好处在于不需要使用传统的锁机制来保证线程安全,CAS是�
     public class MultiInstance {
         private long instanceNum; // 实例编号
         private static final Map<Long, MultiInstance> ins = new HashMap<>(); // 用于存放实例
-    
+
         static { // 存放 3 个实例
             ins.put(1L, new MultiInstance(1));
             ins.put(2L, new MultiInstance(2));
             ins.put(3L, new MultiInstance(3));
         }
-    
+
         private MultiInstance(long n) {
             this.instanceNum = n;
         }
-    
+
         public MultiInstance getInstance(long n) {
             return ins.get(n);
         }
@@ -475,9 +479,9 @@ CAS的好处在于不需要使用传统的锁机制来保证线程安全,CAS是�
 ```java
     public class ThreadedSingleton {
         private static final ConcurrentHashMap<Long, ThreadSingleton> instances = new ConcurrentHashMap<>();
-    
+
         private ThreadedSingleton() {}
-    
+
         public static ThreadedSingleton getInstance() {
             Long id = Thread.currentThread().getId();
             instances.putIfAbsent(id, new ThreadedSingleton());
