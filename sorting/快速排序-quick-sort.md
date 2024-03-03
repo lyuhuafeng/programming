@@ -164,6 +164,8 @@ https://en.wikipedia.org/wiki/Comparison_sort
 * 变化：i 找小的，j 找大的。
 * 不变：最 left 元素值作为 pivot 值。j 先动手。最后 i 或 j 与left交换。
 
+<font color="red">左 <= 右 > 或 左 < 右 > 似乎都可以，但 左< 右>= 似乎不行。to check later</font>
+
 ```cpp
     // 最左边元素值为 pivot 值。对面 j 先动手。
     int partition(int a[], int left, int right) {
@@ -290,3 +292,40 @@ Std::nth_element()
 风格二，`sort()` 和 `partition()` 都用 `(a[])` 做参数。递归时，要把当前数组切出一块再去调用。
 
 [`quick-sort-golang-sol2.go`](code/quick-sort-golang-sol2.go)
+
+# 3-way partition
+
+分成三部分：小于、等于、大于。
+
+时间复杂度：`O(nlog₃n)`，比 2-way partition 的 `O(nlog₂n)` 快一些。
+
+若所有元素都相等，则 3-way partition 的时间复杂度为 `O(n)` or `O(1)`?，而 2-way partition 的时间复杂度为 `O(n²)`。
+
+https://iq.opengenus.org/3-way-partitioning-quick-sort/
+
+https://cs.stackexchange.com/questions/22389/quicksort-dijkstra-3-way-partitioning-why-the-extra-swapping 尤其注意「Some Context and History」这部分。
+
+https://geeksprogrammings.blogspot.com/2014/02/algorithm-quick-sort-program.html
+
+https://www.geeksforgeeks.org/3-way-quicksort-dutch-national-flag/
+
+https://www.toptal.com/developers/sorting-algorithms/quick-sort-3-way
+
+https://stackoverflow.com/questions/941447/quicksort-with-3-way-partition
+
+http://www.sorting-algorithms.com/static/QuicksortIsOptimal.pdf
+
+http://www.sorting-algorithms.com/quick-sort-3-way
+
+are there four partition versions of quicksort...
+
+https://www.geeksforgeeks.org/implement-various-types-of-partitions-in-quick-sort-in-java
+- naive partition
+- Lomuto partition
+- Hoare’s partition
+
+https://en.wikipedia.org/wiki/Quicksort
+
+# dual-pivot quicksort
+
+https://www.geeksforgeeks.org/dual-pivot-quicksort/

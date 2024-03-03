@@ -25,7 +25,7 @@ using namespace std;
         return ans;
     }
 
-// 官方题解。从每个序列的开头数。序列开头如何判断？看n-1是否存在。
+// 官方题解。从每个序列的开头数。序列开头如何判断？看 n-1 是否存在。
 // 开始用 set，最后一个 case 超时，因其有 23817 个元素，太多。
 // 改成 unordered_set，就通过了。应该是 set 排序耗时。
     int longestConsecutive_official(vector<int>& nums) {
@@ -44,9 +44,7 @@ using namespace std;
                 while (s.count(i) != 0) { i++; }
                 int l = i - n;
                 
-                if (len < l) {
-                    len = l;
-                }
+                len = max(len, l);
             }
         }
         return len;
@@ -57,7 +55,7 @@ using namespace std;
         unordered_map<int, int> d; // d[i]: i作为一个端点（左端点或右端点）时，最长区间长度
         for (int i : nums) {
             d[i] = 0;
-        } // d[] 初值全为 0
+        } // d[] 初值全为 0。不能用 fill(d.begin(), d.end(), 0)！
 
         int maxl = 0;
         for (int i : nums) {
@@ -68,7 +66,7 @@ using namespace std;
                 d[i - l] = len; // i-l 为 左端点 的情况
                 d[i + r] = len; // i+r 为 右端点 的情况
                 d[i] = max(1 + l, 1 + r); // i 作为 左端点 或 右端点 的情况
-                if (maxl < len) { maxl = len; }
+                maxl = max(maxl, len);
             }
         }
         return maxl;

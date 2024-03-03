@@ -10,7 +10,7 @@ k，通常从 1 开始，但若使用 quick select，则从 0 开始比较方便
 
 ## 1. 排序后直接取数
 
-时间复杂度：O(nlogn)。
+时间复杂度：`O(nlogn)`。
 
 ## 2. 用 binary search
 
@@ -38,11 +38,11 @@ C++ 代码：[kth-smallest-binary-search.cpp](code/kth-smallest-binary-search.cp
 
 找 k-th largest
 
-初始化一个 min-heap，其堆顶元素最小。堆内存放“从大到小前 k 个元素”。
+初始化一个 min-heap，其堆顶元素最小。堆内存放「从大到小前 k 个元素」。
 
 先将数组的前 k 个元素依次入堆。
 
-从第 k+1 个元素开始，若 a[i] 大于堆顶元素（top k 里最小的），则将堆顶元素出堆，并将 a[i] 入堆。
+从第 k+1 个元素开始，若 `a[i]` 大于堆顶元素（top k 里最小的），则将堆顶元素出堆，并将 `a[i]` 入堆。
 
 遍历完成后，堆中保存的就是最大的 k 个元素，堆顶就是 k-th largest 的。
 
@@ -50,7 +50,7 @@ C++ 代码：[kth-largest-priority-queue.cpp](code/kth-largest-priority-queue.cp
 
 若求 k-th smallest，则
 * 改为 max-heap。
-* 入堆时。从第 k+1 个元素开始，若 a[i] <font color=red>小于</font>堆顶元素（top K 里最小的），则将堆顶元素出堆，并将 a[i] 入堆。
+* 入堆时。从第 k+1 个元素开始，若 `a[i]` <font color=red>小于</font>堆顶元素（top K 里最小的），则将堆顶元素出堆，并将 `a[i]` 入堆。
 * 遍历完成后，堆中保存的就是最小的 k 个元素，堆顶就是 k-th smallest 的。
 
 代码上看，因 max-heap 是 priority queue 的缺省类型，所以定义 pq 类型时不用给出 `greater<int>` 参数，简单了一点。
@@ -81,10 +81,10 @@ to add later
 k 从 0 开始算。若题目要求从 1 开始，则 `k = k - 1`。
 若要找 k largests，则 `k = len + 1 - k` （从 1 开始）或 `k = len - k`（从 0 开始）
 
-k在 [0, len-1] 范围内。
-如果 k > len - 1，则最后 assert(left <= right) 会失败。
+k在 `[0, len-1]` 范围内。
+如果 `k > len - 1`，则最后 `assert(left <= right)` 会失败。
 
-<font color=red>注意，partition 过程中，交换元素位置，改动了数组内容。如果用 vector，则 qselect() 和 partition() 两个函数的参数里都要用引用类型。（用数组则没有这个问题）</font>
+<font color=red>注意，partition 过程中，交换元素位置，改动了数组内容。如果用 vector，则 `qselect()` 和 `partition()` 两个函数的参数里都要用引用类型。（用数组则没有这个问题）</font>
 
 C++ 代码，kth smallest，数组序列：[kth-smallest-quick-select.cpp](code/kth-smallest-quick-select.cpp)
 
