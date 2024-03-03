@@ -72,7 +72,8 @@ using namespace std;
         return maxl;
     }
 
-// 并查集法
+// 并查集法。
+// 元素编号不连续，也不知道编号最大是多少，所以用 unordered_map 当 parents。
     int find(unordered_map<int, int>& parents, int i) {
         if (parents[i] == i) {
             return i;

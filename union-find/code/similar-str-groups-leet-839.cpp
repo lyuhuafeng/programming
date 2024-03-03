@@ -21,7 +21,7 @@ public:
     void unite(vector<int>& parents, vector<int>& rank, int i, int j, int& merged_cnt) {
         int ri = find(parents, i), rj = find(parents, j);
         if (ri == rj) {
-            return ;
+            return;
         }
         if (rank[ri] >= rank[rj]) {
             parents[rj] = ri;

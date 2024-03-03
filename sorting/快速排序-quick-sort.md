@@ -183,7 +183,7 @@ https://en.wikipedia.org/wiki/Comparison_sort
         return i;
     }
 
-    // 最右边元素值作为pivot值。左边i先动手。
+    // 最右边元素值作为 pivot 值。左边 i 先动手。
     int partition(int a[], int left, int right) {
         int key = a[right];
         int i = left, j = right;
@@ -194,7 +194,7 @@ https://en.wikipedia.org/wiki/Comparison_sort
                 swap(a[i], a[j]);
             }
         }
-        a[right] = a[i]; a[i] = key; // 相当于 swap(a[r], a[i])
+        a[right] = a[i]; a[i] = key; // 相当于 swap(a[right], a[i])
         return i;
     }
 ```
@@ -232,7 +232,7 @@ https://en.wikipedia.org/wiki/Comparison_sort
 To find the k-th smallest element in an unordered list.
 又叫 k-th order statistic
 
-与qsort类似，但分成两部分后，只需在pivot的某一侧继续找，不用管另一侧。
+与qsort类似，但分成两部分后，只需在 pivot 的某一侧继续找，不用管另一侧。
 所以，递归调用只用调一次，iterative方法也不用stack。
 https://en.wikipedia.org/wiki/Quickselect
 

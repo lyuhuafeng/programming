@@ -108,6 +108,6 @@
 
 - [128. 最长连续序列](https://leetcode.cn/problems/longest-consecutive-sequence/) 注意，这里说的「序列」可以是乱序的；我开始还以为是不能打乱原顺序的。
   - 官方题解代码、精选题解评论代码、以及错误的dp代码：[longest-consecutive-sequence-leet-128.cpp](code/longest-consecutive-sequence-leet-128.cpp)
-  - [yukiyama 并查集解法](https://leetcode.cn/problems/longest-consecutive-sequence/solutions/1375510/by-yukiyama-e3th/)。代码同上。
+  - [yukiyama 并查集解法](https://leetcode.cn/problems/longest-consecutive-sequence/solutions/1375510/by-yukiyama-e3th/)。代码同上。<font color="red">用 map 而不是数组做 parents。</font>
 
 - [leet 56. 合并区间](https://leetcode.cn/problems/merge-intervals/) 排序后顺序遍历 [merge-intervals-leet-56.cpp](code/merge-intervals-leet-56.cpp)
