@@ -24,7 +24,7 @@
 
 初始条件：初始状态下，默认所有子串都不是回文串。
 
-时间复杂度：`O(n^2)`
+时间复杂度 `O(n²)`
 
 代码
 
@@ -115,7 +115,7 @@
 
 # 中心扩展法
 
-时间复杂度 `O(n^2)`
+时间复杂度 `O(n²)`
 
 ```cpp
     pair<int, int> expand(const string& s, int left, int right) {

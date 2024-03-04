@@ -1,5 +1,6 @@
-# [leetcode 918: 环形子数组的最大和](https://leetcode.cn/problems/maximum-sum-circular-subarray/description/)
+# [leetcode 918: 环形子数组的最大和](https://leetcode.cn/problems/maximum-sum-circular-subarray)
 
+对比：[53. 最大子数组和](../dp/dp-01-最大连续子段和-L4-u14-ex1-leet-53-多种方法.md) 不是环形。同样用前缀和法，53 是求 `[0 .. i]` 范围内的最小前缀和，918 是求 `[i-n .. i]` 长度为 n 窗口的最小前缀和。前者打擂台即可，后者用单调队列方便。
 
 # 解法
 

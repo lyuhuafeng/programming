@@ -115,10 +115,11 @@ https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
 
 - [239. 滑动窗口最大值](https://leetcode.cn/problems/sliding-window-maximum/) 基本模版：[c++ 代码](code/sliding-window-max-leet-239.cpp), [go 代码](code/sliding-window-max-leet-239.go)
 - [LCR 183. 望远镜中最高海拔](https://leetcode.cn/problems/hua-dong-chuang-kou-de-zui-da-zhi-lcof/) 基本模版
-- [918. 环形子数组的最大和](https://leetcode.cn/problems/maximum-sum-circular-subarray/): [我的题解](单调队列-leet-918-环形子数组最大和.md)
-- [862. 和至少为 K 的最短子数组](https://leetcode.cn/problems/shortest-subarray-with-sum-at-least-k/): [我的题解](单调队列-leet-862-和至少为K的最短子数组.md) <font color="red">二分搜索优化还没搞定</font>
-
-- 122. Best Time to Buy and Sell Stock II
+- [918. 环形子数组的最大和](https://leetcode.cn/problems/maximum-sum-circular-subarray/): [我的题解](单调队列-leet-918-环形子数组最大和.md) 对比：[53. 最大子数组和](../dp/dp-01-最大连续子段和-L4-u14-ex1-leet-53-多种方法.md) 不是环形
+- [862. 和至少为 K 的最短子数组](https://leetcode.cn/problems/shortest-subarray-with-sum-at-least-k/): [我的题解](单调队列-leet-862-和至少为K的最短子数组.md) 「窗口范围内和至少为 k」的滑动窗口。<font color="red">二分搜索优化还没搞定</font>
+- `1425.` 带限制的子序列和：[我的题解](leet-1425-带限制的子序列和.md)
+- `1696.` 跳跃游戏 VI：[我的题解]()
+- `luogu p2034.` 选择数字：[我的题解]()
 
 
 - https://1e9.medium.com/monotonic-queue-notes-980a019d5793

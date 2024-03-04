@@ -77,7 +77,7 @@ using namespace std;
         }
 
         int dp[n][n];
-        memset(dp, 0, sizeof dp);
+        fill_n(&dp[0][0], n * n, 0);
 
         int maxl = 0;
         for (int i = 0; i <= n - 1 - 2; i++) {

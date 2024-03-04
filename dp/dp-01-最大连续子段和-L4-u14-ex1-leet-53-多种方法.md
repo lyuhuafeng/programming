@@ -8,6 +8,8 @@
 
 ![largest subarray sum](pics/largest-subarray-sum.png)
 
+对比：[`leet 918.` 环形子数组最大和](../monotonic-stack-queue/单调队列-leet-918-环形子数组最大和.md)。918 是环形。同样用前缀和法，53 是求 `[0 .. i]` 范围内的最小前缀和，918 是求 `[i-n .. i]` 长度为 n 窗口的最小前缀和。前者打擂台即可，后者用单调队列方便。
+
 多种方法：dp (Kadane's algorithm)、前缀和、分治
 
 # dp 法（Kadane’s Algorithm）

@@ -31,13 +31,16 @@ len, i, j 遍历都是正序！<font color="red">（why? i 应该逆序？）</f
               dp[i][j] = max(dp[i][j], dp[i][k] + dp[k + 1][j] + cost[i][j])
 ```
 
-- [5. 最长回文子串](https://leetcode.cn/problems/longest-palindromic-substring/)：[解法](leet-5-最长回文子串-区间dp-马拉车.md) 注意，这里「子串」是连续的！
+四道回文：
 
-- [647. 回文子串数量](https://leetcode.cn/problems/palindromic-substrings/)：[解法](leet-647-回文子串数量.md)
+- 连续：[5. 最长回文子串](https://leetcode.cn/problems/longest-palindromic-substring/)：[解法](leet-5-最长回文子串-区间dp-马拉车.md) 注意，这里「子串」是连续的！
 
-- [516. 最长回文子序列](https://leetcode.cn/problems/longest-palindromic-subsequence/)：[解法](dp-05-最长回文子序列-L4-u14-hw1.md) 注意，这里「子序列」可能是不连续的！
+- 连续：[647. 回文子串数量](https://leetcode.cn/problems/palindromic-substrings/)：[解法](leet-647-回文子串数量.md)
 
-- [730. 统计不同回文子序列](https://leetcode.cn/problems/count-different-palindromic-subsequences/)：[解法](dp-区间-不同回文子序列-leet-730.md)
+- 可能不连续：[516. 最长回文子序列](https://leetcode.cn/problems/longest-palindromic-subsequence/)：[解法](leet-516-最长回文子序列-可不连续.md) 注意，这里「子序列」可能是不连续的！
+
+- 可能不连续：[730. 统计不同回文子序列](https://leetcode.cn/problems/count-different-palindromic-subsequences/)：[解法](dp-区间-不同回文子序列-leet-730.md)
+
 
 - [312. 戳气球](https://leetcode.cn/problems/burst-balloons/)：[解法](dp-区间-戳气球-leet-312.md)
 
@@ -47,7 +50,7 @@ len, i, j 遍历都是正序！<font color="red">（why? i 应该逆序？）</f
 
 - [877. 石子游戏](https://leetcode.cn/problems/stone-game/)
 
-- [1000. 合并石头的最低成本](https://leetcode.cn/problems/minimum-cost-to-merge-stones/) [解法](leet-1000-合并石头每次k堆.md)
+- [1000. 合并石头的最低成本](https://leetcode.cn/problems/minimum-cost-to-merge-stones/) [解法](leet-1000-合并石头每次k堆.md)。参考[石子合并系列](dp-区间-石子合并系列及优化.md)
 
 - [664. 奇怪的打印机](https://leetcode.cn/problems/strange-printer/)：[两种 dp 解法](dp-区间-奇怪的打印机-leet-644.md)
 
@@ -59,7 +62,7 @@ len, i, j 遍历都是正序！<font color="red">（why? i 应该逆序？）</f
 
 - [678. 有效的括号字符串](https://leetcode.cn/problems/valid-parenthesis-string/) [两种 dp 解法](leet-678-有效的括号字符串.md)
 
-- [2104. 子数组范围和](https://leetcode.cn/problems/sum-of-subarray-ranges/) dp 算法其实是个不复杂的递推。更高效的是单调栈算法。[题解笔记](../monotonic-stack-queue/leet-2104-子数组范围和.md)
+- [2104. 子数组范围和](https://leetcode.cn/problems/sum-of-subarray-ranges/) dp 算法其实是个不复杂的递推。更高效的是单调栈算法。两种方法见[题解笔记](../monotonic-stack-queue/leet-2104-子数组范围和.md)
 
 - [vip 1246. 删除回文子数组](https://leetcode.cn/problems/palindrome-removal/) 据说常见于微软面试
 
@@ -103,7 +106,7 @@ https://github.com/shinezzz/LeetCode-Topic/tree/master/5%E5%8A%A8%E6%80%81%E8%A7
 
 - LIS: [300. 最长递增子序列](https://leetcode.cn/problems/longest-increasing-subsequence/)：[解法](dp-03-lis-最长递增子序列-01-综述.md)
 
-- [53. 最大子数组和](https://leetcode.cn/problems/maximum-subarray/) 多种解法：[dp、前缀和、分治、Kadane](dp-01-最大连续子段和-L4-u14-ex1-leet-53-多种方法.md)
+- [53. 最大子数组和](https://leetcode.cn/problems/maximum-subarray/) 多种解法：[dp、前缀和、分治、Kadane](dp-01-最大连续子段和-L4-u14-ex1-leet-53-多种方法.md) 对比：[`leet 918.` 环形子数组最大和](../monotonic-stack-queue/单调队列-leet-918-环形子数组最大和.md)。
 
 - [873. 最长的斐波那契子序列的长度](https://leetcode.cn/problems/length-of-longest-fibonacci-subsequence/) 三种方法。所谓 dp，其实更像简单递推，还不如 dfs 法2。代码：[`longest-fib-subseq-leet-873.cpp`](code/longest-fib-subseq-leet-873.cpp)
 
