@@ -1,7 +1,8 @@
 # 最大连续子段和，Largest Continuous Subarray Sum
 
-* [l4-u14-ex1. 最大连续子段和](https://oj.youdao.com/course/13/82/1#/1/9465)
-* [leetcode 53. 最大子数组和](https://leetcode.cn/problems/maximum-subarray/)
+- [`leet 53.` 最大子数组和](https://leetcode.cn/problems/maximum-subarray/)
+- [`luogo p1115.` 最大子段和](https://www.luogu.com.cn/problem/P1115)
+- [`l4, u14, ex1.` 最大连续子段和](https://oj.youdao.com/course/13/82/1#/1/9465)
 
 注意：子段是连续的
 
@@ -59,34 +60,49 @@ f[i] 表示以第 i 个元素 ai 结尾的最大子段和。
     // s[0] = 0
     // s[1] = a0
     // s[i] = a0 + a1 + ... + a[i-1] = s[i-1] + a[i-1]
-    // a[j] + ... + a[i] = s[i+1] - s[j]. j:[0-i], j=0 也适用 
+    // sum[i .. j] = s[j+1] - s[i]. i:[0-j], i=0 也适用
     int maxSubArray(vector<int>& nums) {
-        vector<int> s(nums.size() + 1);
+        int n = nums.size();
+        vector<int> s(n + 1);
         s[0] = 0;
-        for (int i = 1; i <= nums.size(); i++) {
-            s[i] = s[i - 1] + nums[i - 1];
+        for (int i = 0; i < n; i++) {
+            s[i + 1] = s[i] + nums[i];
         }
-        int minps = s[0];
-        int ans = nums[0];
-        int ansj = s[0]; // 到目前为止的前缀和的最大值
-        for (int j = 0; j < nums.size(); j++) {
-            if (minps < s[j]) {
-                minps = s[j];
-            }
-            ansj = s[j + 1] - minps; // s[j+1] - min{s[j]}, ∀ j ∈ [0, j]
-            if (ans < ansj) {
-                ans = ansj;
-            }
+        int minps = INT_MAX;
+        int ans = INT_MIN;
+        for (int j = 0; j <= n - 1; j++) {
+            minps = min(minps, s[j])
+            int ansj = s[j + 1] - minps; // s[j+1] - min{s[i]}, ∀ i ∈ [0-j]
+            ans = max(ans, ansj);
         }
         return ans;
     }
-// 或：滚动式前缀和
+
+// 或：滚动式前缀和，逻辑更清晰的版本。与上面非滚动版本更新 minps、ps 的顺序一致。
+// 初值：ps必须为0 (ps[0])，因后续不是比较而是累加。
+// 循环体内，
+//   先更新 minps。此时 ps 不含 i，即 ps 不含 nums[j+1]，故 minps 是 ps[0 .. j] 里最小的，符合公式里 min 的范围。
+//       s[j+1] - min{s[i]}, ∀ i ∈ [0-j]
+//   然后更新 ps，此时 ps 含 i，即 ps 含 nums[j+1]，ps 实为 ps[j+1] = sum[0 .. j]。
+    int maxSubArray(vector<int>& nums) {
+        int ps = 0; // 前缀和 s[0]
+        int minps = INT_MAX; // 最小前缀和
+        int ans = INT_MIN;
+        for (int i : nums) { // j: 0 ~ n-1
+            minps = min(minps, ps); // ps[0 .. j] 里最小的
+            ps += i; // ps[j+1] = sum[0 .. j]
+            ans = max(ans, ps - minps);
+        }
+        return ans;
+    }
+
+// 或：滚动式前缀和，较绕的版本，与上面非滚动版本更新 minps、ps 的顺序略有不同。
     int maxSubArray_running_prefix_sum(vector<int>& nums) {
-        int ps = 0; // 前缀和
+        int ps = 0; // 前缀和 s[0]
         int minps = 0; // 最小前缀和
         int ans = INT_MIN;
-        for (int i : nums) {
-            ps += i;
+        for (int i : nums) { // j: 0 ~ n-1
+            ps += i; // ps[j+1] = sum[0 .. j]
             ans = max(ans, ps - minps); // 注意，此时 ps 包含了 i，而 minps 没包含 i
             minps = min(minps, ps);
         }

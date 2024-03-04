@@ -59,8 +59,10 @@ antichain:
 
 # 例题：木棍加工
 
-* [`l5, u16, ex4.` 木棍加工](https://oj.youdao.com/course/37/285/1#/1/14240)
-* [`luogu P1233.` 木棍加工](https://www.luogu.com.cn/problem/P1233)
+- [`luogu P1233.` 木棍加工](https://www.luogu.com.cn/problem/P1233)
+- [`l5, u16, ex4.` 木棍加工](https://oj.youdao.com/course/37/285/1#/1/14240)
+
+求「最短准备时间」，就是求「最少可拆分成多少个 chain」。chain 是「不上升子序列」（满足加工顺序）。
 
 按题目要求，l 相等或 w 相等时，是「可比」的。
 
@@ -78,14 +80,14 @@ antichain:
 
 想求 chain 的个数，需要找 anti-chain 的最大长度。anti-chain 其实是从每个 chain 中取出一个构成的，其各元素之间是「不可比」的。我们已经按 l（不严格）递减排序，所以找 w 时要按（严格）升序，这样保证每俩个之间都「不可比」。而 w 的严格升序，就是 w 的严格 LIS 长度。最后找到的，可能是 2->9, 2->5, 2->4, 1->4，长度都为 2，所以 chain 的个数也是 2。<font color="red">总觉得很绕，to think later</font>
 
-代码：[`dilworth-sticks-l5-u16-ex4.cpp`](code/dilworth-sticks-l5-u16-ex4.cpp)
+c++ 代码：[`luogo-p1233-sticks-using-dilworth.cpp`](code/luogo-p1233-sticks-using-dilworth.cpp)
 
 # 其他例题
 
-- [354. 俄罗斯套娃信封问题](https://leetcode.cn/problems/russian-doll-envelopes/) 最长递增子序列 LIS (Longes Increasing Subsequence) 的变种。也是 partial ordered set，但是找最长 chain 的长度，而不是 chain 的个数，所以没用到 Dilworth 定理。排序时，两个维度，其中一个是逆序的。跟「木棍加工」不同。
+- [354. 俄罗斯套娃信封问题](https://leetcode.cn/problems/russian-doll-envelopes/) 最长递增子序列 LIS (Longes Increasing Subsequence) 的变种。也是 partial ordered set，但是找最长 chain 的长度，而不是 chain 的个数，所以没用到 Dilworth 定理。排序时，两个维度，其中一个是逆序的，跟「木棍加工」不同。为啥不同？因为「相等」不行，而「木棍」「相等」是可以的。若「相等」也能套进去，则排序方法与「木棍」一样。<font color="red">to think later</font>
 
 代码：[`leet-354-russian-doll-envelopes.cpp`](code/leet-354-russian-doll-envelopes.cpp) 思路见代码中注释。其中用多种方法求 LIS 长度。
 
-- [`luogu P1020.` 导弹拦截](https://www.luogu.com.cn/problem/P1020) 求最长严格下降子序列长度
+- [`luogu P1020.` 导弹拦截](https://www.luogu.com.cn/problem/P1020) 分别求最长严格下降子序列长度、最长非严格上升子序列长度
 
 - [`luogu P4298/bzoj1143` 祭祀](https://www.luogu.com.cn/problem/P4298)

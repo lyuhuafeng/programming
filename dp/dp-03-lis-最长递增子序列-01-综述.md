@@ -123,9 +123,10 @@ c++ 代码的两个实现
         vector<char> f; // f[i]: 长度为 i+1 的 LIS，结尾元素的最小值。f[0] 有用。
         for (int i = 0; i < n; i++) {
             if (f.empty() || a[i] > f.back()) {
+                // a[i] > f.back() 的情况，若在下面用 lower_bound()，则找到是 f.end()，不能直接赋值，故在此单独处理
                 f.push_back(a[i]);
             } else {
-                int j = lower_bound(f.begin(), f.end(), a[i]) - f.begin(); // LIS 严格递增
+                int j = lower_bound(f.begin(), f.end(), a[i]) - f.begin(); // LIS 严格递增。lower_bound() 不会返回 f.end()，可放心赋值
                 f[j] = a[i];
                 // 或 *lower_bound(f.begin(), f.end(), a[i]) = a[i];
             }
