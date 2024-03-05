@@ -16,7 +16,7 @@
 
 - `901.` 股票价格跨度。初看是简单找 previous greater，再看发现是分布式的，有点意思。[题解](leet-901-股票价格跨度.md)
 
-- `1019.` 链表中的下一个更大节点。链表元素的 next greater，非常有价值。[解法笔记](leet-1019-链表中的下一个更大节点.md)
+- `1019.` 链表中的下一个更大节点。链表元素的 next greater，非常有价值。[解法笔记](leet-1019-链表中的下一个更大节点.md)。其中还有「往 stack 里 push 一个 pair 的若干种方法」。
 
 ## 雨水
 
@@ -46,7 +46,7 @@ https://cloud.tencent.com/developer/article/2313991?areaId=106001
 
 ## 字典序最小
 
-- `1673. 最具竞争力的子序列。[两种解法](leet-1673-竞争力子序列.md)，分别用单调栈和单调队列。前者简单得多，且只用到 stack 本身，不用求 next greater 之类的
+- `1673.` 最具竞争力的子序列。[两种解法](leet-1673-竞争力子序列.md)，分别用单调栈和单调队列。前者简单得多，且只用到 stack 本身，不用求 next greater 之类的
 
 - [leetcode 402. 移掉K位数字](https://leetcode.cn/problems/remove-k-digits/) 跟上题一样 [`remove-k-digits-leet-402.cpp`](code/remove-k-digits-leet-402.cpp)
 

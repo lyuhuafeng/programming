@@ -59,7 +59,7 @@
 
 还是单调（不严格）递增栈。
 
-每来一个新柱 i，若比栈顶柱（用「top」表示）高或等，则直接入栈。否则，若低于 top，则 i 就是 top 的 next smaller，而「栈顶-1」（用「top_1」表示）就是 top 的 prev smaller，可得到「以 top 为最低」的最宽矩形。top 被弹出后，新的 top （原来的 top_1）仍然适用这个逻辑，可得到「以 top_1 为最低」的最宽矩形。依次弹出所有比 i 高的，然后 i 入栈。<font color="green">重点：第每个被弹出的 top，可同时得到它的 next smaller 和 previous smaller。</font>
+每来一个新柱 i，若比栈顶柱（用「top」表示）高或等，则直接入栈。否则，若低于 top，则 i 就是 top 的 next smaller，而「栈顶-1」（用「top_1」表示）就是 top 的 prev smaller，可得到「以 top 为最低」的最宽矩形。top 被弹出后，新的 top （原来的 top_1）仍然适用这个逻辑，可得到「以 top_1 为最低」的最宽矩形。依次弹出所有比 i 高的，然后 i 入栈。<font color="green">重点：每个被弹出的 top，可同时得到它的 next smaller 和 previous smaller-or-equal。不对称。</font>
 
 所有柱都处理完后，栈可能还不为空。栈内各柱都是没有「next smaller」的，每个柱子的右边都比它高，其「右边最远的不高于」就是「右边界」。栈内各柱是有「prev smaller」的，就是栈内比自己减 1 的位置。依次弹出栈内每个柱，计算即可。特殊地，剩下的最后一个柱，没有「prev smaller」，其「左边最远的不高于」就是「左边界」。
 
