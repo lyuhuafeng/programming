@@ -4,60 +4,21 @@
 
 最后生成一个 SPT (shortest path tree)，以起点（source）为 root，其他顶点为子节点。
 
-# 伪代码
-
-```python
- 1  function Dijkstra(Graph, source):
- 2      
- 3      for each vertex v in Graph.Vertices:
- 4          dist[v] ← INFINITY
- 5          prev[v] ← UNDEFINED                        
- 6          add v to Q
- 7      dist[source] ← 0
- 8      
- 9      while Q is not empty:
-10          u ← vertex in Q with min dist[u]
-11          remove u from Q
-12          
-13          for each neighbor v of u still in Q:
-14              alt ← dist[u] + Graph.Edges(u, v)
-15              if alt < dist[v]:
-16                  dist[v] ← alt
-17                  prev[v] ← u
-18
-19      return dist[], prev[]
-
-集合 U：所有未求出最短路径的顶点，就是 Q
-集合 S：所有已求出最短路径的顶点，就是从 Q 里移出的所有顶点
-
-3-6: 所有顶点加入 Q
-7:   初始化 src 的 dist 为0，作为下面重复部分的起点
-重复：
-10-11: 从U中找出 dist 最小的顶点 u，并移出 Q（也就是放入 S）。
-13-17: 在 Q 中，更新 u 的所有邻接顶点 v 的 dist
-       dist[v] = dist[u] + edge(u,v) 若这样比原 dist[v] 更小。（称为「松弛 (relax)」）
-
-```
-
-上面的原理伪码中，初始时所有顶点都放入 Q。
-
-实际优化：初始时只把起点顶点 src 放入 Q，其他顶点被「发现」后再放入。Q 在实际代码中用 priority queue。
-
-# 更简单直观的步骤
+# 思路
 
 辅助记忆：是普通 BFS 的扩展。
 
 - 相同之处：每次把「当前」顶点能到达的各顶点放入「待处理」集合。
 - 不同之处：按什么顺序，从「待处理」集合中取出一个，作为「当前」顶点？
   - BFS：按放入的「顺序」。则「待处理」集合是个普通 FIFO queue。
-  - Dijkstra：按顶点离 src 的「代价」（离起点近）。则「待处理」集合是个 priority queue。且「待处理」集合中的顶点的「代价」是可以更新的。为了更新 pq 中的「代价」，维护 visited[] 数组。
+  - Dijkstra：按顶点离 src 的「代价」（离起点近）。则「待处理」集合是个 priority queue。且「待处理」集合中的顶点的「代价」是可以更新的。为了更新 pq 中的「代价」，维护 `visited[]` 数组。
 
 若顶点之间的移动代价相同，则 Dijkstra 退化为 BFS。
 
 维护
-- dist[] 数组，dist[i] 表示：从起点 src 出发，到顶点 i 的最短距离。
-- visited[] 数组，bool 类型，visited[i] 表示：顶点 i 是否已「处理」过。因为 C++ priority queue 无法更新 queue 中元素，..., detailed below.
-- prev[] 数组，prev[i] 表示：从起点 src 出发，到顶点 i 的 shortest path，i 的前一个顶点编号
+- `dist[]` 数组，`dist[i]` 表示：从起点 src 出发，到顶点 i 的最短距离。
+- `visited[]` 数组，bool 类型，`visited[i]` 表示：顶点 i 是否已「处理」过。因为 C++ priority queue 无法更新 queue 中元素，细节见下。
+- `prev[]` 数组，`prev[i]` 表示：从起点 src 出发，到顶点 i 的 shortest path，i 的前一个顶点编号
 
 ```
 1. 初始化
@@ -96,38 +57,102 @@ Workaround 是，不更新 `(v1, d1)`，而是再增加一个 `(v1, d2)` 元素�
 
 # C++ 代码
 
-[`dijkstra-huafeng.cpp`](code/dijkstra-huafeng.cpp)
+- 最佳实现：priority queue 里存放自定义的结构体。结构体对象的比较，重载了 `operator<()`。重载该操作符，使 priority queue 的类型声明最简。[`dijkstra-best.cpp`](code/dijkstra-best.cpp)
+- priority queue 里存放自定义的结构体（同上）。自定义比较函数。priority queue 声明时要指定该比较函数，以及（被迫）指定底层容器为 vector。[`dijkstra-custom-cmp.cpp`](code/dijkstra-custom-cmp.cpp)
+- priority queue 里存放 pair 类型，就不用自定义比较函数，用系统自带的 `greater<pair<int, int>>` 函数。pair 默认根据 first 来排序，所以要把 dist 作为 first，vertex 作为 second。与原来自定义的结构体顺序相反。priority queue 声明时要指定这个 `greater` 函数，以及被迫指定底层容器为 vector。[`dijkstra-using-pair.cpp`](code/dijkstra-using-pair.cpp)
+- 小图灵标程：用了链式前向星而不是 vector 来存储邻接表；重载了 `operator<` 操作符。[`dijkstra-little-turing.cpp`](code/dijkstra-little-turing.cpp)
 
-priority queue 里用的是自定义的结构体，和自定义的比较函数。
+最佳实现的核心代码：
+```cpp
+    // 边，包含 to 和 weight
+    struct edge_weight {
+        // int from; // from 顶点，实际不需要，实际用数组下标作为 from
+        int to; // to 顶点
+        int weight;
+    };
+
+    // 放在 priority queue 中，每个顶点及其「最短 dist」。dist 小的排在前。
+    struct vertex_dist {
+        int vertex;
+        int dist;
+    };
+
+    void add_edge(vector<edge_weight> adj[], int u, int v, int wt) {
+        adj[u].push_back({v, wt});
+        adj[v].push_back({u, wt});
+    }
+
+    // 缺省：max-heap，出 max 值，比较函数返回 a < b
+    // 我们这里：min-heap，出 min 值，比较函数相应取反，返回 a > b
+    bool operator<(const vertex_dist& v1, const vertex_dist& v2) {
+        return v1.dist > v2.dist;
+    }
+
+    void shortest_path(vector<edge_weight> adj[], int V, int src) {
+        priority_queue<vertex_dist> pq;
+
+        vector<int> dist(V, INT_MAX);
+        vector<bool> visited(V, false);
+        vector<int> prevs(V, -1); // 每个顶点的前驱顶点，方便打印最终的 shortest path
+
+        // 插入src，距离为0
+        pq.push({src, 0});
+        dist[src] = 0;
+        prevs[src] = src;
+
+        int reached = 0;
+        while (!pq.empty()) {
+            int u = pq.top().vertex;
+            pq.pop();
+            if (visited[u]) {
+                continue;
+            }
+            reached++;
+            visited[u] = true;
+            for (auto x : adj[u]) {
+                int v = x.to;
+                int weight = x.weight;
+                if (dist[v] > dist[u] + weight) {
+                    // 更新 v 的「最短距离」和「前驱顶点」
+                    dist[v] = dist[u] + weight;
+                    prevs[v] = u;
+                    pq.push({v, dist[v]});
+                }
+            }
+        }
+
+        // reachable: 多少顶点可以到达
+        // dist[]: 每个顶点的最短距离
+        // 根据 prev[] 倒推每个顶点的最短路径：略
+    }
+```
+
+几种实现的比较如下：
 
 ```cpp
+// best
+    bool operator<(const vertex_dist& v1, const vertex_dist& v2) {
+        return v1.dist > v2.dist;
+    }
+    priority_queue<vertex_dist> pq;
+
+// custom cmp
     struct my_cmp {
         bool operator()(const vertex_dist& v1, const vertex_dist& v2) const {
             return v1.dist > v2.dist;
         }
     };
-
     priority_queue<vertex_dist, vector<vertex_dist>, my_cmp> pq;
-```
 
-也可以用 pair 类型，就不用自定义比较函数了。pair 默认根据 first 来排序，所以要把 dist 作为 first，vertex 作为 second。与原来自定义的结构体顺序相反。
-
-```cpp
+// using-pair
     #include <utility> // pair
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> q;
-```
 
-这个用法看起来甚是臃肿，可以如下美化一下：
-
-```cpp
+// using-pair better: 美化后，看起来不那么臃肿
     #include <utility> // pair
     typedef pair<int, int> vertex_dist;
     priority_queue<vertex_dist, vector<vertex_dist>, greater<vertex_dist>> pq;
 ```
-
-用 pair 的代码：[`dijkstra-huafeng-using-pair.cpp`](code/dijkstra-huafeng-using-pair.cpp)
-
-小图灵的标程：[`dijkstra-little-turing.cpp`](code/dijkstra-little-turing.cpp)，用了链式前向星而不是 vector 来存储邻接表；重载了 `operator<` 操作符而不是自定义比较函数，使 priority queue 的定义更简捷。
 
 # Java code
 
