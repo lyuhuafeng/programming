@@ -1,10 +1,10 @@
-# 第 k 大 (k-th largest)，或前 k 大 (k largests, top k)
+# 第 k 大 (kᵗʰ largest)，或前 k 大 (k largests, top k)
 
-在未排序的序列中，找第 k 小的元素，或前 k 小（从小到大的前 k 个）元素。（k-th smallest 或 k smallests）
+在未排序的序列中，找第 k 小的元素，或前 k 小（从小到大的前 k 个）元素。（kᵗʰ smallest 或 k smallests）
 
-或，反过来，找第 k 大的元素，或前 k 大（从大到小的前 k 个）元素。（k-th largest 或 k largests 或 top-k）
+或，反过来，找第 k 大的元素，或前 k 大（从大到小的前 k 个）元素。（kᵗʰ largest 或 k largests 或 top-k）
 
-k-th smallest element, 又叫 k-th order statistic。
+kᵗʰ smallest element, 又叫 kᵗʰ order statistic。
 
 k，通常从 1 开始，但若使用 quick select，则从 0 开始比较方便。
 
@@ -14,7 +14,7 @@ k，通常从 1 开始，但若使用 quick select，则从 0 开始比较方便
 
 ## 2. 用 binary search
 
-找 k-th smallest
+找 kᵗʰ smallest
 
 用 `min_val`、`max_val` 分别表示数组的最小元素值、最大元素值。
 
@@ -36,7 +36,7 @@ C++ 代码：[kth-smallest-binary-search.cpp](code/kth-smallest-binary-search.cp
 
 ## 3. 用 heap 或 priority queue
 
-找 k-th largest
+找 kᵗʰ largest
 
 初始化一个 min-heap，其堆顶元素最小。堆内存放「从大到小前 k 个元素」。
 
@@ -44,14 +44,14 @@ C++ 代码：[kth-smallest-binary-search.cpp](code/kth-smallest-binary-search.cp
 
 从第 k+1 个元素开始，若 `a[i]` 大于堆顶元素（top k 里最小的），则将堆顶元素出堆，并将 `a[i]` 入堆。
 
-遍历完成后，堆中保存的就是最大的 k 个元素，堆顶就是 k-th largest 的。
+遍历完成后，堆中保存的就是最大的 k 个元素，堆顶就是 kᵗʰ largest 的。
 
 C++ 代码：[kth-largest-priority-queue.cpp](code/kth-largest-priority-queue.cpp)
 
-若求 k-th smallest，则
+若求 kᵗʰ smallest，则
 * 改为 max-heap。
-* 入堆时。从第 k+1 个元素开始，若 `a[i]` <font color=red>小于</font>堆顶元素（top K 里最小的），则将堆顶元素出堆，并将 `a[i]` 入堆。
-* 遍历完成后，堆中保存的就是最小的 k 个元素，堆顶就是 k-th smallest 的。
+* 入堆时。从第 k+1 个元素开始，若 `a[i]` <font color=red>小于</font>堆顶元素（top k 里最小的），则将堆顶元素出堆，并将 `a[i]` 入堆。
+* 遍历完成后，堆中保存的就是最小的 k 个元素，堆顶就是 kᵗʰ smallest 的。
 
 代码上看，因 max-heap 是 priority queue 的缺省类型，所以定义 pq 类型时不用给出 `greater<int>` 参数，简单了一点。
 
@@ -79,6 +79,7 @@ to add later
 与 quick sort 类似，但分成两部分后，只需在 pivot 的某一侧继续找，不用管另一侧。所以，递归调用只用调一次，iterative 方法也不用 stack。
 
 k 从 0 开始算。若题目要求从 1 开始，则 `k = k - 1`。
+
 若要找 k largests，则 `k = len + 1 - k` （从 1 开始）或 `k = len - k`（从 0 开始）
 
 k在 `[0, len-1]` 范围内。
@@ -86,9 +87,8 @@ k在 `[0, len-1]` 范围内。
 
 <font color=red>注意，partition 过程中，交换元素位置，改动了数组内容。如果用 vector，则 `qselect()` 和 `partition()` 两个函数的参数里都要用引用类型。（用数组则没有这个问题）</font>
 
-C++ 代码，kth smallest，数组序列：[kth-smallest-quick-select.cpp](code/kth-smallest-quick-select.cpp)
+C++ 代码，kᵗʰ smallest，数组序列：[kth-smallest-quick-select.cpp](code/kth-smallest-quick-select.cpp)
 
-C++ 代码，kth largest，vector 序列：[kth-largest-quick-select-vector.cpp](code/kth-largest-quick-select-vector.cpp)
+C++ 代码，kᵗʰ largest，vector 序列：[kth-largest-quick-select-vector.cpp](code/kth-largest-quick-select-vector.cpp)
 
-时间复杂度：partition 过程耗时 O(n)。若 pivot 选得好，每次砍掉一半，则总次数为 n + n/2 + n/4 + … + 1 = 2n。故平均耗时 O(n).
-
+时间复杂度：partition 过程耗时 `O(n)`。若 pivot 选得好，每次砍掉一半，则总次数为 `n + n/2 + n/4 + … + 1 = 2n`。故 qselect 平均耗时 `O(n)`.
