@@ -147,12 +147,14 @@
     str.resize(strlen(str.c_str()));
 ```
 
-# 一直读入，直到没有输入
+# 一直读入，直到输入结束
 
 ```cpp
     while (scanf("%d", &n) != EOF) { ... }
-    // 或者
+
     while (scanf("%d", &n) > 0) { ... }
+
+    while (cin >> n) { ... }
 ```
 
 # misc

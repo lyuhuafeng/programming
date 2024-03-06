@@ -34,9 +34,7 @@
 
 - [1856. 子数组最小乘积的最大值](https://leetcode.cn/problems/maximum-subarray-min-product/) 跟 84 很像，多了个前缀和。注意中间结果用 int64_t 类型存储。代码：[`leet-1856-max-subarray-min-product.cpp`](code/leet-1856-max-subarray-min-product.cpp)
 
-- [907. 子数组最小值之和](https://leetcode.cn/problems/sum-of-subarray-minimums/) 以每个 i 为最低点，看左右两边能延伸到哪里。为防重复计算，一边找 greater，另一边找 greater-or-equal，故一遍遍历即可。[`leet-907-sum-of-subarray-minsums.cpp`](code/leet-907-sum-of-subarray-minsums.cpp)
-
-- [2104. 子数组范围和](https://leetcode.cn/problems/sum-of-subarray-ranges/) 在上题 907 基础上扩展，很巧妙。[题解笔记](leet-2104-子数组范围和.md)
+- `907.` 子数组最小值之和。`2104.` 子数组范围和。后者是前者的扩展。[题解笔记](leet-907-2104-子数组范围和.md)
 
 - [`2818.` 操作使得分最大](https://leetcode.cn/problems/apply-operations-to-maximize-score/)
 题解一（贪心 + 排序 + 中心扩展 + 单调栈 + 快速幂）

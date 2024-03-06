@@ -79,6 +79,18 @@
     getline(cin, s, '\n');    // 显式指定遇到 '\n' 停止
 ```
 
+如果恰好只有一个 newline（比如，前面读入一个 string，随后就是 newline），则 `getline()` 读入一个空字符串。解法：用 `cin.ignore()` 忽略之。
+
+读入一行后，可能想逐个处理其中的字符串。
+
+```cpp
+    #include <sstream>
+    #include <string>
+    stringstream line(s); // s 是以前读入的一整行
+    string word;
+    while (line >> word) { /* do something with word */ }
+```
+
 # 法三：用 `std::cin.getline()` 读入 `char[]`
 
 换行符被读了并扔掉。为安全，需要指定最多读入多少字符。
@@ -92,7 +104,7 @@
     cin.getline(str, 20, '\n');    // 显式指定遇到 '\n' 停止
 ```
 
-# 法四：使用 `gets()` 读入 `char[]`。已被废弃。
+# 法四：使用 `gets()` 读入 `char[]`。<font color="red">已被废弃</font>
 
 ```cpp
     char name[100];
