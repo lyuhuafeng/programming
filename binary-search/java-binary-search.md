@@ -12,9 +12,9 @@
 
 「插入索引」，是「第一个大于 `k` 的位置」。有可能是「最后一个元素之后」。若返回值为 `i`，则可推出 `「插入索引」= -i - 1`。跟上面公式是对称的。
 
-## 利用 Arrays.binarySearch 实现 lower_bound()、upper_bound()
+## 利用 `Arrays.binarySearch` 实现 `lower_bound()`、`upper_bound()`
 
-完整代码: [bsearch.java](bsearch.java)
+完整代码: [bsearch.java](code/bsearch.java)
 
 ```java
     import java.util.Arrays;
