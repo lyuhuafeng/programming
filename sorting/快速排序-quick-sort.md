@@ -42,6 +42,7 @@ to add pic
 对比：
 - Lomuto 实现较直观、简单；Hoare 实现的微妙细节较多。
 - 平均情况下，Hoare 的交换次数约为 Lomuto 的三分之一。Hoare 更高效。
+- https://cs.stackexchange.com/questions/11458/quicksort-partitioning-hoare-vs-lomuto/11550
 
 # partition 法一：Lomuto partition scheme
 
