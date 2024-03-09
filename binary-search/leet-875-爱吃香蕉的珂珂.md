@@ -1,7 +1,7 @@
 # [`leet 875.` 爱吃香蕉的珂珂](https://leetcode.cn/problems/koko-eating-bananas)
 
 二分法，k
- 
+
 k：小 -> 大，耗时：大到小。找第一个「耗时 <= h」的。
 
 <font color="red">坑</font>：算 hours 时，不要用 `p += ceil((float) p / (float) speed)`。浮点数精度不够，坑爹。
