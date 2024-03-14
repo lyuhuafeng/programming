@@ -127,7 +127,7 @@ https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
 # Turing problems
 
 ## monotic stack
-- `l5, u7, ex1.` 出栈合法性。其实不是单调栈问题。[题解](l5-u7-ex1-出栈合法性.md)
+- `l5, u7, ex1. luogo p4387.` 出栈合法性。其实不是单调栈问题。[题解](luogu-p4387-验证出栈合法性.md)
 - `l5, u7, ex2. luogu p1901.` 发射站。基础，看点是用数组模拟栈。[题解](luogu-p1901-发射站.md)
 - `l5, u7, ex3. luogu p2422.` 良好的感觉。基础，看点是用数组模拟栈。[题解](luogu-p2422-良好的感觉.md)
 - `l5, u7, ex4. luogu p1044. NOIP 2003 普及组.` 栈的输出序列。其实不是单调栈问题，是 dp 或直接 catalan 数问题。[题解](../dp/luogu-p1044-栈的输出序列有多少种.md)
