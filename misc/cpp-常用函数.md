@@ -46,11 +46,11 @@
 
 大部分函数都重载为支持多种数据类型。例如 `std::exp()`：
 ```cpp
-  #include <cmath>
-  double exp(double x);
-  float exp(float x);
-  long double exp(long double x);
-  double exp(T x); // T为各种整数类型
+    #include <cmath>
+    double exp(double x);
+    float exp(float x);
+    long double exp(long double x);
+    double exp(T x); // T为各种整数类型
 ```
 
 # 取整
@@ -63,22 +63,9 @@
 # 绝对值
 
 使用 std::abs() 就行，不用 std::fabs() 或 ::abs().
-- std::abs() 支持各种整数和各种浮点数
-- std::fabs() 在 c++11 之前只支持浮点数, c++11 之后也支持各种整数。
-- ::abs() 只支持 int
+- `std::abs()` 支持各种整数和各种浮点数
+- `std::fabs()` 在 c++11 之前只支持浮点数, c++11 之后也支持各种整数。
+- `::abs()` 只支持 int
 
 # 乘方、开方、对数
 
-
-# 遍历 vector 时删除元素
-
-```cpp
-    for (vector<block>::iterator it = v.begin(); it != v.end(); /* it++ */) {
-        printf("%d ", *(it->vpos.begin()));
-        if (it->vpos.empty()) {
-            v.erase(it); // 删，则不需 it++
-        } else {
-            it++; // 不删，则 it++
-        }
-    }
-```
