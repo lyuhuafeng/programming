@@ -1,3 +1,7 @@
+# 总结
+
+`it = container.erase(it);` 对所有 container 都正确。（since c++11）
+
 # 遍历 vector 时删除元素
 
 `v.erase(it)` 与 list 的一样，返回 it 的下一个位置（iterator following the last removed element）。所以，把返回值赋给 it 正好：`it = v.erase(it);`。
@@ -51,4 +55,22 @@
     auto prev = it++; l.erase(prev); // 正确但啰嗦
     l.erase(it); it++; // segfault
     l.erase(it), it++; // segfault
+```
+
+# 遍历 map/set 时删除元素
+
+```cpp
+    map<K, V> m; // 或 set<T> m;
+    for (auto it = m.cbegin(); it != m.cend(); /* it++ */) {
+        if (must_delete(it)) {
+            it = m.erase(it); // since c++11
+            // m.erase(it++); // before c++11
+        } else {
+            ++it;
+        }
+    }
+
+    for (map<K, V>::const_iterator it = m.cbegin(); it != m.cend(); /* it++ */) {
+        it = must_delete(it) ? m.erase(it) : std::next(it);
+    }
 ```
