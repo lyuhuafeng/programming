@@ -4,6 +4,7 @@
 - 递推（非递归）方法
   - 有意思的 merge 变种方法
 - 链表的归并排序（递归方法）
+- 并发
 
 # 递归方法
 
@@ -147,3 +148,7 @@
         h = sorted_merge(a, b);
     }
 ```
+
+# 并发
+
+[concurrency vs. traditional](https://gledis.hashnode.dev/exploring-the-efficiency-of-merge-sort-concurrency-vs-traditional-approach)
