@@ -34,6 +34,13 @@ sorted(student_tuples, key=lambda student: student[2])
 # 输出：[('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
 ```
 
+## 复杂 tuple，多个字段做比较，`key=lambda i: (i[1], -i[0])`
+
+```python
+l = [(1, 0.9), (0, 0.3), (1, 0.7)] # (pred_score, y_label)
+l.sort(key=lambda i : (i[1], -i[0])) # 先按 pred 排，若 pred 相等，则按 y 逆序（从大到小）排
+```
+
 ## 类对象，取其某个字段作比较，`key=lambda student: student.age`
 
 ```python
