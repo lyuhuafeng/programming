@@ -145,7 +145,7 @@ by Tony Hoare。
 
 记忆要点：
 - pivot 值的对面方向先动手。
-- i, j 相遇后，满足的是「先动手方向」的结束条件。（若 j 先动手，则 `a[i] == a[j] < k`; 若 i 先动手，则 `a[i] == a[j] > k`。这样 `a[i]` 再与 pivot 交换恰好不会出错。
+- `i`、`j` 相遇后，满足的是「先动手方向」的结束条件。（若 `j` 先动手，则 `a[i] == a[j] < k`; 若 `i` 先动手，则 `a[i] == a[j] > k`。这样 `a[i]` 再与 pivot 交换恰好不会出错。
 
 如果从大到小排序：
 - 变化：i 找小的，j 找大的。
@@ -255,7 +255,7 @@ Dijkstra 3-way partition，以 Edsger Dijkstra 命名，因为他提出的「荷
 ```
 则，时间复杂度为 `O(nH)` = `O(n)`，是线性的。
 
-若所有元素都相等，则 3-way partition 的时间复杂度为 `O(n)` or `O(1)`?，而 2-way partition 的时间复杂度为 `O(n²)`。
+若所有元素都相等，则 3-way partition 的时间复杂度为 `O(n)` or `O(1)`？，而 2-way partition 的时间复杂度为 `O(n²)`。
 
 # 其他 partition 方法
 

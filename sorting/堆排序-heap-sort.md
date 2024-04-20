@@ -125,8 +125,8 @@ wiki 上的版本，可指定范围 `[start, end]` <font color="red">to check la
         make_heap(a, n);
         for (int i = n - 1; i >= 1; i--) {
             swap(a[i], a[0]); // 当前最大元素 a[0] 与当前堆最后元素 a[i] 交换。
-            // 交换后，a[i, n-1] 是已排好序的，a[0, i-1] 是剩余的堆。
-            sift_down(a, 0, i - 1); // 剩余的 heap, 堆顶元素a[0] sift down，使a[0]重新最大
+            // 交换后，a[i ... n-1] 是已排好序的，a[0 ... i-1] 是剩余的堆。
+            sift_down(a, 0, i - 1); // 剩余的 heap, 堆顶元素 a[0] sift down，使 a[0] 重新最大
         }
     }
 ```
