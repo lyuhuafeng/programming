@@ -4,7 +4,8 @@
 - 什么是 heap
 - 两个基本操作 sift-down, sift-up
 - 建堆 make heap 或 heapify
-- 堆排序 heap sort
+- 堆排序 heap sort (普通 top-down 方法)
+- 改进：bottom-up 方法
 - 时间复杂度分析
 - STL
 
@@ -20,12 +21,14 @@ Ordering property
 
 # 两个基本操作 sift down, sift up
 
+英语学习：sift: v. 筛、筛选
+
 - sift down: 若一节点值太小，则将它与其 larger child 交换。若还小，继续同样交换，使其一路向下，直至合适位置（它大于它的两个 children）。
 - sift up: 若一节点值太大，则将它与其 parent 交换。若还大，继续同样交换，使其一路向上，直至合适位置（它大于它的两个 children）。
 
 ## sift_down，调整 `a[start, end]` 范围，使之成为 heap
 
-- 前提：除了 start，`a[start + 1, end]` 范围已是 heap
+- 前提：除了 start，`a[start + 1, end]` 闭区间范围已是 heap
 - 要做：只需把 start 元素下沉到合适位置
 
 ```cpp
@@ -47,7 +50,7 @@ Ordering property
 
 ## sift_up: child 是新加到最后、可能要上移的节点
 
-- 前提：`a[0, child - 1]` 范围已是 heap
+- 前提：`a[0, child - 1]` 闭区间范围已是 heap
 - 要做：只需把 child 上浮到合适位置。不断与 parent 交换，直到遇到一个比自己大的 parent 或自己已到了最高处。
 
 ```cpp
@@ -76,7 +79,7 @@ Ordering property
 
 wiki 上的版本，可指定范围 `[start, end]` <font color="red">to check later</font>
 
-// todo: 有范围的 sift_up(), 因 sift_down() 是有范围的。
+// todo: 有范围的 `sift_up()`, 因 `sift_down()` 是有范围的。
 
 # 建堆 make heap 或 heapify
 
@@ -112,13 +115,15 @@ wiki 上的版本，可指定范围 `[start, end]` <font color="red">to check la
 
 `make_heap()` 的两个版本，sift_down 版本 `O(n)`，sift_up 版本 `O(nlogn)`。但整个 `heap_sort()` 是 `O(nlogn)`，不管如何 make_heap.
 
-# 堆排序 heap sort
+# 堆排序 heap sort (普通 top-down 方法)
 
-依次把当前最大元素 `a[0]` 取出，并调整剩下部分，使 `a[0]` 重新最大。
+依次把当前最大元素 `a[0]` 取出，把最后元素 `a[end]` 放到最顶上 `a[0]` 位置，并调整剩下部分，使 `a[0]` 重新最大。
 
-取出的各最大元素放在 array 最后，是 in-place 操作。
+取出的各最大 `a[0]` 元素放在 array 最后，是 in-place 操作。
 
 是<font color="green">不稳定</font>的。
+
+完整代码：[`heap_sort_raw_complete.cpp`](code/heap_sort_raw_complete.cpp)
 
 ```cpp
     void heap_sort(T a[], int n) {
@@ -131,13 +136,17 @@ wiki 上的版本，可指定范围 `[start, end]` <font color="red">to check la
     }
 ```
 
-完整代码：[`heap_sort_raw_complete.cpp`](code/heap_sort_raw_complete.cpp)
+这就是普通的 top-down 方法。有个明显的问题：把最小元素 `a[end]` 从堆底部拉到顶部，然后让它一路下行。它下行的过程中，较大元素相应上行。当然，它下行的目的，也确实是为了让其他元素上行，以补上堆顶的空缺，它自己也很可能还会回到堆底。这个过程中，比较次数较多。
 
-另一种排序方法 bottom-up:
+# 改进：bottom-up 方法
 
-不是选 `a[end]` 去填 `a[0]` 的空，而是找到最大的 child 并上移。
+不是选 `a[end]` 去填 `a[0]` 的空，而是找到 `a[0]` 最大的 child 并上移。
 
-但 2008年研究显示，该法不比普通的 heap sort 快。因 cpu 技术进步，branch prediction. Todo: add code
+具体地，堆顶 `a[0]` 移走后，得到的「空缺」一路 sift down。或者理解为，得到的「空缺」是个值为 `-inf` 的元素，它一路 sift down。考虑到 `-inf` 比所有元素都小，每次下移只用比较两个 child 哪个大，不用比较 parent 与 larger-child 哪个大。比较次数减少。
+
+普通的 top-down 堆排比 quick sort 慢，而这样优化过的 bottom-up 堆排比 quick sort 还快。来源：2005 年的[原文](http://www.inference.org.uk/mackay/sorting/sorting.html)、[中译](https://mp.weixin.qq.com/s?__biz=MzI5NjA1MDQ4NA==&mid=2454610192&idx=1&sn=3d317ed1d65e7c918a5886ff37d322ce)、[解读](https://mindhacks.cn/2008/06/13/why-is-quicksort-so-quick)。
+
+<font color=red>但是！</font>2008 年有研究显示，该法不比普通的 heap sort 快。因 cpu 技术进步，branch prediction 等。来源：[wikipedia](https://en.wikipedia.org/wiki/Heapsort)。
 
 # 时间复杂度
 
@@ -148,25 +157,24 @@ wiki 上的版本，可指定范围 `[start, end]` <font color="red">to check la
 - `pop()`: sift-down 操作，`O(logn)` 次比较
 - `push()`: sift-up 操作，`O(logn)` 次比较
 
-
-方法一，使用sift_down。
-设高度h=log2n，需要的工作量为
-   0 * n/2  +  1 * n/4   +   2 * n/8 + … + h * 1 = O(n)
-    最后一层      倒数第二层
-    全是leaf     最多下移一次
+方法一，使用 `sift_down`。
+设高度 `h=log2n`，需要的工作量为
+   `0 * n/2  +  1 * n/4   +   2 * n/8 + … + h * 1 = O(n)`
+    最后一层     倒数第二层
+    全是leaf    最多下移一次
     不用下移
 
-方法二，使用sift up，从 [1 -> n-1] 依次上浮
-h * n/2 + (h-1) * n/4 + (h-2) * n/8 + … + 1 * 1
-其中第一项就是 log2n * n/2 = O(nlogn)，所以总不会好于O(nlogn).
-事实上，全部加起来就是O(nlogn).
+方法二，使用 `sift up`，从 `[1 ... n-1]` 依次上浮
+    `h * n/2 + (h-1) * n/4 + (h-2) * n/8 + … + 1 * 1`
+其中第一项就是 `log2n * n/2 = O(nlogn)`，所以总不会好于 `O(nlogn)`。
+事实上，全部加起来就是 `O(nlogn)`。
 
 ## 整个 heap sort 的时间复杂度：
 
-先 make_heap，`O(n)`；
-再一系列sift down，从top->end 调用sift_down，树的层数减少得慢（头一半节点时，height不变）。
-h * n/2 + (h-1) * n/4 + (h-2) * n/8 + … + 0 * 1 = O(nlogn)
-总共 O(n) + O(nlogn) = O(nlogn).
+- 先 make_heap，`O(n)`；
+- 再一系列 sift down，从 top->end 调用 sift_down，树的层数减少得慢（头一半节点时，height 不变）。
+`h * n/2 + (h-1) * n/4 + (h-2) * n/8 + … + 0 * 1 = O(nlogn)`
+总共 `O(n) + O(nlogn) = O(nlogn)`。
 
 To add: remove, insertion 的时间分析。在原始手写笔记上有一些。
 
@@ -195,3 +203,9 @@ To add: remove, insertion 的时间分析。在原始手写笔记上有一些。
         v[i] = pq.top(); pq.pop();
     }
 ```
+
+# 推广
+
+heap sort 理论上很有吸引力，但实际应用中往往不如 quick sort 快。主要是因为 heap srot 在数组中的大范围跳跃可能导致缓存命中率降低，而 quick sort 的连续的数据访问模式更适合现代计算机的缓存系统。
+
+heap 最常见的使用场景，其实并不是排序，而是实现优先队列。例如，在 10 亿个数中找出最小的 100 万个数。

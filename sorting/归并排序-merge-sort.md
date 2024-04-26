@@ -5,6 +5,7 @@
   - 有意思的 merge 变种方法
 - 链表的归并排序（递归方法）
 - 并发
+- 推广
 
 # 递归方法
 
@@ -94,7 +95,6 @@
     }
 ```
 
-
 # 链表的归并排序（递归法）
 
 完整代码：[`merge-sort-linked-list.cpp`](code/merge-sort-linked-list.cpp)
@@ -152,3 +152,10 @@
 # 并发
 
 [concurrency vs. traditional](https://gledis.hashnode.dev/exploring-the-efficiency-of-merge-sort-concurrency-vs-traditional-approach)
+
+# 推广
+
+merge sort 特别是其变体如 k-way merge，是一些重要算法的核心。（k-way merge 要用到 priority queue）
+
+- 磁盘上排序 (external sorting)：数据量很大时，通过分批处理适合内存的数据量，优化了磁盘 I/O 操作。
+- LSM tree (log-structured merge-tree)：在教学上不太突出，但在实际 db/storage 系统中很重要。通过批量写入和合并操作，提高写入效率、减少磁盘 I/O。在处理大规模数据时尤其重要。

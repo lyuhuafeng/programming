@@ -55,7 +55,7 @@
     f3(a, 3);
 ```
 
-- 法三，用 template，参数数组不需指定任何维度的大小。但所有维度大小需用参数传递。
+- 法三，用 template（模板参数），参数数组不需指定任何维度的大小。但所有维度大小需用参数传递。
 
 ```cpp
     // 声明 a，并给 a 赋值，略
@@ -89,9 +89,31 @@
     pr(a);
 ```
 
+数据类型、二维数组大小，都用模版。调用时不需指定各维度的大小。
+```cpp
+    template<typename T, int M, int N>
+    T f_sum(const T (&a)[M][N]) {
+        T s = 0;
+        for (int i = 0; i < M; i++)
+            for (int j = 0; j < N; j++)
+                s += a[i][j] * a[i][j];
+        return s;
+    }
+    // 调用
+	double a[][2] = {{ 1.11, 2.24 }, { 3.38, 4.40 }};
+	double ans = f_sum(a);
+
+    // 错误调用方式：不能用 variable-length array。
+    int rows = 2, cols = 2; // 若改成 const int 就正确了
+	double a[rows][cols];
+    a[0][0] = 1.11, a[0][1] = 2.24, a[1][0] = 3.38, a[1][1] = 4.40;
+    double ans = f_sum(a); // 编译错误
+
+```
+
 法三是最佳。若有多个维度相同（例如，都是二维）但大小不同（例如，`a[5][3]`，`b[4][9]`）的数组，法一法二都需要给 a、b 单独定义函数，因为 a、b 的数据类型不同。而法三可适应不同大小的数组。(若维度不同，其实参数 a 也可以适应，但需要传递每个维度大小的参数个数不同，还是得定义不同的函数。)
 
-<font color="red">但 `f5()` 和 `pr()` 仍然不能用于 variable-length array。</font>
+<font color="red">但 `f5()` 和 `pr()` 以及 `f_sum()` 的参数，仍然不能用 variable-length array。</font>
 
 ```cpp
     // 错误：不能用于 variable-length array
