@@ -30,6 +30,17 @@ void insertion_sort_2(int a[], int n) {
     }
 }
 
+void insertion_sort_3(vector<float>& bkt) {
+    for (int i = 1; i < bkt.size(); ++i) { // 注意从 1 开始。第 0 个元素是「已排序区」的初始态。
+        float t = bkt[i];
+        int j = i - 1;
+        while (j >= 0 && bkt[j] > t) { // 注意 bkt[j] > t 而不是「>=」，为保持稳定性。
+            bkt[j + 1] = bkt[j];
+            j--;
+        }
+        bkt[j + 1] = t;
+    }
+}
 
 //// stable binary insertion sort
 struct entry {

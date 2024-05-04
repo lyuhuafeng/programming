@@ -8,7 +8,7 @@
   - `f1()` 的 `a` 需要指定两个维度大小
 
 ```cpp
-    // 声明 a，并给 a 赋值
+    // 声明 a，并给 a 赋值。多种方式均可。
     int a[3][5] = {{2, 9, 3, 1, 5}, {6, 5, 6, 5, 0}, {0, 3, 4, 0, 1}};
     // 或
     int a[3][5];
@@ -17,9 +17,15 @@
             scanf("%d", &a[i][j]);
         }
     }
+    // 或
+    const int M = 3, N = 5;
+    int a[M][N] = {{2, 9, 3, 1, 5}, {6, 5, 6, 5, 0}, {0, 3, 4, 0, 1}};
+    // 或
+    int a[][N] = {{2, 9, 3, 1, 5}, {6, 5, 6, 5, 0}, {0, 3, 4, 0, 1}};
 
     // 法一，a[3][5] 指定两个维度的大小
     void f1(int a[3][5]) {
+        a[0][0] = 7; // 改动会影响到 f1() 之外
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 5; ++j) {
                 printf("%d ", a[i][j]);
@@ -36,7 +42,7 @@
   - `f2()`、`f3()` 的参数 `a[][5]`，第一维大小省略，只指定了第二维的大小。但还有 `rows` 参数，用于指定第一维的大小。
 
 ```cpp
-    // 声明 a，并给 a 赋值，略
+    // 声明 a，并给 a 赋值，多种方式，完全同上，略
 
     // 法二，参数 `a[][5]`，第一维大小省略，只指定了第二维的大小。但还有 `rows` 参数，用于指定第一维的大小。
     // f2()、f3() 代码完全相同。
@@ -61,6 +67,7 @@
     // 声明 a，并给 a 赋值，略
 
     // 法三，用 template，a 不需指定任何维度的大小，但所有维度大小需用参数传递。
+    // 不能用于 variable-length array。
     template <typename T>
     void f5(T a, int rows, int cols) {
         for (int i = 0; i < rows; ++i) {
@@ -76,6 +83,7 @@
 
 另一种类似写法：
 ```cpp
+    // 不能用于 variable-length array。
     template <size_t rows, size_t cols>
     void pr(int (&a)[rows][cols]) {
         for (int i = 0; i < rows; ++i) {
@@ -91,6 +99,7 @@
 
 数据类型、二维数组大小，都用模版。调用时不需指定各维度的大小。
 ```cpp
+    // 不能用于 variable-length array。
     template<typename T, int M, int N>
     T f_sum(const T (&a)[M][N]) {
         T s = 0;
@@ -103,7 +112,7 @@
 	double a[][2] = {{ 1.11, 2.24 }, { 3.38, 4.40 }};
 	double ans = f_sum(a);
 
-    // 错误调用方式：不能用 variable-length array。
+    // 错误调用方式：不能用于 variable-length array。
     int rows = 2, cols = 2; // 若改成 const int 就正确了
 	double a[rows][cols];
     a[0][0] = 1.11, a[0][1] = 2.24, a[1][0] = 3.38, a[1][1] = 4.40;
