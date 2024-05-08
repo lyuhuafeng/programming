@@ -2,13 +2,11 @@
 
 ## 基本
 
-- [leetcode 496. 下一个更大元素I](https://leetcode.cn/problems/next-greater-element-i/) 基本模版
+- [leetcode 496. 下一个更大元素I](https://leetcode.cn/problems/next-greater-element-i/) 基本模版。因要在 nums2 中找 nums1 中元素，故两种方法，分别用普通方式 vector 或 map 存 next greaters。[代码](code/leet-496-next-greater-element-i.cpp)
 
 - [leetcode 739. 每日温度](https://leetcode.cn/problems/daily-temperatures/) next greater 标准模版
 
 - [leetcode 1475. 商品折扣后的最终价格](https://leetcode.cn/problems/final-prices-with-a-special-discount-in-a-shop/) 基本模版 next smaller or equal
-
-- [962. 最大宽度坡](https://leetcode.cn/problems/maximum-width-ramp/) next greater 模版
 
 - `503.` 下一个更大元素II。环形 next greater。[题解](leet-503-下一个更大元素ii.md)
 
@@ -66,7 +64,7 @@ https://cloud.tencent.com/developer/article/2313991?areaId=106001
 
 - [121. 买卖股票的最佳时机](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock/) 其实没用到单调栈，但感觉还是有点那意思。[我的题解](leet-121-买卖股票最佳时机.md)
 
-
+- [962. 最大宽度坡](https://leetcode.cn/problems/maximum-width-ramp/) 表面上看起来是简单的 next greater，其实不是！它定义的「坡」的两个端点形成的区间，不要求是单调递增的！其实类似 121。[我的题解](leet-962-最大宽度坡.md)
 
 - [百度2022秋招-士兵的序列](https://oj.algomooc.com/problem.php?id=5151) 有点巧妙。[`od-5151-soldiers-baidu-2022.cpp`](code/od-5151-soldiers-baidu-2022.cpp)
 

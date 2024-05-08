@@ -34,16 +34,16 @@ vertex 分类
 
 每次，在所有能连接两个 set 的 edge 中，找到 weight 最小的，加入 mst。
 
-用图论术语说，是，「每次，在这两个 set 的 cut-set 中，把其中 weight 最小的 edge 加入 mst」。
+用图论术语说，是「每次，在这两个 set 的 cut-set 中，把其中 weight 最小的 edge 加入 mst」。
 
-所以这几种说法是等价的，但最后一种便于写代码。
+所以，下面这几种说法是等价的，但最后一种便于写代码。
 - 连接这两个 set 的 所有 edge 中，weight 最小的 edge
 - 这两个 set 的 cut-set 中，weight 最小的 edge
 - 离 mst 最近的 vertex（便于写代码）
 
 具体怎么算？某顶点 `v` 离 mst 的距离，就是该顶点到 mst 里所有顶点距离的最小值。算法如下：
 ```cpp
-    dist(v) = min{ dist(v, u) } ∀ u ∈ mst
+    dist(v) = min{ dist(v, u) }, ∀ u ∈ mst
     // 注意，dist(v, u) 就是 grid[v][u] 的值。
 ```
 
@@ -83,7 +83,7 @@ int main() {
     vector<bool> in_mst(v + 1, false); // 每个顶点是否在 mst 里
 
     // 只需循环 v-1 次，建立 v-1 条边，就可把 v 个顶点连在一起
-    // 第一次循环，找到的就是「任选一个 vertex」
+    // 第一次循环，找到的就是开局的「任选一个 vertex」
     for (int i = 1; i <= v - 1; i++) {
         // 步骤 1：选离 mst 最近的顶点
         int cur = -1; // 选中的顶点编号
@@ -167,4 +167,4 @@ int main() {
     // 最后输出 mst 的各边，略
 ```
 
-注意，一维数组，`parent[j] = cur`，不能反过来。因为 cur 可能与多个顶点相连，遍历一遍，可能有 `parent[j1] = cur`，`parent[j2] = cur`，...，`parent[jn] = cur` 等等。若反过来，遍历完后，只剩一个 `parent[cur] = jn`，丢失了数据。若用二维数组存储，则没有此问题。
+注意，一维数组，`parent[j] = cur`，不能反过来。因为 cur 可能与多个顶点相连，遍历一遍，可能有 `parent[j₁] = cur`，`parent[j₂] = cur`，...，`parent[jₙ] = cur` 等等。若反过来，遍历完后，只剩一个 `parent[cur] = jₙ`，丢失了数据。若用二维数组存储，则没有此问题。

@@ -21,7 +21,7 @@ int main() {
     vector<bool> in_mst(v + 1, false); // 每个顶点是否在 mst 里
 
     // 只需循环 v-1 次，建立 v-1 条边，就可把 v 个顶点连在一起
-    // 第一次循环，找到的就是「任选一个 vertex」
+    // 第一次循环，找到的就是开局的「任选一个 vertex」
     for (int i = 1; i <= v - 1; i++) {
         // 步骤 1：选离 mst 最近的顶点
         int cur = -1; // 选中的顶点编号

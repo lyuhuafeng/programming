@@ -28,7 +28,7 @@ bool operator<(const vertex_dist& v1, const vertex_dist& v2) {
     return v1.dist > v2.dist;
 }
 
-void shortest_path(vector<edge_weight> adj[], int V, int src) {
+void shortest_path(const vector<edge_weight> adj[], int V, int src) {
     priority_queue<vertex_dist> pq;
 
     vector<int> dist(V, INT_MAX);

@@ -4,21 +4,23 @@
 
 需要把原来的算法「分布化」。`next()` 的代码就是 for 循环体里的代码。
 
+求 previous greater，用单调（严格）下降栈。
+
 # 法一，严格模拟原方法
 
 ```cpp
 class StockSpanner {
     vector<int> prices;
-    stack<int> st;
+    stack<int> st; // 单调（严格）下降栈
 public:
     StockSpanner() {}
 
     // prev greater 的位置 +1。新法。单调（严格）下降栈。next() 的代码，就是原来 for 循环体里的代码。
     int next(int price) {
-        int i = prices.size(); // 新来的 price 的下标
         while (!st.empty() && prices[st.top()] <= price) {
             st.pop();
         }
+        int i = prices.size(); // 新来的 price 的下标
         int span = st.empty() ? i + 1: i - (st.top() + 1) + 1;
         st.push(i);
         prices.push_back(price);
@@ -35,7 +37,7 @@ public:
 
 # 法二
 
-法一严格模拟了原方法，包括用 `prices[]` 数组保存所有输入。其实新来的 price 只与栈顶的若干元素比较，已经被弹出的元素以后就用不到了。所以，可以不用保存所有输入，只把「以后还会用到的」放入栈中即可。栈中同时保存 price 的下标和值。但无法再像法一那样用 `prices.size()` 得到新来元素的下标，必须增加一个成员变量 i。
+法一严格模拟了原方法，包括用 `prices[]` 数组保存所有输入。其实新来的 price 只与栈顶的若干元素比较，已经被弹出的元素以后就用不到了。所以，可以不用保存所有输入，只在栈中保存「以后还会用到的」即可。栈中同时保存 price 的下标和值。但无法再像法一那样用 `prices.size()` 得到新来元素的下标，必须增加一个成员变量 i。
 
 ```cpp
 class StockSpanner {
