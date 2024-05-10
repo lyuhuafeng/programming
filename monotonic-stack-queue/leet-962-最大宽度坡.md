@@ -76,6 +76,22 @@
     }
 ```
 
+或者直接用 `std::lower_bound()`，就不用自己实现二分搜索了。完整代码见 [`leet-962-max-ramp-width-sol2-lowerbound.cpp`](code/leet-962-max-ramp-width-sol2-lowerbound.cpp)。改动部分见下，其余均不变：
+
+```cpp
+    // entry_lt() 作为类的成员函数，需要加 static，否则后面 lower_bound() 调用报错：
+    //   reference to non-static member function must be called
+    // 或者把 entry_lt() 定义在类之外，就不用加 static 了。
+    //
+    // 因是 pair，故不能重载 operator<(pair, int)。若是结构体，则可以。
+    static bool entry_lt(const pair<int, int> &a, int key) {
+        return a.first < key;
+    }
+
+    // 在「下标逆序」序列中，找第一个「值 >= 当前值」的元素
+    int idx = lower_bound(v.begin(), v.end(), nums[i], entry_lt) - v.begin();
+```
+
 法二中，「下标逆序」序列，处理过程中感觉有点像单调栈。仔细一想，其实不是。单调栈的重要特征，是「新来的都入栈，为此不惜弹出栈顶若干元素」；本法中的处理，是「已入序列的一直在里面，为此不惜拒绝新来的入栈」。
 
 法三

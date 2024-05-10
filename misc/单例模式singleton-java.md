@@ -8,7 +8,7 @@ https://www.digitalocean.com/community/tutorials/thread-safety-in-java-singleton
 - 提供一个全局访问点 global point of access to the Singleton object.
 
 - 本质上，是个 global variable，且可能被更改 mutable。考虑：是否有更好的方式？
-- 有点像 static variable。优点：静态变量在程序启动的时候JVM就会进行加载，如果不使用，会造成大量的资源浪费。singleton 可 lazy initialization，首次使用时再创建。
+- 有点像 static variable。优点：静态变量在程序启动时 JVM 就会加载，如果不使用，会浪费资源。singleton 可 lazy initialization，首次使用时再创建。
 
 应用：
 - 很多工具类都应用了单例模式，如：logging, driver objects, caching, thread pool
@@ -293,8 +293,8 @@ Java ensures that any enum value is instantiated only once in a Java program. Si
 与其他方法的明显区别：`Singleton.INSTANCE.getInstance()` 而不是 `Singleton.getInstance()`。
 
 枚举对抗攻击：
-- 天然可以对抗「反射攻击」：反射在通过 newInstance 创建对象时，会检查该类是否 enum 修饰，若是则抛出异常 (java.lang.IllegalArgumentException: Cannot reflectively create enum objects)，反射失败。
-- 天然可以对抗「反序列化攻击」：enum 与普通类的机制不同。甚至不会抛出异常，很优雅，就像什么都没发生一样。
+- 天然可对抗「反射攻击」：反射在通过 newInstance 创建对象时，会检查该类是否 enum 修饰，若是则抛出异常 (java.lang.IllegalArgumentException: Cannot reflectively create enum objects)，反射失败。
+- 天然可对抗「反序列化攻击」：enum 与普通类的机制不同。甚至不会抛出异常，很优雅，就像什么都没发生一样。
 
 最简方法。只用一个 `INSTANCE` 成员，连构造函数和 `getInstance()` 都不要了。调用时用 `Singleton.INSTANCE`。
 

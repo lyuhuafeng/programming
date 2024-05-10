@@ -9,6 +9,8 @@
     upper_bound(first, last, k); // 找第一个「大于 k」的元素
 ```
 
+注意，虽然名字分别是「下界」、「上界」，但其实它俩求的都是满足某条件的「下界」。也可以理解为，这个「上界」是个开区间的。我们通常理解的「上界」对应的是「最后一个」。
+
 遵循 STL algorithm 的规范，搜索的范围是左闭右开区间 `[first, last)`。
 
 last 不在范围之内。或者说，last 是「最大下标 + 1」、「最后位置之后」。
@@ -85,15 +87,32 @@ last 不在范围之内。或者说，last 是「最大下标 + 1」、「最后
     int pos = it - v.begin();
 ```
 
-但通常，第一个参数里是要比较的字段的值，而不是结构体对象。以 student 结构体为例，要比较 age，所以第一个参数是 int 类型；第二个参数才是 student 类型。
+# pair 类型，使用 lambda
+
+```cpp
+    typedef pair<int, double> myPair;
+    vector<myPair> v(5);
+
+    myPair val;
+    auto it = lower_bound(v.begin(), v.end(), val,
+            [](myPair a, myPair b) -> bool { return a.second < b.second; });
+```
+
+但通常，不是比较两个同类型的对象（或 pair），而是比较一个对象（或 pair）和一个值。例如，有一个 `vector<student>`，要找出第一个 `age >= 10` 的。比较的两者，分别是一个 student 对象、一个年龄值（跟 student.age 比较）。
+
+注意，`lower_bound()` 和 `upper_bound()` 对应的比较函数的参数顺序不同。`lower_bound()` 要求 `(age, student_object)`，而 `upper_bound()` 要求 `(student_object, age)`。函数实现都是「`return 第一个参数 < 第二个参数`」，逻辑上是一致的。
+
+有如下几种定义方法：重载 `operator<`、自定义函数、自定义 functor、lambda。下面用 `upper_bound()` 实例。完整代码见 [`student-bsearch.cpp`](code/student-bsearch.cpp)。
+
+<font color="red">注意</font>，若是 `pair<int, int>` 而不是自定义的结构体，则重载 `operator<` 方法不能用，自定义函数方法可用。其他方法待查。
 
 法一：自定义函数。`upper_bound()` 调用时，函数名后不用加括号。
 
 ```cpp
-    bool student_cmp(int age, student const &t) {
+    bool upper_cmp(int age, student const &t) {
         return age < t.age;
     }
-    it = upper_bound(v.begin(), v.end(), 11, student_cmp);
+    it = upper_bound(v.begin(), v.end(), 11, upper_cmp);
 ```
 
 法二：重载小于比较符。`upper_bound()` 调用时，不用带比较函数名。
@@ -105,25 +124,29 @@ last 不在范围之内。或者说，last 是「最大下标 + 1」、「最后
     it = upper_bound(v.begin(), v.end(), 11);
 ```
 
-法三：使用 functor.
+法三：使用 functor
 
 Functor 就是重载了 `operator()` 的 class 或 struct。可以当做函数使用。`upper_bound()` 调用时，functor 名后要加括号。
 
 ```cpp
-    struct student_cmp {
+    struct upper_functor_cmp {
         bool operator ()(int age, const student &t) const {
             return age < t.age;
         }
     };
-    it = upper_bound(v.begin(), v.end(), 11, student_cmp());
+    it = upper_bound(v.begin(), v.end(), 11, upper_functor_cmp());
 ```
 
-法四：使用 lambda.
+法四：使用 lambda
 
-Lambda
-https://stackoverflow.com/questions/17711652/lower-bound-of-vector-of-pairs-with-lambda
+以 pair 为例。
 
-https://cc321.ltd/2021/07/25/C-lower-bound-%E4%B8%8Eupper-bound%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8/
+```cpp
+    vector<pair<int, double>> v = { ... }; // must be sorted!
+    double val = 1.3;
+    auto it = lower_bound(v.begin(), v.end(), val,
+            [](pair<int, double> const & e, double d) { return e.second < d; });
+```
 
 # misc
 

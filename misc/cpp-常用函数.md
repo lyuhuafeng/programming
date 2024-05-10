@@ -62,10 +62,30 @@
 
 # 绝对值
 
-使用 std::abs() 就行，不用 std::fabs() 或 ::abs().
+使用 `std::abs()` 就行，不用 `std::fabs()` 或 `::abs()`。
 - `std::abs()` 支持各种整数和各种浮点数
-- `std::fabs()` 在 c++11 之前只支持浮点数, c++11 之后也支持各种整数。
+- `std::fabs()` 在 c++11 之前只支持浮点数, c++11 之后也支持各种整数
 - `::abs()` 只支持 int
 
 # 乘方、开方、对数
 
+# `memset()`
+
+可用在整数或 bool 数组上。
+
+```cpp
+    #include <cstring>
+
+    const int n = 100;
+    int a[n];
+    memset(a, 0, sizeof a);
+
+    bool visited[n];
+    memset(visited, false, sizeof visited);
+```
+
+`memset()` 初始化整数类型时，只能初始化成 `-1` 或 `0`，其他的值不要用。`1` 也不行！
+
+初始化 bool 数组时，`true` 或 `false` 都行。bool 占地 1 byte。
+
+但最好避免使用 `memset()`，改用 `std::fill()` 或 `std::fill_n()`，什么类型、什么值都可以。

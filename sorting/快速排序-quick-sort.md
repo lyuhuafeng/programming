@@ -315,7 +315,7 @@ Cache-friendly
     auto it = std::partition(v.begin(), v.end(), [](int i) {return i % 2 == 0;});
 ```
 
-用 `std::partition()` 实现 quick sort：
+用 `std::partition()` 实现 quick sort。注意，partition 分成三部分，中间一部分是「等于 pivot 值」的。
 
 ```cpp
     template<typename ForwardIt>
