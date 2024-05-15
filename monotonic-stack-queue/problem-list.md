@@ -10,11 +10,13 @@
 
 - `503.` 下一个更大元素II。环形 next greater。[题解](leet-503-下一个更大元素ii.md)
 
-- [2023C-回转寿司](https://oj.algomooc.com/problem.php?id=2655) 环形 next smaller，与上题略有不同，没有取模。[代码：`od-2655-sushi-2023c.cpp`](code/od-2655-sushi-2023c.cpp)
+- [2023C-回转寿司](https://oj.algomooc.com/problem.php?id=2655) 环形 next smaller，与上题略有不同，没有取模。直接把数组扩大了一倍，变成了普通不环形的问题。[代码：`od-2655-sushi-2023c.cpp`](code/od-2655-sushi-2023c.cpp)
 
 - `901.` 股票价格跨度。初看是简单找 previous greater，再看发现是分布式的，有点意思。[题解](leet-901-股票价格跨度.md)
 
 - `1019.` 链表中的下一个更大节点。链表元素的 next greater，非常有价值。[解法笔记](leet-1019-链表中的下一个更大节点.md)。其中还有「往 stack 里 push 一个 pair 的若干种方法」。
+
+- `2454.` 下一个更大元素 IV。求「第二个」greater，可称为 next² greater。注意，next² greater 与 next greater 谁大谁小都可以。[题解笔记](leet-2454-下一个更大元素iv.md)
 
 ## 雨水
 
@@ -30,6 +32,10 @@
 
 - `1504.` 统计全 1 子矩形。[解法笔记]()
 
+- `2866.` 美丽塔 II。[解法笔记]()
+
+- `1671.` 得到山形数组的最少删除次数。[解法笔记]()
+
 - [1856. 子数组最小乘积的最大值](https://leetcode.cn/problems/maximum-subarray-min-product/) 跟 84 很像，多了个前缀和。注意中间结果用 int64_t 类型存储。代码：[`leet-1856-max-subarray-min-product.cpp`](code/leet-1856-max-subarray-min-product.cpp)
 
 - `907.` 子数组最小值之和。`2104.` 子数组范围和。后者是前者的扩展。[题解笔记](leet-907-2104-子数组范围和.md)
@@ -44,11 +50,11 @@ https://cloud.tencent.com/developer/article/2313991?areaId=106001
 
 - `1673.` 最具竞争力的子序列。[两种解法](leet-1673-竞争力子序列.md)，分别用单调栈和单调队列。前者简单得多，且只用到 stack 本身，不用求 next greater 之类的
 
-- [leetcode 402. 移掉K位数字](https://leetcode.cn/problems/remove-k-digits/) 跟上题一样 [`remove-k-digits-leet-402.cpp`](code/remove-k-digits-leet-402.cpp)
+- [`402.` 移掉K位数字](https://leetcode.cn/problems/remove-k-digits/) 跟上题一样 [`remove-k-digits-leet-402.cpp`](code/remove-k-digits-leet-402.cpp)
 
-- [321.hard 拼接最大数](https://leetcode.cn/problems/create-maximum-number/) 在 1673、402 基础上 [题解笔记](leet-321-拼接最大数.md)
+- [`321.`hard 拼接最大数](https://leetcode.cn/problems/create-maximum-number/) 在 1673、402 基础上 [题解笔记](leet-321-拼接最大数.md)
 
-- [316.hard 去除重复字母](https://leetcode.cn/problems/remove-duplicate-letters/)，[`1081.` 不同字符的最小子序列](https://leetcode.cn/problems/smallest-subsequence-of-distinct-characters) 两道题目相同 [`od 2651.` 2023Q1A-删除重复数字后的最大数字](https://oj.algomooc.com/problem.php?id=2651) 只是由最小改成最大 [题解笔记](leet-316-1081-od-2651-去除重复字母.md)
+- [`316.`hard 去除重复字母](https://leetcode.cn/problems/remove-duplicate-letters/)，[`1081.` 不同字符的最小子序列](https://leetcode.cn/problems/smallest-subsequence-of-distinct-characters) 两道题目相同 [`od 2651.` 2023Q1A-删除重复数字后的最大数字](https://oj.algomooc.com/problem.php?id=2651) 只是由最小改成最大 [题解笔记](leet-316-1081-od-2651-去除重复字母.md)
 
 - 316 扩展：重复个数不超过 limit  https://leetcode.cn/contest/tianchi2022/problems/ev2bru/
 
@@ -60,11 +66,11 @@ https://cloud.tencent.com/developer/article/2313991?areaId=106001
 
 - [腾讯2021秋招&用友2022秋招-逛街](https://oj.algomooc.com/problem.php?id=5152) 逻辑上，是上一题的扩展，但不能简单套用，否则会超时。用 stack 自身性质。[`od-5152-high-buildings-tecent-2021.cpp`](code/od-5152-high-buildings-tecent-2021.cpp) 两种解法，思路基本一致。od 的测试数据貌似有问题。
 
-- [1944. 队列中可以看到的人数](https://leetcode.cn/problems/number-of-visible-people-in-a-queue/) 一眼看上去，跟上题差不多，其实有些差异。[题解笔记](leet-1994-队列中可以看到的人数.md)
+- [`1944.` 队列中可以看到的人数](https://leetcode.cn/problems/number-of-visible-people-in-a-queue/) 一眼看上去，跟上题差不多，其实有些差异。[题解笔记](leet-1994-队列中可以看到的人数.md)
 
-- [121. 买卖股票的最佳时机](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock/) 其实没用到单调栈，但感觉还是有点那意思。[我的题解](leet-121-买卖股票最佳时机.md)
+- [`121.` 买卖股票的最佳时机](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock/) 其实没用到单调栈，但感觉还是有点那意思。[我的题解](leet-121-买卖股票最佳时机.md)
 
-- [962. 最大宽度坡](https://leetcode.cn/problems/maximum-width-ramp/) 表面上看起来是简单的 next greater，其实不是！它定义的「坡」的两个端点形成的区间，不要求是单调递增的！其实类似 121。[我的题解](leet-962-最大宽度坡.md)
+- [`962.` 最大宽度坡](https://leetcode.cn/problems/maximum-width-ramp/) 表面上看起来是简单的 next greater，其实不是！它定义的「坡」的两个端点形成的区间，不要求是单调递增的！其实类似 121。[我的题解](leet-962-最大宽度坡.md)
 
 - [百度2022秋招-士兵的序列](https://oj.algomooc.com/problem.php?id=5151) 有点巧妙。[`od-5151-soldiers-baidu-2022.cpp`](code/od-5151-soldiers-baidu-2022.cpp)
 
@@ -92,13 +98,9 @@ https://oj.algomooc.com/problemset.php?search=%E5%8D%95%E8%B0%83%E6%A0%88
 
 1124. 表现良好的最长时间段 1908
 
-2866. 美丽塔 II 2072
-2454. 下一个更大元素 IV 2175
 2289. 使数组按非递减顺序排列 2482
 1776. 车队 II 2531
 2832. 每个元素为最大值的最大范围（会员题）
-
-
 
 
 1425. 带限制的子序列和

@@ -15,7 +15,7 @@ using namespace std;
         }
 
         int sum = 0;
-        // mh = 0; // 到目前为止，最高
+        // 下面两部分，mh 都表示「到目前为止，最高」。第三部分不需要 mh
         for (int i = 0, mh = 0; i <= l - 1; i++) {
             mh = max(mh, height[i]);
             sum += (mh - height[i]) * 1;

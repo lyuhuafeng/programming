@@ -18,11 +18,11 @@ k，通常从 1 开始，但若使用 quick select，则从 0 开始比较方便
 
 用 `min_val`、`max_val` 分别表示数组的最小元素值、最大元素值。
 
-找第一个 `"数组中 <=m 的元素个数 >= k"` 的整数（而不是数组元素！）。查找的范围是 `[min_val, max_val]` 的整数范围（而不是数组下标！）。（所以，若数组中元素不是整数类型，而是小数类型或其他自定义类型，此法就不好使了，因为不好确定二分范围、m+1等）
+找第一个`「数组中 <=m 的元素个数 >= k」`的整数（而不是数组元素！）。查找的范围是 `[min_val, max_val]` 的整数范围（而不是数组下标！）。（所以，若数组中元素不是整数类型，而是小数类型或其他自定义类型，此法就不好使了，因为不好确定二分范围、m+1等）
 
-`m` 从 `min_val` 到 `max_val` 变大，`“数组中 <=m 的元素个数”` 也相应变大。要找的是第一个 `”数组中 <= m 的元素个数 >= k"` 的数。
+`m` 从 `min_val` 到 `max_val` 变大，`「数组中 <=m 的元素个数」`也相应变大。要找的是第一个`「数组中 <= m 的元素个数 >= k」`的数。
 
-若 `m` 就是所求 `kth smallest`，且无重复的，则“数组中 <=m 的元素个数" 恰好为 `k`；若有重复的，个数 `>k` 但不会有等于 `k` 的。所以 `predicate(m)` 里要用 `>= k`。
+若 `m` 就是所求 `kth smallest`，且无重复的，则「数组中 <=m 的元素个数」恰好为 `k`；若有重复的，个数 `>k` 但不会有等于 `k` 的。所以 `predicate(m)` 里要用 `>= k`。
 
 C++ 代码：[kth-smallest-binary-search.cpp](code/kth-smallest-binary-search.cpp)
 
@@ -49,9 +49,9 @@ C++ 代码：[kth-smallest-binary-search.cpp](code/kth-smallest-binary-search.cp
 C++ 代码：[kth-largest-priority-queue.cpp](code/kth-largest-priority-queue.cpp)
 
 若求 kᵗʰ smallest，则
-* 改为 max-heap。
-* 入堆时。从第 k+1 个元素开始，若 `a[i]` <font color=red>小于</font>堆顶元素（top k 里最小的），则将堆顶元素出堆，并将 `a[i]` 入堆。
-* 遍历完成后，堆中保存的就是最小的 k 个元素，堆顶就是 kᵗʰ smallest 的。
+- 改为 max-heap。
+- 入堆时。从第 k+1 个元素开始，若 `a[i]` <font color=red>小于</font>堆顶元素（top k 里最小的），则将堆顶元素出堆，并将 `a[i]` 入堆。
+- 遍历完成后，堆中保存的就是最小的 k 个元素，堆顶就是 kᵗʰ smallest 的。
 
 代码上看，因 max-heap 是 priority queue 的缺省类型，所以定义 pq 类型时不用给出 `greater<int>` 参数，简单了一点。
 

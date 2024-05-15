@@ -159,7 +159,6 @@ by Tony Hoare，1959-1961。
 
 上面的方法中，与 pivot 值相等的元素分布在 pivot 两边。如果放在一边呢？<font color="red">左 <= 右 > 或 左 < 右 > 似乎都可以，但 左< 右>= 似乎不行。to check later</font>
 
-Sedgewick《算法》：左侧扫描，最好遇到 `>= pivot` 时停下。右侧扫描，最好遇到 `<= pivot` 时停下。这样可能会导致不必要的等值元素交换，但某些场景下，可避免运行时间变成 `O(n²)`。（我注：也就是下面 while 循环中用 `a[j] > key` 和 `a[i] < key`，而不是用「`<=`」或「`>=`」。）
 
 ```cpp
 // 最左边元素值为 pivot 值。对面 j 先动手。
@@ -191,6 +190,152 @@ Sedgewick《算法》：左侧扫描，最好遇到 `>= pivot` 时停下。右�
         }
         a[right] = a[i]; a[i] = key; // 相当于 swap(a[right], a[i])
         return i;
+    }
+```
+
+Sedgewick《算法》：左侧扫描，最好遇到 `>= pivot` 时停下。右侧扫描，最好遇到 `<= pivot` 时停下。这样可能会导致不必要的等值元素交换，但某些场景下（所有待排序元素值都一样），可避免运行时间变成 `O(n²)`。（我注：但不是简单在 while 循环中把用 `a[j] >= key` 和 `a[i] <= key` 改为「`>`」或「`<`」就可以了。to do later.）
+
+## 比较「原汁原味」的 Hoare 方法：
+
+初值 i = l-1, j = r+1；循环时先 i++ 或 j-- 再判断，需使用 do ... while 循环。
+partition 返回的下标（位置），其值并不一定就是 pivot 值。所以 partition 的结果是分成两部分，而不是三部分。配套的 qsort() 或 qselect() 也与分成三部分的 Lomuto 不同。
+
+```cpp
+    // impl 1
+    // 来自 wikipedia https://en.wikipedia.org/wiki/Quicksort 和 mit「算法导论」书
+    // 两者基本一致，只是 j 循环 和 i 循环 顺序相反。但谁先谁后都可以。
+    int partition(vector<int> &nums, int l, int r) {
+        int key = nums[l];
+        int i = l - 1, j = r + 1;
+        while (true) {
+            do { i++; } while (nums[i] > key); // wiki: 此句在前
+            do { j--; } while (nums[j] < key); // book: 此句在前
+            if (i >= j) {
+                return j;
+            }
+            swap(nums[i], nums[j]);
+        }
+    }
+
+    // impl 2
+    // ref: leetcode 215. 数组中的第K个最大元素 官方题解
+    int partition(vector<int> &nums, int l, int r) {
+        int key = nums[l];
+        int i = l - 1, j = r + 1;
+        while (i < j) {
+            do { i++; } while (nums[i] > key);
+            do { j--; } while (nums[j] < key);
+            if (i < j) {
+                swap(nums[i], nums[j]);
+            }
+        }
+        return j;
+    }
+
+    // impl 3
+    // 对 impl 1 改进了一点，先 i++/j-- 再对 i/j 做循环，从而把 do ... while 循环变成了 while 循环
+    int partition(vector<int> &nums, int l, int r) {
+        int key = nums[l];
+        int i = l - 1, j = r + 1;
+        while (true) {
+            i++;
+            while (nums[i] > key) { i++; }
+            j--;
+            while (nums[j] < key) { j--; }
+            if (i >= j) {
+                return j;
+            }
+            swap(nums[i], nums[j]);
+        }
+    }
+
+    // qselect(), qsort() 写法，是两部分的
+    void qselect(vector<int>& a, int left, int right, int k) {
+        if (left == right) { return; }
+        int pivot = partition(a, left, right);
+        if (pivot >= k) {
+            qselect(a, left, pivot, k);
+        } else {
+            qselect(a, pivot + 1, right, k);
+        }
+    }
+
+    void qselect(vector<int>& a, int left, int right, int k) {
+        if (left == right) { return; }
+        while (left < right) {
+            int pivot = partition(a, left, right);
+            if (pivot >= k) {
+                right = pivot;
+            } else {
+                left = pivot + 1;
+            }
+        }
+    }
+    int findKthLargest(vector<int>& nums, int k) {
+        qselect(nums, 0, nums.size() - 1, k-1);
+        return nums[k-1];
+    }
+```
+
+另一种方式 Hoare 方式。分成三段的。初值 i = l, j = r+1。<font color="red">i, j 谁先动手，to check later.</font>
+
+```cpp
+    // Sedgewick 'algorithms' 4th ed. p291
+    // 好像已经正确处理了 duplicate elements?
+    int partition(vector<int>& a, int l, int r) {
+        int key = a[l];
+        int i = l, j = r + 1;
+        while (true) {
+            while (a[++i] > key) { if (i == r) break; } // i 向右找第一个大于等于 k 的。
+            while (a[--j] < key) { if (j == l) break; } // j 向左找第一个小于等于 k 的。
+            if (i >= j) { break; }
+            swap(a[i], a[j]);
+        }
+        a[l] = a[j], a[j] = key; // 相当于 swap(a[l], a[j])
+        return j;
+    }
+
+    // little turing 标程。初值 l, r；i, j 谁先动手有规律，见上。
+    // 好像不能正确处理 duplicate elements?
+    int partition(vector<int> &a, int left, int right) {
+        int key = a[left];
+        int i = left, j = right;
+        while (i < j) {
+            while (i < j && a[j] <= key) { j--; } // j 先动手，往左找第一个小于 key 的。
+            while (i < j && a[i] >= key) { i++; } // i 随后，往右找第一个大于 key 的。
+            if (i < j) {
+                swap(a[i], a[j]);
+            } // { else 会自然 break }
+        }
+        // 循环结束后，i == j
+        a[left] = a[i]; a[i] = key; // 相当于 swap(a[left], a[i]);
+        return i;
+    }
+    // 递归法
+    void qselect(vector<int>& a, int left, int right, int k) {
+        if (left == right) { return; }
+        int pivot = partition(a, left, right);
+        if (pivot == k) {
+            return;
+        } else if (pivot > k) {
+            qselect(a, left, pivot - 1, k);
+        } else {
+            qselect(a, pivot + 1, right, k);
+        }
+    }
+    // 非递归法
+    void qselect(vector<int>& a, int left, int right, int k) {
+        // if (left == right) { return; } // 此句不用
+        while (left < right) {
+            int pivot = partition(a, left, right);
+            if (pivot == k) {
+                return;
+            } else if (pivot > k) {
+                right = pivot - 1;
+            } else {
+                left = pivot + 1;
+            }
+        }
     }
 ```
 
@@ -340,7 +485,7 @@ Cache-friendly
 
 # 快速选择 quick select
 
-在未排序的序列中，找第 k 小的元素。k: 从 0 开始。
+在未排序的序列中，找第 k 小的元素。k: 从 0 开始。若从 1 开始 (1-based numbering)，left 初值应该为 1。
 
 To find the kᵗʰ smallest element in an unordered list。
 

@@ -18,7 +18,7 @@ using namespace std;
         vector<int> dirs = { -1, 1 };
 
         int n = height.size();
-        vector<bool> visited(n, false);
+        vector<bool> visited(n, false); // visit 含义为「计算我自己顶上能放多少水」
         visited[0] = true, visited[n - 1] = true;
 
         priority_queue<pole> pq;

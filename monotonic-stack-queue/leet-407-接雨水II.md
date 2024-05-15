@@ -6,7 +6,7 @@
 
 按「2D 接雨水」的思路扩展。2D 时，求当前柱子顶上能装多少水，要找它的「左最高」和「右最高」中较低的那个。按此思路，3D 应该是「左最高」、「右最高」、「上最高」、「下最高」四者中最低的那个。但不对。因 3D 时需「周围一圈」柱子都围住才行，只有这四个是不够的。
 
-![pic](pics/trap-rain-3d-failure.png) 
+![pic](pics/trap-rain-3d-failure.png)
 
 如图，粉色 1 的上下左右最高（灰色）中的最小者是左边的 2，按此思路，粉色 1 顶上可以存水到 2 的高度。但实际上，会按箭头方向流出。
 
@@ -38,14 +38,15 @@
     bool operator<(const pole &a, const pole &b) {
         return a.h > b.h;
     }
-    
-    int trapRainWater(vector<vector<int>>& heightMap) {  
+
+    int trapRainWater(vector<vector<int>>& heightMap) {
         if (heightMap.size() <= 2 || heightMap[0].size() <= 2) {
             return 0;
-        }  
+        }
         int m = heightMap.size();
         int n = heightMap[0].size();
         priority_queue<pole> pq;
+        // visit 含义为「计算我自己顶上能放多少水」
         vector<vector<bool>> visited(m, vector<bool>(n, false));
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
@@ -60,19 +61,20 @@
         int dirs[] = {-1, 0, 1, 0, -1}; // 这个 trick 有点意思
         while (!pq.empty()) {
             pole p = pq.top();
-            pq.pop();            
+            pq.pop();
+            // 这里不用判断 p 是否 visited（计算过）；放入时已设置为 visited（计算过）；现在是以 p 为基础 visit 它周围的
             for (int k = 0; k < 4; ++k) {
                 int i = p.i + dirs[k], j = p.j + dirs[k + 1];
                 if (i >= 0 && i < m && j >= 0 && j < n && !visited[i][j]) {
                     if (heightMap[i][j] < p.h) {
-                        res += p.h - heightMap[i][j]; 
+                        res += p.h - heightMap[i][j];
                     }
                     visited[i][j] = true;
                     pq.push({i, j, max(heightMap[i][j], p.h)});
                 }
             }
         }
-        
+
         return res;
     }
 ```

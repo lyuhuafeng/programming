@@ -89,7 +89,7 @@ references:
         }
 
         int sum = 0;
-        // mh = 0; // 到目前为止，最高
+        // 下面两部分，mh 都表示「到目前为止，最高」。第三部分不需要 mh
         for (int i = 0, mh = 0; i <= l - 1; i++) {
             mh = max(mh, height[i]);
             sum += (mh - height[i]) * 1;
@@ -260,7 +260,7 @@ inspired by 3leaf
         vector<int> dirs = { -1, 1 };
 
         int n = height.size();
-        vector<bool> visited(n, false);
+        vector<bool> visited(n, false); // visit 含义为「计算我自己顶上能放多少水」
         priority_queue<pole> pq;
         pq.push({0, height[0]});
         pq.push({n - 1, height[n - 1]});
