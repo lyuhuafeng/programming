@@ -26,9 +26,15 @@ partition: 所有比 pivot 值小的元素放到 pivot 前，所有比 pivot 值
 重点是 `partition()` 的实现方法。两种方式：
 
 法一：Lomuto
+
+方式一：
 - 取最右边元素的值 (k 或 key) 为 pivot 值。
-- 整个数组分为三个区，从左到右为：「`<=k` 区」、「`>k` 区」、「未处理区」。或者，依次为「`<k` 区」、「`>=k` 区」、「未处理区」。（注意，与 pivot 相等的元素，只分布在 pivot 的某一侧）
+- 整个数组分为三个区，从左到右为：「`<=k` 区」、「`>k` 区」、「未处理区」。
 - 在「未处理区」找到 `<=k` 的，放到「`<=k` 区」末尾。（实际实现：与 「`>k` 区」的第一个交换）
+
+或者，方式二：
+- 整个数组分为三个区，从左到右为：「`<k` 区」、「`>=k` 区」、「未处理区」。（注意，上面方式，与 pivot 相等的元素，都在 pivot 的左侧；本方式，都在 pivot 的右侧。总之只在 pivot 的某一侧，但一定不会在 pivot 两侧都有分布。）
+- 在「未处理区」找到 `<k` 的，放到「`<k` 区」末尾。（实际实现：与 「`>=k` 区」的第一个交换）
 
 to add pic
 
@@ -50,30 +56,39 @@ by Nico Lomoto。被收入 Jon Bentley《Programming Pearls》书中。比 Hoare
 
 `qsort()` 和 `partition()` 的范围，都是 `[left, right]` 闭区间。
 
-```c++
-    int partition(int a[], int left, int right) {
-        int key = a[right]; // 最后一个元素作为 pivot 值
-        int p = left - 1;   // 「小于等于区」的右边界
-+       for (int j = left; j <= right - 1; j++) {
-            if (a[j] <= key) { // 找 <= key 的，放到 pivot 左边
-                swap(a[++p], a[j]);
-            }
-        }
-+       swap(a[++p], a[right]);
-        return p;
-    }
+完整代码：[`quick-sort-lomuto.cpp`](code/quick-sort-lomuto.cpp)
 
-// 还有另外一种写法
-    int partition(int a[], int left, int right) {
-        int key = a[right];
-        int p = left - 1;
-+       for (int j = left; j <= right; j++) { // right 而不是 right - 1
-            if (a[j] <= key) { // 找 <= key的
-                swap(a[++p], a[j]);
-            }
-        }
-        return p;
-    }
+注意，
+- 第 5 行，用「`<=`」就是方式一，用「`<`」就是方式二。两种方式，代码区别只此一处。
+- 第 9 行，`++p` 保证 `p` 指向的是「`>=k` 区」或「`>k` 区」（都是「第二区」）的第一个元素。然后 right 与 p 交换，把 pivot 值放到正确的位置，更重要的是放到 right 位置的仍然是第二区元素，使 right 位置正确变成第二区的一部分。（假如 right 与「第一区」的最后一个元素交换，可能会出错）。
+
+核心部分：
+```c++
+ 1  int partition(long long a[], int left, int right) {
+ 2      long long key = a[right]; // 最后一个元素作为 pivot 值
+ 3      int p = left - 1;   // 「小于等于区」的右边界
+ 4      for (int j = left; j <= right - 1; j++) {
+ 5          if (a[j] <= key) { // 找 <= key 的，放到 pivot 左边。
+ 6              swap(a[++p], a[j]);
+ 7          }
+ 8      }
+ 9      swap(a[++p], a[right]);
+10      return p;
+11  }
+12
+13  void qsort(long long a[], int left, int right) {
+14      if (left >= right) { // 必须是 >= 而不是 ==。有时 pivot == left 或 right，导致下一次调用时 left > right。
+15          return;
+16      }
+17      int pivot = partition(a, left, right);
+18      qsort(a, left, pivot - 1);
+19      qsort(a, pivot + 1, right);
+20  }
+21
+22  // 调用
+23  long long nums[] = { /* ... */ };
+24  int n = sizeof nums / sizeof nums[0];
+25  qsort(nums, 0, n - 1);
 ```
 
 重点在于 `partition()`。
@@ -109,11 +124,45 @@ j 循环结束后，所有元素都处理过，未处理区没了，只有「小
 
 ## 还有另外一种写法
 
-见上面代码。
+`partition()` 还有一种稍有不同的写法，如下。有注释的几行是不同之处。
 
-区别：最后一个元素 `a[right]` 也纳入 j 的扫描范围。因为 `a[right] == key`，所以判断 `if (a[j] <= key)` 判断时，必然成立，则循环体中对 right 一定会执行 `swap()`，循环体外就不用针对 right 再做 `swap()` 了。效果与上面一致。
+区别：最后一个元素 `right` 也纳入 `j` 的扫描范围。因为 `a[right] == key`，所以判断 `if (a[j] <= key)` 判断时，必然成立，则循环体中对 `right` 一定会执行 `swap()`，循环体外就不用对 `right` 再做 `swap()` 了。效果与上面一致。
 
 这种方法，少写了一句，但多了一次判断，且逻辑上不如上面直观，所以还是推荐上面的方法。
+
+注意，另一种写法的第 5 行，不能用 `<`，也就是说，不能用方式二。为何？若改为 `if (a[j] < key)`，当 `j == right` 时，因 `a[j] == key`，此条件不满足，导致下面的 swap 不执行，`right` 位置的元素没能放到 `pivot` 位置处。partition 之后，实际分成了两部分：「第一区（`<` 区）」、「第二区（`>=`区）」。这两者之间，本应是 pivot，但现在没了。`p` 本应指向 pivot，但现在指向第一区的最后一个位置。「第二区」的首个元素，其值不一定等于 pivot 值。这样就出错了。<font color="red">解决方法：用两段式。但实际发现两段式导致 segfault。to check later。</font>
+
+完整代码：[`quick-sort-lomuto-alt.cpp`](code/quick-sort-lomuto-alt.cpp)
+
+不同之处：
+
+```c++
+// 原本写法
+ 1  int partition(long long a[], int left, int right) {
+ 2      long long key = a[right];
+ 3      int p = left - 1;
+ 4      for (int j = left; j <= right - 1; j++) { // right
+ 5          if (a[j] <= key) { // 可以用 <
+ 6              swap(a[++p], a[j]);
+ 7          }
+ 8      }
+ 9      swap(a[++p], a[right]); // 交换 right 与「第二区」首元素
+10      return p;
+11  }
+
+// 另一种写法
+ 1  int partition(long long a[], int left, int right) {
+ 2      long long key = a[right];
+ 3      int p = left - 1;
+ 4      for (int j = left; j <= right; j++) { // right 而不是 right - 1
+ 5          if (a[j] <= key) { // 不能用 < !
+ 6              swap(a[++p], a[j]);
+ 7          }
+ 8      }
+ 9        // 不用再交换；已在上面循环中交换
+10      return p;
+11  }
+```
 
 
 # partition 法二：Hoare partition scheme，经典双指针法

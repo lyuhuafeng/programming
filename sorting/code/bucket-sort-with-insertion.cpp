@@ -24,9 +24,10 @@ void bucket_sort(float a[], int n) {
     }
     printf("minv=%f, maxv=%f\n", minv, maxv);
     float gap = maxv - minv;
+    float bkt_size = gap / n;
     int k = n + 1; // bucket 数量，与待排序的 array 长度（实质）相同
-    float bkt_size = gap / (k - 1);
-    // float bkt_size = gap / k * 1.000001;
+    // /* 法三 */ int k = n;
+    // /* 法三 */ float bkt_size = gap / k * 1.000001;
     printf("k=%d, gap:%f, bkt_size=%f\n", k, gap, bkt_size);
 
     vector<float> b[k];

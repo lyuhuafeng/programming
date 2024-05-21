@@ -34,9 +34,9 @@ bucket 的数量 `k` 取「约等于」待排序序列的长度 `n`。（为何�
 <font color="brown">但，有个问题。</font>每个 bucket 的覆盖范围是个「左闭右开」的区间。这样的 `k` 个区间，`maxv` 恰好在最后一个区间的右（开）边界，恰好没被覆盖到；用上面的公式，其 bucket 的下标为 `k`，恰好超出 `[0 ... k-1]` 的范围，造成访问越界。
 
 如何解决？
-- 法一：令 `k = n`，`bkt_size = gap / (k-1)`。这样，其实是分成了 `k-1` 个「正常」区间，以及一个额外的、只使用了左边界的第 `k` 个区间。最后这第 `k` 个区间，只包含 `maxv` 自己（或多个，若 `maxv` 值有重复），落在左边界上。这样，就解决了访问 `bkt[]` 下标越界的问题。分析时间复杂度时，实质上是 `k = n-1`。
+- 法一：保持 `bkt_size` 的「正常值」，但额外加一个 bucket。令 `k = n`，`bkt_size = gap / (k-1)`。这样，其实是分成了 `k-1` 个「正常」区间，以及一个额外的、只使用了左边界的第 `k` 个区间。最后这第 `k` 个区间，只包含 `maxv` 自己（或多个，若 `maxv` 值有重复），落在左边界上。这样，就解决了访问 `bkt[]` 下标越界的问题。分析时间复杂度时，实质上是 `k = n-1`。
 - 法二：令 `k = n+1`，其余与法一相同。这样，分析时间复杂度时，实质上是 `k = n`，更好看些。
-- 法三：令 `k = n`，`bkt_size` 比 `gap / k` 稍大一点，比如 `bkt_size = gap / k * 1.000001`。这样，第 `k` 个 bucket（下标为 `k-1`）就能覆盖 `maxv`，消除了那个特殊的 bucket。
+- 法三：保持 bucket 数量不变，但让 `bkt_size` 比「正常值」稍大一点。令 `k = n`，`bkt_size` 在 `gap / k` 的基础上乘以一个比 1 稍大一点的系数如 `1.000001`。这样，第 `k` 个 bucket（下标为 `k-1`）就能覆盖 `maxv`，消除了那个特殊的 bucket。
 
 代码中，采用了法二，注释掉了法三。
 
@@ -61,10 +61,10 @@ bucket 的数量 `k` 取「约等于」待排序序列的长度 `n`。（为何�
             minv = min(minv, a[i]), maxv = max(maxv, a[i]);
         }
         float gap = maxv - minv;
+        float bkt_size = gap / n;
         int k = n + 1; // bucket 数量，与待排序的 array 长度（实质）相同
-        float bkt_size = gap / (k - 1);
-        // int k = n;
-        // float bkt_size = gap / k * 1.000001;
+        // /* 法三 */ int k = n;
+        // /* 法三 */ float bkt_size = gap / k * 1.000001;
 
         vector<float> b[k];
         for (int i = 0; i < n; i++) {

@@ -10,11 +10,11 @@
 - tens place digits
 - hundreds place digits
 
-从低位到高位，依次对每一「位」排序，即可。其实是 lexical order.
-- 数：右 -> 左。高位可能需要补零。属于 Least Significant Digit (LSD) Radix Sort。
-- 字符串：左 -> 右。低位可能需要补「空」。属于 Most Significant Digit (MSD) Radix Sort。
+从低位到高位，依次对每一「位」排序，即可。其实是 lexical order。
+- 数：右 -> 左。高位可能需要补零。属于 least significant digit (LSD) radix sort。
+- 字符串：左 -> 右。低位可能需要补「空」。属于 most significant digit (MSD) radix sort。
 
-对于一个 d 进制的数字，要取其第 k 位 `xₖ`，公式：
+对于一个 `d` 进制的数字，要取其第 `k` 位 `xₖ`，公式：
 
 ```cpp
     xₖ = ⌊x / dᵏ⁻¹⌋ % d
