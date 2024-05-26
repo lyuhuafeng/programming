@@ -70,13 +70,13 @@
             scanf("%d", &a[i]);
         }
         sort(a, a + m);
-        int cnt = 0;
+        long long cnt = 0;
         while (n--) {
             int t;
             scanf("%d", &t);
             cnt += bs_new(a, 0, m, t); // 左闭右开 [0,m)
         }
-        printf("%d", cnt);    
+        printf("%lld", cnt);    
         return 0;
     }
 ```
