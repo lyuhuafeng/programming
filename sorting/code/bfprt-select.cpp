@@ -35,8 +35,8 @@ int hoare_partition(vector<int>& arr, int left, int right, int pv) {
     }
 }
 
+// 找 [left, right] 范围的第 k 个 (0-indexed)，返回下标
 // in-place 的，为了找 median-of-medians，把 median-of-5's 挪到了整个 array 的前面
-// 若用额外空间
 int bfprt_select(vector<int>& arr, int left, int right, int k) {
     printf("bfprt: left:%d, right:%d\n", left, right);
     if (left == right) { return arr[left]; }
@@ -50,15 +50,15 @@ int bfprt_select(vector<int>& arr, int left, int right, int k) {
         j++;
         display(arr);
     }
-    j--;
+    j--; // 现在 [left ... left + j] 范围是 median-of-5's，共 j+1 个
 
-    int mm = bfprt_select(arr, left, left + j, (j + 1) / 2);
+    int mm = bfprt_select(arr, left, left + j, (j + 1) / 2); // 注意 (j+1)/2
     int pi = hoare_partition(arr, left, right, mm);
     int len = pi - left + 1;
     if (len > k) {
         return bfprt_select(arr, left, pi, k);
     } else {
-        return bfprt_select(arr, pi + 1, right, k - len); // why not k?
+        return bfprt_select(arr, pi + 1, right, k - len); // 注意 k-len 不是 k
     }
 }
 

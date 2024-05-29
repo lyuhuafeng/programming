@@ -10,7 +10,7 @@ using namespace std;
         for (int i = 0; i < n; i++) {
             while (!st.empty() && heights[st.top()] > heights[i]) { // > 或 >= 都行
                 int ti = st.top();
-                int h = heights[st.top()];
+                int h = heights[ti];
                 st.pop();
                 int w = st.empty() ? i : i - st.top() - 1;
                 res = max(res, h * w);

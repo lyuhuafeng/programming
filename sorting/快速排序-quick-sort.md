@@ -366,29 +366,24 @@ little turing 标程，核心代码。还不能完美处理 duplicate elements�
  5        while (i < j) {
  6            while (i < j && a[j] >= key) { j--; } // j 先动手
  7            while (i < j && a[i] <= key) { i++; } // i 随后
- 9            if (i < j) {
-10                swap(a[i], a[j]);
-11            }
-12        }
-13        // 循环结束后，i == j
-14        a[left] = a[i]; a[i] = key; // left
-15        return i;
-16    }
-17
-18    // 最右边元素值作为 pivot 值。左边 i 先动手。
-19    int partition_2(long a[], int left, int right) {
-20        long key = a[right]; // right
-21        int i = left, j = right;
-22        while (i < j) {
-23            while (i < j && a[i] <= key) { i++; } // i 先动手
-24            while (i < j && a[j] >= key) { j--; } // j 随后
-26            if (i < j) {
-27                swap(a[i], a[j]);
-28            }
-29        }
-31        a[right] = a[i]; a[i] = key; // right
-32        return i;
-33    }
+ 8            if (i < j) { swap(a[i], a[j]); }
+ 9        }
+10        a[left] = a[i]; a[i] = key; // left
+11        return i;
+12    }
+
+ 1    // 最右边元素值作为 pivot 值。左边 i 先动手。
+ 2    int partition_2(long a[], int left, int right) {
+ 3        long key = a[right]; // right
+ 4        int i = left, j = right;
+ 5        while (i < j) {
+ 6            while (i < j && a[i] <= key) { i++; } // i 先动手
+ 7            while (i < j && a[j] >= key) { j--; } // j 随后
+ 8            if (i < j) { swap(a[i], a[j]); }
+ 9        }
+10        a[right] = a[i]; a[i] = key; // right
+11        return i;
+12    }
 ```
 
 方式二，Sedgewick 方式，貌似已解决重复元素问题。核心代码见下。

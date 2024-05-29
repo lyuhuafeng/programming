@@ -67,6 +67,8 @@ Ordering property
     }
 ```
 
+可见，`sift_down()` 与 `sift_up()` 代码基本是对称的。
+
 另一种实现：同样思路，改用 for 循环。
 
 ```cpp
@@ -136,13 +138,13 @@ wiki 上的版本，可指定范围 `[start, end]` <font color="red">to check la
     }
 ```
 
-这就是普通的 top-down 方法。有个明显的问题：把最小元素 `a[end]` 从堆底部拉到顶部，然后让它一路下行。它下行的过程中，较大元素相应上行。当然，它下行的目的，也确实是为了让其他元素上行，以补上堆顶的空缺，它自己也很可能还会回到堆底。这个过程中，比较次数较多。
+这就是普通的 top-down 方法。有个明显的问题：把最小元素 `a[end]` 从堆底部拉到顶部，然后让它一路下行。它下行的过程中，较大元素相应上行。当然，它下行的目的，也确实是为了让其他元素上行，以补上堆顶的空缺，它自己也很可能还会回到堆底。这个过程中，比较次数较多。（由此导致，heap sort 的比较次数平均大约是 quick sort 的两倍）
 
 # 改进：bottom-up 方法
 
 不是选 `a[end]` 去填 `a[0]` 的空，而是找到 `a[0]` 最大的 child 并上移。
 
-具体地，堆顶 `a[0]` 移走后，得到的「空缺」一路 sift down。或者理解为，得到的「空缺」是个值为 `-inf` 的元素，它一路 sift down。考虑到 `-inf` 比所有元素都小，每次下移只用比较两个 child 哪个大，不用比较 parent 与 larger-child 哪个大。比较次数减少。
+具体地，堆顶 `a[0]` 移走后，得到的「空缺」一路 sift down。或者理解为，得到的「空缺」是个值为 `-inf` 的元素，它一路 sift down 直到 leaf 节点。然后用正确的值（`a[end]`）取代 `-inf`，再 sift up 上去。考虑到 `-inf` 比所有元素都小，每次下移只用比较两个 child 哪个大，不用比较 parent 与 larger-child 哪个大。这样就减少了比较次数。(wikipedia 上有伪代码)
 
 普通的 top-down 堆排比 quick sort 慢，而这样优化过的 bottom-up 堆排比 quick sort 还快。来源：2005 年的[原文](http://www.inference.org.uk/mackay/sorting/sorting.html)、[中译](https://mp.weixin.qq.com/s?__biz=MzI5NjA1MDQ4NA==&mid=2454610192&idx=1&sn=3d317ed1d65e7c918a5886ff37d322ce)、[解读](https://mindhacks.cn/2008/06/13/why-is-quicksort-so-quick)。
 

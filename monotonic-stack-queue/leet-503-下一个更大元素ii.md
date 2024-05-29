@@ -15,7 +15,7 @@
         vector<int> res(n, -1); // 存放结果值，不存下标。初始化为 -1（无结果）
         stack<int> st; // 存放下标
         // 假装这个数组长度翻倍了
-        for (int i = 0; i <= 2 * nums.size() - 1; i++) {
+        for (int i = 0; i <= 2 * n - 1; i++) {
             // 循环体内有三处 i%n，可优化一下，定义一个 idx = i % n
             while (!st.empty() && nums[st.top()] < nums[i % n]) {
                 res[st.top()] = nums[i % n];

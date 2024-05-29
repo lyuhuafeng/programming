@@ -32,7 +32,7 @@ int main() {
     int k = 8; // age的最大值，本应遍历arr求得，为简化代码，直接赋值
 
     int count[k + 1];
-    memset(count, 0, sizeof count);
+    fill_n(count, k + 1, 0);
     for (int i = 0; i < n; i++) {
         count[arr[i].age]++; // count[v]: v 出现的次数
     }
