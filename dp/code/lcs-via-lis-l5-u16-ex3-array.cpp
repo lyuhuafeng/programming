@@ -16,7 +16,7 @@ int main() {
     for (int i = 0; i < n; i++) {
         scanf("%d", &q[i]);
     }
-    memset(mp, -1, sizeof mp); // mp[i] < 0，表示 p 序列中不存在元素 i
+    fill_n(mp, sizeof mp / sizeof mp[0], -1); // mp[i] < 0，表示 p 序列中不存在元素 i
     for (int i = 0; i < n; i++) {
         mp[p[i]] = i;
     }

@@ -8,6 +8,12 @@ kᵗʰ smallest element, 又叫 kᵗʰ order statistic。
 
 k，通常从 1 开始，但若使用 quick select，则从 0 开始比较方便。
 
+1. 排序后直接取数
+2. 用 binary search
+3. 用 heap 或 priority queue
+4. 不用 heap，用类似 binary insertion sort 的方法，自己维护一个最长为 k 的数组
+5. 快速选择 quick select
+
 ## 1. 排序后直接取数
 
 时间复杂度：`O(nlogn)`。
@@ -70,9 +76,9 @@ java code,
 
 python code
 
-### 4.a 不用 priority queue, 自己用 heap
+## 4. 不用 heap，用类似 binary insertion sort 的方法，自己维护一个最长为 k 的数组
 
-to add later
+参见 [leet 347 的解法一](leet-347-top-k.md)
 
 ## 5. 快速选择 quick select
 

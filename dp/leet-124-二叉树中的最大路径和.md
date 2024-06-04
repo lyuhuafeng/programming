@@ -16,19 +16,17 @@
 - 节点的最大贡献值：`node->val + max(left_gain, right_gain)`，求 max
 
 ```cpp
-    int maxGain(TreeNode* node, int &max_sum) {
+    int max_gain(TreeNode* node, int &max_sum) {
         if (node == nullptr) {
             return 0;
         }
         
         // 递归计算：左右子节点的最大贡献值
         // 只有在最大贡献值大于 0 时，才会选取对应子节点
-        int left_gain = max(maxGain(node->left, max_sum), 0);
-        int right_gain = max(maxGain(node->right, max_sum), 0);
-
+        int left_gain = max(max_gain(node->left, max_sum), 0);
+        int right_gain = max(max_gain(node->right, max_sum), 0);
         // 本 node 的最大路径和，并用于更新 global 最大路径和
-        int t_sum = node->val + left_gain + right_gain;
-        max_sum = max(max_sum, t_sum);
+        max_sum = max(max_sum, node->val + left_gain + right_gain);
 
         // 返回节点的最大贡献值
         return node->val + max(left_gain, right_gain);
@@ -36,7 +34,7 @@
 
     int maxPathSum(TreeNode* root) {
         int max_sum = INT_MIN;
-        maxGain(root, max_sum);
+        max_gain(root, max_sum);
         return max_sum;
     }
 ```

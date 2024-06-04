@@ -157,7 +157,7 @@ x       if (mp.count(c) != 0) {
 x   int mp[(int) 1e6 + 1]; // int 类型，存放下标
     int b[n]; // 必须是 int 类型，存放的是下标
 
-x   memset(mp, -1, sizeof mp); // mp[i] < 0，表示 p 序列中不存在元素 i
+x   fill_n(mp, sizeof mp / sizeof mp[0], -1); // mp[i] < 0，表示 p 序列中不存在元素 i
     for (int i = 0; i < n; i++) {
         mp[p[i]] = i;
     }

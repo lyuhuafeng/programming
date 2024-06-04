@@ -3,21 +3,21 @@
 
 下面各公式中，m 为桶的数量、哈希表的大小
 
-直接定址：`h(k) = k` 或 `h(k) = a⋅k+b`
+- 直接定址：`h(k) = k` 或 `h(k) = a⋅k+b`
 
-乘法 multiplication：`h(k) = floor(m * (A * k 的小数部分))`。常数 A，`0 < A < 1`，Knuth 认为取 0.618... 挺好。
+- 乘法 multiplication：`h(k) = floor(m * (A * k 的小数部分))`。常数 A，`0 < A < 1`，Knuth 认为取 0.618... 挺好。
 
-数字分析
+- 数字分析
 
-平方取中 mid-square: `k^2` 取中间若干位的数字
+- 平方取中 mid-square: `k^2` 取中间若干位的数字
 
-随机数
+- 随机数
 
-折叠 folding: k 分成若干部分，相加，mod m
+- 折叠 folding: k 分成若干部分，相加，mod m
 
-universal hashing: `h(k) = ((a⋅k+b) mod p) mod m`，p 是个大质数。
+- universal hashing: `h(k) = ((a⋅k+b) mod p) mod m`，p 是个大质数。
 
-除留取余 division：`h(k) = k mod p (p ≤ m)`。p 为质数。
+- 除留取余 division：`h(k) = k mod p (p ≤ m)`。p 为质数。
 
 
 

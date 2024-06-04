@@ -3,39 +3,39 @@
 # 交换
 
 ```cpp
-  #include <algorithm> // c++98
-  #include <utility>   // c++11
-  std::swap(a, b);     // 各种数据类型都可以，也不用传地址
+    #include <algorithm> // c++98
+    #include <utility>   // c++11
+    std::swap(a, b);     // 各种数据类型都可以，也不用传地址
 ```
 
 # 最大值、最小值
 
 ```cpp
-  // 适用于任何类型
-  #include <algorithm>
-  std::max(), std::min()
-  
-  // 适用于 float，起源于 c99，c++11 引入的
-  #include <cmath>
-  std::fmax(), std::fmin()
-  #include <math.h>
-  ::fmax(), ::fmin()
+    // 适用于任何类型
+    #include <algorithm>
+    std::max(), std::min()
+
+    // 适用于 float，起源于 c99，c++11 引入的
+    #include <cmath>
+    std::fmax(), std::fmin()
+    #include <math.h>
+    ::fmax(), ::fmin()
 ```
 
 比较两个数，或一个初始化列表(用 `{}` 括起来的)；还可提供比较函数。
 
 ```cpp
-  int a = 10, b = 13;
-  printf("%d\n", std::max(a, b));	// 输出 13
+    int a = 10, b = 13;
+    printf("%d\n", std::max(a, b));	// 输出 13
 
-  bool abs_greater(int a, int b) {
-    return std::abs(a) < std::abs(b);
-  }
-  int a = 10, b = -13;
-  printf("%d\n", std::max(a, b, abs_greater));  // 输出 -13
+    bool abs_greater(int a, int b) {
+      return std::abs(a) < std::abs(b);
+    }
+    int a = 10, b = -13;
+    printf("%d\n", std::max(a, b, abs_greater));  // 输出 -13
 
-  std::cout << std::min({9, 5, 2, 7}); // 输出 2
-  std::cout << std::min({-9, 5, 2, -7}, abs_greater); // 输出 2
+    std::cout << std::min({9, 5, 2, 7}); // 输出 2
+    std::cout << std::min({-9, 5, 2, -7}, abs_greater); // 输出 2
 ```
 
 # 数学运算
@@ -62,10 +62,12 @@
 
 # 绝对值
 
-使用 `std::abs()` 就行，不用 `std::fabs()` 或 `::abs()`。
-- `std::abs()` 支持各种整数和各种浮点数
+使用 `std::abs()` 就行，不用 `std::fabs()` 或 `::abs()`
+- `std::abs()` 支持各种整数和各种浮点数，但返回值为 float 或 double
 - `std::fabs()` 在 c++11 之前只支持浮点数, c++11 之后也支持各种整数
 - `::abs()` 只支持 int
+
+`std::abs()` 在 c++14 及以前，返回值均为 float 或 double，即使参数可能是整数类型。所以，若用 `printf("%d", std::abs(...))` 打印，一定要把 `std::abs()` 的结果显示转换成 int 或 long 或其他整数类型，否则出错。（其他函数会做类型转换，但 `printf` 很特殊，不会转换，导致出错）
 
 # 乘方、开方、对数
 

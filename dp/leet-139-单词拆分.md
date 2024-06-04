@@ -10,14 +10,17 @@
 
 递推初始值，定义 `dp[0] = true`，表示「空串、合法」。
 
+判断「是否在词典中」，也可用 set 解决，可能快些。
+
 ```cpp
     bool wordBreak(string s, vector<string>& wd) {
         int n = s.length();
-        vector<bool> dp(n + 1);
-        dp[0] = true;
+        vector<bool> dp(n + 1); // dp[i]：s[0 .. i−1] 能否拆成
+        dp[0] = true; // 空串、合法
 
         for (int i = 1; i <= n; ++i) {
             for (int j = 0; j <= i - 1; ++j) {
+                // 两部分 [0 .. j-1]、[j .. i-1]
                 if (dp[j] && find(wd.begin(), wd.end(), s.substr(j, i - j)) != wd.end()) {
                     dp[i] = true;
                     break;

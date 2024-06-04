@@ -29,7 +29,10 @@
 
 为何要允许堆里有空链表？为了用 `(lists.begin(), lists.end())` 做参数初始化 pq，方便处理题目数据里有空链表的情况。但，后续不会再往堆里放入新的空链表。
 
-c++ 代码中，这样的数据类型 `priority_queue<ListNode *, vector<ListNode *>, node_greater>` 太笨重，不如 `priority_queue<ListNode *>` 轻巧。但用后者，需要重载 `operator<()`，其两个参数不能是指针类型。偏偏本题貌似只能用指针类型。所以只能笨重点了。
+c++ 代码中，如何初始化 priority_queue？
+- 正确做法：`priority_queue<ListNode *, vector<ListNode *>, node_greater>`，但显然数据类型太笨重。
+  - 其中 `node_greater` 是结构体或类内重载 `operator()`，不能是简单的比较函数。<font color="red">to check why</font>
+- 错误做法：`priority_queue<ListNode *>` 轻巧。但需重载 `operator<()`，其两个参数不能是指针类型。偏偏本题貌似只能用指针类型。所以只能笨重点了。
 
 Java 代码里，不允许 pq 中有空链表，所以把非空链表逐个放入 pq。
 
@@ -48,12 +51,8 @@ C++ 代码
     class node_greater {
     public:
         bool operator()(const ListNode* l1, const ListNode *l2) {
-            if (l1 == nullptr) {
-                return false;
-            }
-            if (l2 == nullptr) {
-                return true;
-            }
+            if (l1 == nullptr) { return false; }
+            if (l2 == nullptr) { return true; }
             return l1->val > l2->val;
         }
     };
@@ -126,16 +125,13 @@ class Solution {
 
 对 k 个链表做「merge」，就像对 k 个数做「merge sort」一样，有点神奇。有空时再体会体会。
 
-`merge_two()`，合并两个有序链表，递归法，巧妙。
+`merge_two()`，合并两个有序链表，两种方法。其中，递归法，巧妙。
 
 ```cpp
+    // 合并两个，递归法
     ListNode* merge_two(ListNode *a, ListNode *b) {
-        if (a == nullptr) {
-            return b;
-        }
-        if (b == nullptr) {
-            return a;
-        }
+        if (a == nullptr) { return b; }
+        if (b == nullptr) { return a; }
         if (a->val < b->val) {
             a->next = merge_two(a->next, b);
             return a;
@@ -143,20 +139,33 @@ class Solution {
         b->next = merge_two(b->next, a);
         return b;
     }
-    ListNode* merge(vector<ListNode *> lists, int l, int r) {
-        if (l == r) {
-            return lists[l];
+    // 合并两个，非递归法
+    ListNode* merge_two(ListNode* l1, ListNode* l2) {
+        ListNode dummy, *h = &dummy;
+        while (l1 != nullptr && l2 != nullptr) {
+            if (l1->val < l2->val) {
+                h->next = l1;
+                l1 = l1->next;
+            } else {
+                h->next = l2;
+                l2 = l2->next;
+            }
+            h = h->next;
         }
+        h->next = (l1 ? l1 : l2);
+        return dummy.next;
+    }
+
+    ListNode* merge(vector<ListNode *> lists, int l, int r) {
+        if (l == r) { return lists[l]; }
         int m = l + (r - l) / 2;
         ListNode *a = merge(lists, l, m);
         ListNode *b = merge(lists, m + 1, r);
         return merge_two(a, b);
     }
     ListNode* mergeKLists(vector<ListNode*>& lists) {
+        if (lists.empty()) { return nullptr; }
         int n = lists.size();
-        if (n == 0) {
-            return nullptr;
-        }
         return merge(lists, 0, n - 1);
     }
 ```

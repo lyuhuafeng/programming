@@ -20,9 +20,9 @@ Definition for a binary tree node.
 
 层序遍历，用 map 记录每个 val 的父节点；不放入 null 节点。
 
-从 p 开始，在 map 里持续找父（祖先）节点，用 set 记录 p 的所有祖先节点。
+从 p 开始，往上遍历 p 及其所有父（祖先）节点（通过在 map 中查找的方式），并用 set 记录 p 的所有祖先节点。
 
-从 q 开始，在 map 里持续找，遍历 q 的所有祖先节点，遇到「p 祖先 set」里的就是答案。
+从 q 开始，往上遍历 q 及其所有父（祖先）节点（通过在 map 中查找的方式），遇到「p 祖先 set」里的就是答案。
 
 ```cpp
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
@@ -58,6 +58,45 @@ Definition for a binary tree node.
             q = m[q->val];
         }
         return nullptr; // shouldn't be here; to make compiler happy.        
+    }
+```
+
+或，map 和 set 的 key 用树的「节点」而不是「节点的值」，感觉简单点。
+
+```cpp
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if (root == nullptr) {
+            return root;
+        }
+        unordered_map<TreeNode *, TreeNode *> m; // 每个节点的父节点
+        queue<TreeNode *> qu;
+        qu.push(root);
+        while (!qu.empty()) {
+            TreeNode *n = qu.front(); qu.pop();
+            if (n->left != nullptr) {
+                m[n->left] = n;
+                qu.push(n->left);
+            }
+            if (n->right != nullptr) {
+                m[n->right] = n;
+                qu.push(n->right);
+            }
+        }
+
+        unordered_set<TreeNode *> s; // p 的所有祖先节点
+        s.insert(p);
+        while (m.count(p) > 0) {
+            p = m[p];
+            s.insert(p);
+        }
+
+        while (true) {
+            if (s.count(q) > 0) {
+                return q;
+            }
+            q = m[q];
+        }
+        return nullptr; // shouldn't be here; to make compiler happy.
     }
 ```
 
