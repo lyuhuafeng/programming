@@ -46,12 +46,16 @@ void slidingWindow(string s, string t) {
 
 # 标准模板 C++ 实现：[438. 字符串中所有字母异位词](https://leetcode.cn/problems/find-all-anagrams-in-a-string)
 
-标准模板代码: [`all-anagrams-in-string-leet-438-sol2-template.cpp`](code/all-anagrams-in-string-leet-438-sol2-template.cpp)
+[标准模板代码](code/all-anagrams-in-string-leet-438-sol2-template.cpp)
 
 重要变量：
 - `map<char, int> need`: 窗口中各字符「需要」出现的次数。预处理好了就不用改变。
 - `map<char, int> win`: 窗口中各字符「实际」已出现的次数。随窗口移动，不断更新。
 - `int valid`: 窗口中「已完全包含」多少所需字符。随窗口移动，不断更新。免得每次都要遍历 need 和 win 比较是否满足要求。
+
+[标准模板代码小改动](code/all-anagrams-in-string-leet-438-sol2-template-2.cpp) 去掉了 `valid`，直接比较 `need` 和 `win` 是否一致。
+
+下面还有另一种实现。
 
 ```cpp
     vector<int> findAnagrams(string s, string p) {
@@ -104,8 +108,9 @@ void slidingWindow(string s, string t) {
   - 代码: [min-window-substr-leet-76.cpp](code/min-window-substr-leet-76.cpp)
   - 模板代码: [min-window-substr-leet-76-template.cpp](code/min-window-substr-leet-76-template.cpp)
 - hard: [438. 字符串中所有字母异位词](https://leetcode.cn/problems/find-all-anagrams-in-a-string)
-  - 标准模板代码: [all-anagrams-in-string-leet-438-sol2-template.cpp](code/all-anagrams-in-string-leet-438-sol2-template.cpp)
-  - 另一代码: [all-anagrams-in-string-leet-438-sol1.cpp](code/all-anagrams-in-string-leet-438-sol1.cpp)
+  - [标准模板代码](code/all-anagrams-in-string-leet-438-sol2-template.cpp)
+  - [标准模板代码小改动](code/all-anagrams-in-string-leet-438-sol2-template-2.cpp) 去掉了 `valid`，直接比较 `need` 和 `win` 是否一致。
+  - [另一代码](code/all-anagrams-in-string-leet-438-sol1.cpp)
 - hard: 438的进阶：[30. 串联所有单词的子串](https://leetcode.cn/problems/substring-with-concatenation-of-all-words) 窗口大小固定，但每次移动若干字符
   - 代码（for循环，分两段）: [substr-with-concating-words-leet-30.cpp](code/substr-with-concating-words-leet-30.cpp)
   - 模板代码: [substr-with-concating-words-leet-30-template.cpp](code/substr-with-concating-words-leet-30-template.cpp) <font color="red">to check on leet</font>

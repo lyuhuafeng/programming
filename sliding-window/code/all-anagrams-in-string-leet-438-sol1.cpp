@@ -3,10 +3,9 @@
 #include <string>
 using namespace std;
 
-
-    bool same(const unordered_map<char, int>& mp, unordered_map<char, int>& mr) {
+    bool same(const unordered_map<char, int>& mp, const unordered_map<char, int>& mr) {
         for (auto i : mp) {
-            if (i.second != mr[i.first]) {
+            if (mr.count(i.first) == 0 || mr.at(i.first) != i.second) {
                 return false;
             }
         }

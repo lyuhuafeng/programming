@@ -10,6 +10,8 @@
 
 这是「普通」完全背包的空间压缩解法，先枚举物品，再枚举背包容量。得到的解，没算排列数，不正确。
 
+注意：普通完全背包，是 `f[j] = max(f[j], f[j - numsⱼ] + 1)`；这里是 `f[j] = f[j] + f[j - numsⱼ]`。
+
 ```cpp
 // 错误
 // 完全背包，先枚举物品，再枚举背包容量。没考虑到排列数，故错。
@@ -30,18 +32,16 @@
 
 正确解法：把「普通」完全背包的遍历顺序变一下，先枚举背包容量，再枚举物品，就得到排列数。<font color="red">神奇。to think more.</font>
 
-这样一改，感觉就成了「上台阶」问题。<font color="red">to think more.</font>
-
 ```cpp
 // 正确
 // 完全背包，先枚举背包容量，再枚举物品。得到了排列数。
     int combinationSum4(vector<int>& nums, int target) {
         int n = nums.size();
         vector<unsigned long long> f(target + 1);
-        fill_n(f.begin(), target + 1, 0);
         f[0] = 1;
 
-        for (int j = 1; j <= target; j++) {    
+        for (int j = 1; j <= target; j++) {
+            f[i] = 0; // 初始值。也可以在上面一起初始化。 
             for (int i : nums) {
                 if (j >= i) {
                     f[j] += f[j - i];
@@ -51,6 +51,10 @@
         return f[target];
     }
 ```
+
+这样一改，感觉就成了「爬楼梯」问题。本质上也确实是「[70. 爬楼梯](https://leetcode.cn/problems/climbing-stairs)」问题，不过不是每次爬 1 或 2 级，而是每次爬的级数有多种选择。`f[i]` 表示前 `i` 级台阶的方案数，则 `f[i] = ∑f[i - numsⱼ], ∀j`。
+
+<font color="red">to think more: 爬楼梯 与 完全背包 的深层联系</font>
 
 几点讨论：
 

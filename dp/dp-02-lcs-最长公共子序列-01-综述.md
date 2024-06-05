@@ -26,6 +26,8 @@
 
 完整代码，既求出了 lcs 长度，又找出了 lcs 字符串及每个字符在原字符串中的位置：[longest-common-sub-sequence-leet-1143.cpp](code/longest-common-sub-sequence-leet-1143.cpp)
 
+（另一种思路，`dp[i][j]` 表示 `s[0 .. i-1]` 和 `t[0 .. j-1]` 的 LCS。下标从 `0` 开始。但 `dp[0][j]` 和 `dp[i][0]` 的初值设定比较麻烦。详见 [longest-common-sub-sequence-leet-1143-0-indexed.cpp](code/longest-common-sub-sequence-leet-1143-0-indexed.cpp)）
+
 ```cpp
     int longestCommonSubsequence(string text1, string text2) {
         int m = text1.length(), n = text2.length();

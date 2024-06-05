@@ -22,7 +22,7 @@ using namespace std;
                     valid++;
                 }
             }
-            while (r - l >= p.size()) {
+            while (r - l >= p.length()) {
                 // 若窗口满足条件（窗口中「已完全包含」所有所需字符），则将起始索引放入 res
                 if (valid == need.size()) {
                     res.push_back(l);
