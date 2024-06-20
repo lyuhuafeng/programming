@@ -46,14 +46,14 @@ void slidingWindow(string s, string t) {
 
 # 标准模板 C++ 实现：[438. 字符串中所有字母异位词](https://leetcode.cn/problems/find-all-anagrams-in-a-string)
 
-[标准模板代码](code/all-anagrams-in-string-leet-438-sol2-template.cpp)
+- [标准模板代码](code/all-anagrams-in-string-leet-438-sol2-template.cpp)
+- [标准模板代码小改动](code/all-anagrams-in-string-leet-438-sol2-template-2.cpp) 去掉了 `valid`，直接比较 `need` 和 `win` 是否一致。
+- [我修正的代码](code/all-anagrams-in-string-leet-438-sol2-template-mine.cpp)
 
 重要变量：
 - `map<char, int> need`: 窗口中各字符「需要」出现的次数。预处理好了就不用改变。
 - `map<char, int> win`: 窗口中各字符「实际」已出现的次数。随窗口移动，不断更新。
 - `int valid`: 窗口中「已完全包含」多少所需字符。随窗口移动，不断更新。免得每次都要遍历 need 和 win 比较是否满足要求。
-
-[标准模板代码小改动](code/all-anagrams-in-string-leet-438-sol2-template-2.cpp) 去掉了 `valid`，直接比较 `need` 和 `win` 是否一致。
 
 下面还有另一种实现。
 
@@ -99,14 +99,17 @@ void slidingWindow(string s, string t) {
 
 # 题目
 
-- [209. 长度最小的子数组](https://leetcode.cn/problems/minimum-size-subarray-sum)
-  - 标准模板代码，但更简单些: [shortest-subarray-with-sum-greater-leet-209.cpp](code/shortest-subarray-with-sum-greater-leet-209.cpp)
+- [209. 和大于某给定值的、长度最小的子数组](https://leetcode.cn/problems/minimum-size-subarray-sum)
+  - [更简单些的标准模板代码](code/shortest-subarray-with-sum-greater-leet-209.cpp)，[我修正的代码](code/min-window-substr-leet-76-mine.cpp)
+  - 类似题目，正整数数组中，连续子数组和「等于」k 而不是「大于」k：[代码](code/longest-subarray-with-sum-k.cpp)。代码结构与上题不同，需再思考。
+  - 变化一点，数组含正整数、负整数、零，求连续子数组和「等于」k。不能用双指针滑动窗口，得用前缀和。[代码](code/longest-subarray-with-sum-k-all-type-numbers.cpp)
 - [3. 无重复字符的最长子串](https://leetcode.cn/problems/longest-substring-without-repeating-characters)
   - 代码: [longest-substr-without-dups-leet-3.cpp](code/longest-substr-without-dups-leet-3.cpp)
   - 标准模板代码，因字符不重复，不用统计出现多少次，所以用 set 而不用 map [longest-substr-without-dups-leet-3-template.cpp](code/longest-substr-without-dups-leet-3-template.cpp)
 - hard: [76. 最小覆盖子串](https://leetcode.cn/problems/minimum-window-substring)
   - 代码: [min-window-substr-leet-76.cpp](code/min-window-substr-leet-76.cpp)
   - 模板代码: [min-window-substr-leet-76-template.cpp](code/min-window-substr-leet-76-template.cpp)
+  - [模板代码逻辑简化](code/min-window-substr-leet-76-template-simplified.cpp)：没使用 valid 变量，改用 covered() 判断
 - hard: [438. 字符串中所有字母异位词](https://leetcode.cn/problems/find-all-anagrams-in-a-string)
   - [标准模板代码](code/all-anagrams-in-string-leet-438-sol2-template.cpp)
   - [标准模板代码小改动](code/all-anagrams-in-string-leet-438-sol2-template-2.cpp) 去掉了 `valid`，直接比较 `need` 和 `win` 是否一致。

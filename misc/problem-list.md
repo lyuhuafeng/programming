@@ -11,7 +11,11 @@
 
 - [15. 三数之和](sliding-window/leet-15-16-三数之和.md)
 - 3. 无重复字符的最长子串
-- [146. LRU缓存机制](https://leetcode.cn/problems/lru-cache/) 代码：[`leet-146-lru-cache.cpp`](code/leet-146-lru-cache.cpp)
+- [146. LRU缓存机制](https://leetcode.cn/problems/lru-cache) [代码](code/leet-146-lru-cache.cpp)
+- [232. 用栈实现队列](https://leetcode.cn/problems/implement-queue-using-stacks) 
+  - 基本思路，一个栈作为 helper 帮助另一个栈：[代码](code/leet-232-queue-by-stacks.cpp)
+  - 更好的解法，两个栈协作，分别负责 push 和 pop/peek：[代码](code/leet-232-queue-by-stacks-better.cpp)
+
 - [25. K个一组翻转链表](https://leetcode.cn/problems/reverse-nodes-in-k-group/) 代码：[``]()
 - [206. 反转链表](https://leetcode.cn/problems/reverse-linked-list/) 代码：[`leet-206-reverse-linked-list.cpp`](code/leet-206-reverse-linked-list.cpp)
 215. 数组中的第K个最大
@@ -79,16 +83,16 @@ https://mp.weixin.qq.com/s/Rf8dbEGhFNQS4AkXhn6Gew
 - [x] 49、字母异位词分组
 - [x] 20、有效的括号
 - [x] 125、验证回文串
-- [] 5、最长回文子串
-- [] 647、回文子串
-- [] 271、加码解码字符串
+- [x] 5、最长回文子串
+- [x] 647、回文子串 countSubstrings_dp 思路不太好理解；还是看 dp_simple 两种思路
+- [] 271、加码解码字符串 vip
 
 图：
-- [x] 133、克隆图
-- [x] 207、课程表
+- [x] 133、克隆图  看 leet 上我 06.13 的提交，遍历两遍，逻辑清晰
+- [x] 207、课程表  拓扑排序
 - [x] 417、太平洋大西洋水流问题
-- [x] 200、岛屿数量
-- [x] 128、最长连续序列
+- [x] 200、岛屿数量  简单 bfs
+- [x] 128、最长连续序列  leet 上我的 _best 题解思路巧妙。注意，不能排序然后二分！因为不是两段的，可能多段！
 - [] 269、外星人字典 vip
 - [] 261、图验证树 vip
 - [] 323、无向图的连通分量 vip
@@ -99,9 +103,9 @@ https://mp.weixin.qq.com/s/Rf8dbEGhFNQS4AkXhn6Gew
 - [x] 226、翻转二叉树
 - [x] 124、二叉树中的最大路径和
 - [x] 102、二叉树的层序遍历
-- [] 297、二叉树的序列化和反序列化
+- [x] 297、二叉树的序列化和反序列化
 - [] 572、另一棵树的子树
-- [] 105、从前序与中序遍历序列构造二叉树
+- [x] 105、从前序与中序遍历序列构造二叉树
 - [x] 98、验证二叉搜索树
 - [x] 230、二叉搜索树中第K小的元素
 - [x] 235、二叉搜索树的最近公共祖先
@@ -125,7 +129,7 @@ https://mp.weixin.qq.com/s/Rf8dbEGhFNQS4AkXhn6Gew
 堆：
 - [x] 23、合并K个升序链表
 - [x] 347、前K个高频元素
-- [] 295、数据流的中位数
+- [x] 295、数据流的中位数
 
 bit：
 - [] 371、两整数之和
