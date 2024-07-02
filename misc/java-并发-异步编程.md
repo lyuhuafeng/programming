@@ -1,11 +1,86 @@
+# 同步机制
+
+intrinsic lock，又称为 monitor lock 或 monitor
+
+英语学习：intrinsic: 内在的、固有的
+
+每个 object 都有一个 intrinsic lock。
+
+synchronization 的两个方面：
+- enforcing exclusive access to an object's state
+- establishing happens-before relationships that are essential to visibility
+
+## 用 synchronized 关键字
+
+- synchronized method
+- synchronized statement：一段代码，显式
+
+reentrant synchronization 可重入的：一个线程多次 acquire 同一个 lock。（不能 acquire 别的线程拥有的 lock）
+
+## mutex
+
+任何 object 都可用作 mutex。需要用 synchronized 关键字。
+
+```java
+    private Object mutex = new Object();
+
+    public int getNextSequence() {
+        synchronized (mutex) {
+            return super.getNextSequence();
+        }
+    }
+```
+
+## reentrant lock
+
+since java 1.5。比 synchronized 关键字更好。
+
+```java
+    private ReentrantLock mutex = new ReentrantLock();
+    public int getNextSequence() {
+        try {
+            mutex.lock();
+            return super.getNextSequence();
+        } finally {
+            mutex.unlock();
+        }
+    }
+```
+
+## semaphore
+
+since java 1.5。可支持多个线程同时访问。特点：任何 thread 都可以 release；但通常希望最初上锁的 thread 才能 release。
+
+```java
+    private Semaphore mutex = new Semaphore(3);
+
+    public int getNextSequence() {
+        try {
+            mutex.acquire();
+            return super.getNextSequence();
+        } catch (InterruptedException e) {
+            // exception handling code
+        } finally {
+            mutex.release();
+        }
+    }
+```
+
+# 异步编程：概述
+
+- by threads
+- by Future
+- by CompletableFuture
+- by ListenableFuture (by Google Guava)
+
+# by threads
 
 创建 thread 的两种方式：
 
-继承 Thread 类，override 其 run() 方法。
-创建该类实例，并调用其 start() 方法。
-
-实现 Runnable 接口，实现其 run() 方法。
-用该类的对象生成一个 Thread 类对象（作为 Thread 的构造函数的参数），并调用该 Thread 对象的 start() 方法。
+1. 继承 Thread 类，override 其 run() 方法。
+  - 创建该类实例，并调用其 start() 方法。
+2. 实现 Runnable 接口，实现其 run() 方法。
+  - 用该类的对象生成一个 Thread 类对象（作为 Thread 的构造函数的参数），并调用该 Thread 对象的 start() 方法。
 
 ```java
     public interface Runnable {
@@ -30,10 +105,15 @@
 
 解法：通过 Callable 和 Future (since Java 5), 可在任务执行完后，得到结果。
 
+# by Future
+
 callable，可以认为是增强版的 runnable。表示一个待执行的 task。
+
 泛型接口。只有一个 call() 方法，返回类型就是泛型 V。
+
 定义一个 task 类，继承自 callable，重写其 call() 方法。
-用 executor service 提交该 task，返回 Future<V> 对象。
+
+用 executor service 提交该 task，返回 `Future<V>` 对象。
 
 ```java
     public interface Callable<V> {
@@ -59,14 +139,17 @@ callable，可以认为是增强版的 runnable。表示一个待执行的 task�
     int f = future.get().intValue();
 ```
 
-Futrue是个接口。Future就是对于具体的Runnable或者Callable任务的执行结果进行取消、查询是否完成、获取结果。必要时可以通过get方法获取执行结果，该方法会阻塞直到任务返回结果。
+Futrue 是个接口。Future 就是对于具体的 Runnable 或者 Callable 任务的执行结果进行取消、查询是否完成、获取结果。必要时可以通过 get 方法获取执行结果，该方法会阻塞直到任务返回结果。
+
 cancel(), isCancelled(), isDone(), get(), get()
 
+```
 Runnable   Future
    |         |
   RunnableFuture
         |
     FutureTask
+```
 
 FutureTask 既可以作为 Runnable 被线程执行，又可以作为 Future 得到 Callable 的返回值。
 
@@ -89,9 +172,36 @@ ForkJoinTask
 
 to add later
 
-CompletableFuture (since Java 8)
-	implements Future, CompletionStage
+# by CompletableFuture
+
+```
+    CompletableFuture (since Java 8)
+	    implements Future, CompletionStage
+```
+
+简单用法
+
+```java
+    CompletableFuture<String> cf = CompletableFuture.supplyAsync(() -> "Hello");
+    // ...
+    String result = cf.get(); // 其值为 "Hello"
+```
+
+异步计算阶乘，[完整代码](code/CompletableFutureTest.java)
+
+```java
+    int num = 12;
+    CompletableFuture<Long> cf = CompletableFuture.supplyAsync(() -> factorial(num));
+    while (!cf.isDone()) {
+        System.out.println("CompletableFuture is not finished yet...");
+    }
+    long result = cf.get();
+```
 to add later
+
+ref: https://www.baeldung.com/java-completablefuture
+
+# by ListenableFuture (by Google Guava)
 
 ListenableFuture (by Google Guava)
 	extends Future

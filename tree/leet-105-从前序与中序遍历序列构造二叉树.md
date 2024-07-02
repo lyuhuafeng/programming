@@ -1,19 +1,17 @@
+[105. 从前序与中序遍历序列构造二叉树](https://leetcode.cn/problems/construct-binary-tree-from-preorder-and-inorder-traversal)
 
-preorder 和 inorder 均无重复元素！
+重要：preorder 和 inorder 均无重复元素！
 
 
 ```cpp
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
+    struct TreeNode {
+        int val;
+        TreeNode *left;
+        TreeNode *right;
+        TreeNode() : val(0), left(nullptr), right(nullptr) {}
+        TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+        TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+    };
 
     TreeNode* helper(const vector<int>& preorder, int l1, int r1, const vector<int>& inorder, int l2, int r2) {
         if (l1 > r1) {
@@ -32,6 +30,22 @@ preorder 和 inorder 均无重复元素！
         root->right = helper(preorder, m + 1, r1, inorder, i + 1, r2);
         return root;
     }
+
+    // 更简单一点的 helper 写法
+    TreeNode* helper(const vector<int>& preorder, int l1, int r1, const vector<int>& inorder, int l2, int r2) {
+        if (l1 > r1) {
+            return nullptr;
+        }
+        int i = l2;
+        while (i <= r2 && inorder[i] != preorder[l1]) {
+            i++;
+        }
+        int m = l1 + (i - l2);
+        return new TreeNode(preorder[l1],
+                helper(preorder, l1 + 1, m, inorder, l2, i - 1),
+                helper(preorder, m + 1, r1, inorder, i + 1, r2));
+    }
+
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
         // if (preorder.empty()) {
         //     return nullptr;

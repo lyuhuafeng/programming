@@ -25,16 +25,23 @@ wikipedia
 
 环形，start、end 增大、超出范围后，如何得到正确值？
 
-通常思路，用 mod 运算：`start = (start + 1) % capacity`。
+思路一，用 mod 运算：`start = (start + 1) % capacity`。
 
-若 capacity 是 2 的幂，则可以用位运算：`start = (start + 1) & (capacity - 1)`。这个运算，称为「mask」。下面方法中，用到了 mask 运算，定义如下：
+思路二，若 capacity 是 2 的幂，则可以用位运算：`start = (start + 1) & (capacity - 1)`。这个运算，称为「mask」。下面方法中，用到了 mask 运算，定义如下：
 
 ```cpp
     uint32_t mask(uint32_t i) const { return i & (capacity - 1); }
     uint32_t incr(uint32_t &i) const { return (i = mask(i + 1)); }
 ```
 
-mod 运算要做除法，较昂贵，所以用 mask 更好。但是，因为每次只增 1，所以实际上不需要 mod，只需要 `if (start >= capacity) { start -= capacity; }` 就行，可能也不比 mask 慢。
+mod 运算要做除法，较昂贵，所以用 mask 更好。
+
+思路三，但是，因为每次只增 1，所以实际上不需要 mod，只需要 `if (start >= capacity) { start -= capacity; }` 就行，可能也不比 mask 慢。代码如下，注意 mask() 改名为 to_idx()：
+
+```cpp
+    int to_idx(int i) { return i >= capacity ? i - capacity : i; }
+    int incr(int &i) { return (i = to_idx(i + 1)); }
+```    
 
 ## 法一，双指针，但为了区分 empty 和 full，只能浪费一个空间
 
@@ -42,11 +49,11 @@ mod 运算要做除法，较昂贵，所以用 mask 更好。但是，因为每�
 
 Typically when the tail pointer is equal to the head pointer, the buffer is empty; and the buffer is full when the head pointer is one less than the tail pointer.
 
-[代码](code/ring-buffer.cpp)
+用 mask：[代码](code/ring-buffer.cpp)。若 full 则新数据覆盖旧数据。
 
-```cpp
+用思路三，[leet 622. 循环队列](https://leetcode.cn/problems/design-circular-queue) [代码](code/leet-622-circular-queue.cpp)。若 full 则新数据无法写入。注意，按题意，实际容量 k，则 `capacity = k + 1`。
 
-```
+用思路三，[leet 641. 循环双端队列](https://leetcode.cn/problems/design-circular-deque) [代码](code/leet-641-circular-deque.cpp) 比 622 多了一点逻辑。
 
 ## 法二，一个 start 指针，一个 size 变量，不浪费空间
 

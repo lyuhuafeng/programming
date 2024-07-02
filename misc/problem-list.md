@@ -11,7 +11,8 @@
 
 - [15. 三数之和](sliding-window/leet-15-16-三数之和.md)
 - 3. 无重复字符的最长子串
-- [146. LRU缓存机制](https://leetcode.cn/problems/lru-cache) [代码](code/leet-146-lru-cache.cpp)
+- [146. LRU 缓存](https://leetcode.cn/problems/lru-cache) [代码](code/leet-146-lru-cache.cpp)
+- [460. LFU 缓存](https://leetcode.cn/problems/lfu-cache) [代码](code/leet-460-lfu-cache.cpp)、[代码](code/leet-460-lfu-cache-sol2.cpp)
 - [232. 用栈实现队列](https://leetcode.cn/problems/implement-queue-using-stacks) 
   - 基本思路，一个栈作为 helper 帮助另一个栈：[代码](code/leet-232-queue-by-stacks.cpp)
   - 更好的解法，两个栈协作，分别负责 push 和 pop/peek：[代码](code/leet-232-queue-by-stacks-better.cpp)

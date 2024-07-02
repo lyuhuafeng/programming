@@ -230,8 +230,8 @@ condition_variable 需要与 mutex（互斥锁）一起使用。当线程需要�
 
 ## 异步操作：future、promise
 
-future: 代表 consumer/read 端
-promise: 代表 producer/write 端
+- promise: 代表 producer/write 端，used by the producer to set (and "send") the data
+- future: 代表 consumer/read 端，used by "consumer" to receive the data
 
 future 封装的是一种访问异步操作的「机制」，也是一种线程间的同步手段。
 
@@ -246,10 +246,6 @@ future 封装的是一种访问异步操作的「机制」，也是一种线程�
     - wait(): 等待异步操作结束，也是一个阻塞过程
     - wait_for()、wait_until(): 等一段时间
     - 各种 wait() 的返回结果是三种状态之一：`future_status::ready`、`future_status::timeout`(还没 ready)、`future_status::deferred`(计算还没开始)
-
-std::promise is used by the producer to set (and "send") the data, 
-
-std::future is used by "consumer" to receive it. 
 
 future 和 promise 间的关系，最简示例
 ```cpp

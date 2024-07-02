@@ -18,11 +18,13 @@ https://www.cnblogs.com/vianzhang/p/7922426.html 此文甚好
 
 系统从磁盘读取数据到内存时是以磁盘块（block）为基本单位的，位于同一个磁盘块中的数据会被一次性读取出来，而不是需要什么取什么。
 
-InnoDB存储引擎中有页（Page）的概念，页是其磁盘管理的最小单位。InnoDB存储引擎中默认每个页的大小为16KB，可通过参数innodb_page_size将页的大小设置为4K、8K、16K，在MySQL中可通过如下命令查看页的大小：
+InnoDB存储引擎中有页（Page）的概念，页是其磁盘管理的最小单位。InnoDB存储引擎中默认每个页的大小为16KB，可通过参数 innodb_page_size 将页的大小设置为4K、8K、16K，在MySQL中可通过如下命令查看页的大小：
 
+```sql
 mysql> show variables like 'innodb_page_size';
 1
-1
+```
+
 而系统一个磁盘块的存储空间往往没有这么大，因此InnoDB每次申请磁盘空间时都会是若干地址连续磁盘块来达到页的大小16KB。InnoDB在把磁盘数据读入到磁盘时会以页为基本单位，在查询数据时如果一个页中的每条数据都能有助于定位数据记录的位置，这将会减少磁盘I/O次数，提高查询效率。
 
 
@@ -60,3 +62,19 @@ secondary index: B+ tree 的 (key, val) 是 db 的 (index, id)
 根据 索引 找 id (primary key)
 
 
+## page merging, page splitting
+
+[innodb page merging, page splitting](https://www.percona.com/blog/innodb-page-merging-and-page-splitting/) 及[汉译版](https://blog.csdn.net/weixin_44228698/article/details/119057511)
+
+- 一个 mysql table 对应一个 file
+- 一个 file 由 N 个 segment 组成。Each segment is associated with an index.
+- 每个 segment 的大小可以一个 extent 为单位增减。每个 extent 固定大小为 1MB。
+- 一个 extent 含多个 page。每个 page 固定大小为 16KB。
+- 每个 page 就是 B+ tree 的一个 node。
+- 每个 page 可包含 2~N 条 record (row)。具体多少，取决于 row size。
+
+
+MERGE_THRESHOLD，缺省值 50%，对应 B+ tree 定义里「每个 node 至少是 half full 的」。<font color=red>（但实际上这个 threshold 对应的是 page size 而不是 row amount？）</font>
+
+- page merges 在 delete 或 update 时发生。(update 的 row size 变小，导致 page size 低于 threshold)
+- page splits 在 Insert 或 Update 时发生，通常导致 page dislocation（逻辑上连续，但物理上不连续，很多时候在不同的 extent 里）

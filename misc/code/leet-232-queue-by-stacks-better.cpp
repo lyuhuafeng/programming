@@ -29,6 +29,7 @@ public:
                 a.pop();
             }
         }
+        // 以上代码，top()、peek() 完全相同。这有下面一点不同。
         int val = b.top();
         b.pop();
         return val;
@@ -45,6 +46,7 @@ public:
                 a.pop();
             }
         }
+        // 以上代码，top()、peek() 完全相同。这有下面一点不同。
         return b.top();
     }
     
