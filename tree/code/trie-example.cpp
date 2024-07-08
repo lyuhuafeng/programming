@@ -8,7 +8,7 @@ using namespace std;
 const int ALPHABET_SIZE = 26;
 
 typedef struct trie_node {
-    int count;   // 记录该节点代表的单词的个数
+    int count;   // 该节点代表的单词的个数
     trie_node *children[ALPHABET_SIZE]; // 各个子节点 
 } *trie;
 
@@ -32,7 +32,7 @@ void trie_insert(trie root, const string &key) {
 }
 
 /**
- * 查询：不存在返回0，存在返回出现的次数
+ * 查询：不存在：返回0，存在：返回出现的次数
  */ 
 int trie_search(trie root, const string& key) {
     trie_node* node = root;

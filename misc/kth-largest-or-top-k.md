@@ -69,7 +69,7 @@ C++ 代码：[kth-smallest-priority-queue.cpp](code/kth-smallest-priority-queue.
 
 当 `k` 较小时，时间复杂度趋向 `O(n)`；当 `k` 较大时，时间复杂度不会超过 `O(nlogn)`。
 
-另，该法适用于动态数据流。在不断加入数据时，堆内元素始终为k。
+另，该法适用于动态数据流。在不断加入数据时，堆内元素始终为 k 个。
 
 
 java code,

@@ -4,16 +4,16 @@
 
 法一，排序得到中序遍历序列，再根据前序、中序两个序列，重建二叉树。没有充分利用 BST 的特点。
 
-法二，递归。
+法二，递归。<font color=green>最佳</font>
 
-基本思路：给定范围 [l, r]
+基本思路：给定范围 `[l, r]`
 - root 是第一个元素，即 l；
 - 左子树的 root 的下一个元素，即 l+1；
 - 右子树的 root 是第一个比 root 大的元素，需往后顺序遍历
 
 [代码](code/leet-1008-rebuild-bst-by-preorder.cpp) to_bst() 中分情况讨论。具体看注释。
 
-优化：[代码](leet-1008-rebuild-bst-by-preorder-improved.cpp) 直接找右子树的 root，即第一个比 root 大的元素。也不用管返回值（也就是不用管左右子树是否分别存在），直接递归调用 to_bst() 去创建左右子树，反正 to_bst() 中开头判断了，若 l、r 值不合法，则返回 nullptr（对应的子树为空）。并使用 TreeNode(val, lroot, root) 这个构造函数，一次性创建好整棵树，而不是先创建 root 节点再把左右子树挂上去。
+优化：[代码](code/leet-1008-rebuild-bst-by-preorder-improved.cpp) 直接找右子树的 root，即第一个比 root 大的元素。也不用管返回值（也就是不用管左右子树是否分别存在），直接递归调用 to_bst() 去创建左右子树，反正 to_bst() 中开头判断了，若 l、r 值不合法，则返回 nullptr（对应的子树为空）。并使用 TreeNode(val, lroot, root) 这个构造函数，一次性创建好整棵树，而不是先创建 root 节点再把左右子树挂上去。
 
 ```cpp
     TreeNode *to_bst(const vector<int> &v, int l, int r) {

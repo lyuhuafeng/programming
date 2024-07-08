@@ -1,7 +1,7 @@
 
 https://leetcode.cn/problems/kth-smallest-element-in-a-bst/
 
-类似[二叉树遍历的各种方法](二叉树遍历.md)中提到的通用方法，用 stack。第二次从栈中弹出某节点时，才正式「访问」它。
+按从小到大排序，也就是 in-order 遍历。类似[二叉树遍历的各种方法](二叉树遍历.md)中提到的通用方法，用 stack。第二次从栈中弹出某节点时，才正式「访问」它。
 
 ```cpp
     struct TreeNode {

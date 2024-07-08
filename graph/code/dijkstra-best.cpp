@@ -60,8 +60,8 @@ void shortest_path(const vector<edge_weight> adj[], int V, int src) {
             if (dist[v] > dist[u] + weight) {
                 // 更新 v 的「最短距离」和「前驱顶点」
                 dist[v] = dist[u] + weight;
-                prevs[v] = u;
                 pq.push({v, dist[v]});
+                prevs[v] = u;
                 // printf("  push: vertex:%d, dist:%d, prev:%d\n", v, dist[v], prevs[v]);
             }
         }

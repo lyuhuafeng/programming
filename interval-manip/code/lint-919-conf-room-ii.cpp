@@ -26,13 +26,15 @@ public:
 // 若会议间隔是「左闭右闭」的，怎么处理？
 
     int minMeetingRooms(vector<Interval> &intervals) {
-        map<int, int> m;
+        map<int, int> m; // ordered_map<时刻，+1/-1>，按时刻排序
         for (Interval i : intervals) {
             m[i.start]++, m[i.end]--;
+            // 每个会议，开始时 +1，结束时 -1。
+            // 若两会「无缝衔接」，a.end == b.start，则计算完后对应的 m[时刻] = 0，符合我们的语义
         }
         int ans = 0, cnt = 0;
-        for (auto& e : m) {
-            cnt += e.second;
+        for (auto& e : m) { // 按「时刻」顺序遍历
+            cnt += e.second; // 当前有多少会议正在进行。若有「无缝衔接」的两个会，前一个结束、后一个开始，不会导致 cnt 变化。
             ans = max(ans, cnt);
         }
         return ans;

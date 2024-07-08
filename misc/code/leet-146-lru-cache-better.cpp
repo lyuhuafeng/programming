@@ -46,14 +46,6 @@ private:
         addToHead(node);
     }
 
-    // 只用在：容量满时，删除最后一个节点
-    // 只把节点从链表移出，但不释放内存，因调用方还要用到其 value。（调用方用完后，应释放内存。）
-    Node* removeTail() {
-        Node* node = tail->prev;
-        removeNode(node);
-        return node;
-    }
-
 public:
     LRUCache(int _capacity): capacity(_capacity) {
         // 使用 dummy 头尾节点
@@ -73,13 +65,21 @@ public:
 
     void put(int key, int value) {
         if (cache.count(key) == 0) {
-            Node* node = new Node(key, value); // 如果 key 不存在，创建一个新的节点
-            cache[key] = node; // 添加进哈希表
-            addToHead(node); // 添加至双向链表的头部
-            if (cache.size() > capacity) {
-                Node* removed = removeTail(); // 如果超出容量，删除双向链表的尾部节点
-                cache.erase(removed->key); // 删除哈希表中对应的项
-                delete removed; // 防止内存泄漏
+            if (cache.size() < capacity) {
+                // 如果 key 不存在，且没满：直接加一个新节点
+                Node* node = new Node(key, value); // 创建一个新的节点
+                addToHead(node); // 添加至双向链表的头部
+                cache[key] = node; // 添加进哈希表
+            } else {
+                // 如果 key 不存在，且已满：删最旧节点，加一个新节点。
+                // 代码中实际重复利用被删的节点
+                Node *node = tail->prev; // 最旧节点：链表中最后一个节点
+                int removed_key = node->key; // 记录其 key，以备一会儿修改 hash table
+                node->key = key;
+                node->value = value; // 修改其内容，为新的 k-v
+                moveToHead(node); // 挪到链表头
+                cache.erase(removed_key);
+                cache[key] = node; // 修改 hash table
             }
         } else {
             // 如果 key 存在，先通过哈希表定位，再修改 value，并移到头部

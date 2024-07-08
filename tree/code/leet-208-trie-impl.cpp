@@ -2,6 +2,8 @@
 #include <algorithm>
 using namespace std;
 
+// Trie 类其实是「trie 节点」。命名为 trie_node 更好些。
+
 class Trie {
 private:
     bool is_end;
@@ -17,7 +19,7 @@ public:
         for (char c : word) {
             int ci = c - 'a';
             if (node->children[ci] == nullptr) {
-                node->children[ci] = new Trie();
+                node->children[ci] = new Trie(); // 缺省构造，其 is_end == false, children[] 均为 null
             }
             node = node->children[ci];
         }

@@ -1,5 +1,5 @@
 // 156 合并区间
-// https://www.lintcode.com/problem/156/description
+// https://www.lintcode.com/problem/156
 // ac 2024.05.23
 
 #include <vector>
@@ -35,13 +35,13 @@ public:
         ans.push_back(intervals[0]);
         for (int i = 1; i < intervals.size(); i++) {
             Interval &iv = intervals[i];
-            if (ans.back().end >= iv.start) {
+            if (ans.back().end >= iv.start) { // 有重合
                 // i.start 肯定比 back.start 小或等。因为是按 start 排序的。所以只要更新 end 即可。
                 if (ans.back().end < iv.end) {
                     ans.back().end = iv.end;
                 }
                 // ans.back().end = max(ans.back().end, iv.end);
-            } else {
+            } else { // 无重合
                 ans.emplace_back(iv);
             }
         }

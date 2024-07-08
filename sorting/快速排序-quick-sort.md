@@ -338,8 +338,8 @@ little turing 标程，核心代码。还不能完美处理 duplicate elements�
 36    void qsort(long a[], int left, int right) {
 37        if (left < right) {
 38            int pi = partition(a, left, right);
-39            qsort(a, left, pi - 1); // 左侧：递归
-40            qsort(a, pi + 1, right); // 右侧：不递归
+39            qsort(a, left, pi - 1);  // 左侧：递归
+40            qsort(a, pi + 1, right); // 右侧：递归
 41        }
 42    }
 43    void qsort(long a[], int left, int right) {

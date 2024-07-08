@@ -16,17 +16,17 @@ struct Node {
     int cnt;
     int ts; // timestamp
 
-    Node(int _cnt, int _ts, int _key, int _value)
-        : cnt(_cnt), ts(_ts), key(_key), value(_value) {}
+    Node(int _key, int _value, int _cnt, int _ts)
+        : key(_key), value(_value), cnt(_cnt), ts(_ts) {}
     
-    bool operator < (const Node& rhs) const {
+    bool operator<(const Node& rhs) const {
         return cnt == rhs.cnt ? ts < rhs.ts : cnt < rhs.cnt;
     }
 };
 class LFUCache {
     int capacity;
     int timestamp;
-    unordered_map<int, Node> m;
+    unordered_map<int, Node> cache;
     set<Node> s;
 public:
     LFUCache(int _capacity) : capacity(_capacity), timestamp(0) {}
@@ -35,49 +35,49 @@ public:
         if (capacity == 0) {
             return -1;
         }
-        auto it = m.find(key);
+        auto it = cache.find(key);
         // 如果哈希表中没有键 key，返回 -1
-        if (it == m.end()) {
+        if (it == cache.end()) {
             return -1;
         }
         // 从哈希表中得到旧的缓存
-        Node cache = it->second;
+        Node &node = it->second;
         // 从平衡二叉树中删除旧的缓存
-        s.erase(cache);
+        s.erase(node);
         // 将旧缓存更新
-        cache.cnt++;
-        cache.ts = ++timestamp;
+        node.cnt++;
+        node.ts = ++timestamp;
         // 将新缓存重新放入哈希表和平衡二叉树中
-        s.insert(cache);
-        it->second = cache;
-        return cache.value;
+        s.insert(node);
+        // it->second = node; // 引用类型，不需要此句
+        return node.value;
     }
     
     void put(int key, int value) {
-        if (capacity == 0) return;
-        auto it = m.find(key);
-        if (it == m.end()) {
+        if (capacity == 0) { return; }
+        auto it = cache.find(key);
+        if (it == cache.end()) {
             // 如果到达缓存容量上限
-            if (m.size() == capacity) {
+            if (cache.size() == capacity) {
                 // 从哈希表和平衡二叉树中删除最近最少使用的缓存
-                m.erase(s.begin()->key);
+                cache.erase(s.begin()->key);
                 s.erase(s.begin());
             }
             // 创建新的缓存
-            Node cache = Node(1, ++timestamp, key, value);
+            Node node = Node(key, value, 1, ++timestamp);
             // 将新缓存放入哈希表和平衡二叉树中
-            m.insert({key, cache}); // 或 m.insert(make_pair(key, cache)); 但不能用 m[key] = cache;
-            s.insert(cache);
+            cache.insert({key, node}); // 或 m.insert(make_pair(key, node)); 但不能用 m[key] = node;
+            s.insert(node);
         }
         else {
             // 这里和 get() 函数类似
-            Node cache = it->second;
-            s.erase(cache);
-            cache.cnt++;
-            cache.ts = ++timestamp;
-            cache.value = value;
-            s.insert(cache);
-            it->second = cache;
+            Node node = it->second;
+            s.erase(node);
+            node.cnt++;
+            node.ts = ++timestamp;
+            node.value = value;
+            s.insert(node);
+            it->second = node;
         }
     }
 };

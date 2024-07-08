@@ -115,7 +115,7 @@ wiki 上的版本，可指定范围 `[start, end]` <font color="red">to check la
     }
 ```
 
-`make_heap()` 的两个版本，sift_down 版本 `O(n)`，sift_up 版本 `O(nlogn)`。但整个 `heap_sort()` 是 `O(nlogn)`，不管如何 make_heap.
+`make_heap()` 的两个版本，sift_down 版本 `O(n)`，sift_up 版本 `O(nlogn)`。<font color=green>（如何记忆？前者处理的元素少，所以时间复杂度也小。）</font>但整个 `heap_sort()` 是 `O(nlogn)`，不管用的那种方法。
 
 # 堆排序 heap sort (普通 top-down 方法)
 
@@ -138,7 +138,7 @@ wiki 上的版本，可指定范围 `[start, end]` <font color="red">to check la
     }
 ```
 
-这就是普通的 top-down 方法。有个明显的问题：把最小元素 `a[end]` 从堆底部拉到顶部，然后让它一路下行。它下行的过程中，较大元素相应上行。当然，它下行的目的，也确实是为了让其他元素上行，以补上堆顶的空缺，它自己也很可能还会回到堆底。这个过程中，比较次数较多。（由此导致，heap sort 的比较次数平均大约是 quick sort 的两倍）
+这就是普通的 top-down 方法。有个明显的问题：把最小元素 `a[end]` 从堆底部拉到顶部，然后让它一路下行。它下行的过程中，较大元素相应上行。当然，它下行的目的，也确实是为了让其他元素上行，以补上堆顶的空缺，它自己也很可能还会回到堆底。但因为它是最小元素，所以最后可能还会下行至比较靠底的位置。这个过程中，比较次数较多。（由此导致，heap sort 的比较次数平均大约是 quick sort 的两倍）
 
 # 改进：bottom-up 方法
 

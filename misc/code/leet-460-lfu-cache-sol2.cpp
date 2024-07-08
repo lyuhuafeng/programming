@@ -20,11 +20,6 @@ class LFUCache {
     unordered_map<int, list<Node>> freq_table;
 public:
     LFUCache(int _capacity) : capacity(_capacity), min_cnt(0) {}
-    //     min_cnt = 0;
-    //     capacity = _capacity;
-    //     key_table.clear();
-    //     freq_table.clear();
-    // }
     
     int get(int key) {
         if (capacity == 0) return -1;

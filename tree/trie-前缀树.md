@@ -1,5 +1,7 @@
 # Trie 前缀树、字典树
 
+注意，root 节点不包含字符，是个 dummy 节点。
+
 用法一：统计单词数量
 
 [代码](code/trie-example.cpp)
@@ -11,3 +13,5 @@
 两者代码基本一样。区别：
 - 前者有 count 成员，表示：以我结束的字符串的数量
 - 后者有 is_end 成员，表示：以我结束的字符串是否是个合法单词。
+
+这两个，固定 26 个字母，所以用 `trie_node *children[26]` 即可。若不固定，比如汉字，则用 `unordered_map<char, trie_node *>` 更方便。

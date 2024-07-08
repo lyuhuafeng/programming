@@ -15,11 +15,11 @@ wikipedia
 这个 `读 tail ____ head 写` 跟通常习惯相反。
 
 通常，用 array，从左往右，左边是 head，右边是 tail。queue 也是这样。
-- array: `读 head   ____ tail 写`。
+- array: `读 head   ____ tail 写`
 - queue: `读 front  ____ back 写`
-- stack: `无 buttom ____ top 写`
+- stack: `读 buttom ____ top  写`
 
-为了避免误解，我们避免用 head、tail，而是用 start、end 比较好。
+为了避免误解，避免用 head、tail，而是用 start、end 比较好。
 
 ## mask
 

@@ -11,7 +11,7 @@
 
 - [15. 三数之和](sliding-window/leet-15-16-三数之和.md)
 - 3. 无重复字符的最长子串
-- [146. LRU 缓存](https://leetcode.cn/problems/lru-cache) [代码](code/leet-146-lru-cache.cpp)
+- [146. LRU 缓存](https://leetcode.cn/problems/lru-cache) [代码](code/leet-146-lru-cache.cpp)、[逻辑更清晰的代码](code/leet-146-lru-cache-better.cpp)（`put()` 代码不同；去掉了 `removeTail()`）
 - [460. LFU 缓存](https://leetcode.cn/problems/lfu-cache) [代码](code/leet-460-lfu-cache.cpp)、[代码](code/leet-460-lfu-cache-sol2.cpp)
 - [232. 用栈实现队列](https://leetcode.cn/problems/implement-queue-using-stacks) 
   - 基本思路，一个栈作为 helper 帮助另一个栈：[代码](code/leet-232-queue-by-stacks.cpp)
@@ -21,7 +21,6 @@
 - [206. 反转链表](https://leetcode.cn/problems/reverse-linked-list/) 代码：[`leet-206-reverse-linked-list.cpp`](code/leet-206-reverse-linked-list.cpp)
 215. 数组中的第K个最大
 103. 二叉树的锯齿形层次
-121. 买卖股票的最佳时机
 200. 岛屿数量
 33. 搜索旋转排序数组
 
@@ -30,7 +29,7 @@
 - [829. 连续整数求和]()
 - [221. 最大正方形]()
 - [96. 不同的二叉搜索树]()
-- [295. 数据流的中位数](https://leetcode.cn/problems/find-median-from-data-stream/)
+- [295. 数据流的中位数](../heap-priority-queue/leet-295-medium-of-stream.md)
 - [LCR 146. 螺旋遍历二维数组]()
 - [67. 二进制求和]()
 - [143. 重排链表]()
@@ -63,15 +62,15 @@ https://mp.weixin.qq.com/s/Rf8dbEGhFNQS4AkXhn6Gew
 - [x] 238、除自身以外数组的乘积
 - [x] 53、最大子数组和
 - [x] 152、乘积最大子数组
-- [x] 153、寻找旋转排序数组中的最小值
-- [x] 33、搜索旋转排序数组
-- [x] 15、三数之和
+- [x] 153、寻找旋转排序数组中的最小值 binary search
+- [x] 33、搜索旋转排序数组 binary search
+- [x] 15、三数之和 ?
 - [x] 11、盛最多水的容器
 
 链表：
-- [x] 206、反转链表
+- [x] 206、反转链表 ?
 - [x] 141、环形链表
-- [x] 21、合并两个有序链表
+- [x] 21、合并两个有序链表 
 - [x] 23、合并K个有序链表
 - [x] 19、删除链表的倒数第N个结点
 - [x] 143、重排链表
@@ -102,15 +101,15 @@ https://mp.weixin.qq.com/s/Rf8dbEGhFNQS4AkXhn6Gew
 - [x] 104、二叉树的最大深度
 - [x] 100、相同的树
 - [x] 226、翻转二叉树
-- [x] 124、二叉树中的最大路径和
+- [x] 124、二叉树中的最大路径和 hard
 - [x] 102、二叉树的层序遍历
-- [x] 297、二叉树的序列化和反序列化
+- [x] 297、二叉树的序列化和反序列化，good
 - [] 572、另一棵树的子树
 - [x] 105、从前序与中序遍历序列构造二叉树
 - [x] 98、验证二叉搜索树
 - [x] 230、二叉搜索树中第K小的元素
 - [x] 235、二叉搜索树的最近公共祖先
-- [] 208、实现Trie（前缀树）
+- [x] 208、实现Trie（前缀树）
 - [] 211、添加与搜索单词-数据结构设计
 - [] 212、单词搜索II
 
@@ -130,7 +129,7 @@ https://mp.weixin.qq.com/s/Rf8dbEGhFNQS4AkXhn6Gew
 堆：
 - [x] 23、合并K个升序链表
 - [x] 347、前K个高频元素
-- [x] 295、数据流的中位数
+- [x] [295、数据流的中位数](../heap-priority-queue/leet-295-medium-of-stream.md)
 
 bit：
 - [] 371、两整数之和

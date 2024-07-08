@@ -30,6 +30,7 @@
         return cur;
     }
 
+    // 里面有三或四次递归调用
     TreeNode *deleteNode(TreeNode *root, int key) {
         if (root == nullptr) {
             return root;
@@ -37,10 +38,10 @@
 
         // key 在 left 或 right
         if (key < root->val) {
-            root->left = deleteNode(root->left, key);
+            root->left = deleteNode(root->left, key); // 递归调用
             return root;
         } else if (key > root->val) {
-            root->right = deleteNode(root->right, key);
+            root->right = deleteNode(root->right, key); // 递归调用
             return root;
         }
 
@@ -52,15 +53,17 @@
             return root->left;
         }
 
-        // 否则，在 left 中找最大的 t，将其值放到 root 位置（删 root），再在 left 中删掉 t
-        // TreeNode *target = find_max(root->left);
-        // root->val = target->val;
-        // root->left = deleteNode(root->left, target->val);
+        // 否则，可以把 left 中的最大值补上来
+        // 在 left 中找最大的 t，将其值放到 root 位置（删 root），再在 left 中删掉 t
+        // TreeNode *t = find_max(root->left);
+        // root->val = t->val;
+        // root->left = deleteNode(root->left, t->val); // 递归调用
 
-        // 或者，对称地，在 right 中找最小的 t，将其值放到 root 位置（删 root），再在 right 中删掉 t
-        TreeNode *target = find_min(root->right);
-        root->val = target->val;
-        root->right = deleteNode(root->right, target->val);
+        // 或者，对称地，可以把 right 中的最小值补上来
+        // 在 right 中找最小的 t，将其值放到 root 位置（删 root），再在 right 中删掉 t
+        TreeNode *t = find_min(root->right);
+        root->val = t->val;
+        root->right = deleteNode(root->right, t->val); // 递归调用
         return root;
     }
 

@@ -14,8 +14,8 @@ class MyQueue {
 public:
     MyQueue() {}
 
-    void push(int x) {
-        a.push(x);
+    void push(int val) {
+        a.push(val);
     }
     
     int pop() {

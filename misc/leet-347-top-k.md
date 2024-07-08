@@ -5,6 +5,21 @@ top k
 
 - 法一，用类似 insertion sort 的方法，维护一个长度最多为 k 的数组
 - 法二，用 heap，经典方法
+- 法三，online 流式处理，因为要更新 topk 里已经记录的 freq，故用 set 代替 heap
+- 法四，online 流式处理，法一的变种 <font color=red>todo</font>
+- trie
+
+流式处理
+  - 法三的分布式版本，
+  - Count-Min Sketch 算法代替 hashmap 
+  - Lossy Counting
+  - SpaceSaving 原始论文 "Efficient Computation of Frequent and Top-k Elements in Data Streams"
+ref:
+  - https://soulmachine.gitbooks.io/system-design/content/cn/bigdata/heavy-hitters.html
+  - https://soulmachine.gitbooks.io/system-design/content/cn/bigdata/frequency-estimation.html
+  - https://www.cnblogs.com/fxjwind/p/3289221.html
+  - https://soulmachine.gitbooks.io/system-design/content/cn/bigdata/data-stream-sampling.html
+  - https://soulmachine.gitbooks.io/system-design/content/cn/bigdata/cardinality-estimation.html
 
 # 法一，用类似 binary insertion sort 的方法，维护一个长度最多为 k 的数组
 
@@ -55,7 +70,7 @@ top k
     bool operator<(const myitem &a, const myitem &b) {
         return a.occurs > b.occurs;
     }
-    // 较小的被删 -> 较小的在 heap 顶 -> min-heap，与缺省的相反
+    // k largest -> 来个更大的，最小的被删 -> 最小的在 heap 顶 -> min-heap，与缺省的相反
     vector<int> topKFrequent_heap(vector<int>& nums, int k) {
         unordered_map<int, int> m; // <num, 出现次数>
         for (int i : nums) { m[i]++; }
@@ -79,3 +94,9 @@ top k
         return ans;
     }
 ```
+
+# 法三，online 流式处理，因为要更新 topk 里已经记录的 freq，故用 set 代替 heap
+
+直观逻辑，[用 struct 的代码](code/leet-347-top-k-frequency-online-struct.cpp)、[用 pair 的代码](code/leet-347-top-k-frequency-online-pair.cpp)
+
+稍微有点不太直观的逻辑，[用 pair 的代码](code/leet-347-top-k-frequency-online-pair-sol2.cpp)

@@ -19,7 +19,7 @@ private:
         return (i = to_idx(i - 1));
     }
 public:
-    // 按题意，实际容量 k，则 capacity = k + 1
+    // 按题意，实际容量 k，浪费一个空间，则 capacity = k + 1。
     MyCircularQueue(int k) : capacity(k + 1), start(0), end(0) {
         buf.resize(k + 1);
     }
