@@ -1,10 +1,8 @@
 # 同步机制
 
-intrinsic lock，又称为 monitor lock 或 monitor
+每个 object 都有一个 intrinsic lock，又称为 monitor lock 或 monitor
 
 英语学习：intrinsic: 内在的、固有的
-
-每个 object 都有一个 intrinsic lock。
 
 synchronization 的两个方面：
 - enforcing exclusive access to an object's state
@@ -12,42 +10,167 @@ synchronization 的两个方面：
 
 ## 用 synchronized 关键字
 
-- synchronized method
-- synchronized statement：一段代码，显式
+java 1.5 之前，只能用 synchonized 关键字
+
+- synchronized method 同步方法
+- synchronized statement 同步代码块：一段代码，显式
+
+多个线程同时执行「一块代码」或「一个函数」。
+
+`synchronized (object)`，是用该 object 做 mutex。严谨说法：某线程 acquire 了与 object/mutex 关联的 intrinsic lock (monitor lock, monitor)。
+
+任何 object 都可用作 mutex。但，既然用作 mutex，该 object 应该是 class 全局可见的、各 thread 都能访问到的。或者是自定义的类成员变量，或者直接用 this。
+
+```java
+    private Object mtx = new Object();
+
+    public int getNextSequence() {
+        synchronized (mtx) { // 用自定义的 class 成员变量做 mutex
+            return super.getNextSequence();
+        }
+        // 或
+        synchronized (this) { // 用 class object 做 mutex
+            return super.getNextSequence();
+        }
+    }
+```
+
+synchronized method，相当于 `synchronized (this)`；
+
+synchronized static method，相当于 `synchronized (class_name.class)`；
+
+c++ 可用 function 来创建 thread；java 好像不行，得用 ... 来创建 thread。
+
 
 reentrant synchronization 可重入的：一个线程多次 acquire 同一个 lock。（不能 acquire 别的线程拥有的 lock）
 
 ## mutex
 
-任何 object 都可用作 mutex。需要用 synchronized 关键字。
+# Lock 接口，ReentrantLock
 
-```java
-    private Object mutex = new Object();
+synchronized 的缺陷：
+《Java高并发编程详解:多线程与架构设计》可供参考的内 容如下。
+- 第4章“线程安全与数据同步”：何种情况之下会出现死锁以及如何诊断。
+- 第5章“线程间通信”:其中的5.4节自定义显式锁BooleanLock为 读者分析了synchronized关键字的缺陷，以及如何实现一个显式 锁的方法。 
+- 第17章“读写分离锁”:当前共 享资源在所有线程间进行读操作的情况之下无须加锁提高并发程 序性能，并且给出了解决方案以及程序实现。
 
-    public int getNextSequence() {
-        synchronized (mutex) {
-            return super.getNextSequence();
-        }
-    }
-```
+
 
 ## reentrant lock
 
 since java 1.5。比 synchronized 关键字更好。
 
+为确保释放成功，要将 `unlock()` 放在 finally 中。
+
+下面两个例子，`lock()` 分别放在了 try 里和 try 外。
+
 ```java
-    private ReentrantLock mutex = new ReentrantLock();
+    private ReentrantLock mtx = new ReentrantLock();
     public int getNextSequence() {
         try {
-            mutex.lock();
+            mtx.lock();
             return super.getNextSequence();
         } finally {
-            mutex.unlock();
+            mtx.unlock();
+        }
+    }
+
+    private int x;
+    private final Lock rlock = new ReentrantLock();
+    public void lockInc() {
+        rlock.lock();
+        try {
+            x++;
+        } finally {
+            rlock.unlock();
         }
     }
 ```
 
-## semaphore
+# volatile 关键字
+
+volatile的实现最终是加了内存屏障
+
+- 保证写volatile变量会强制把CPU写缓存区的数据刷新到内存
+- 读volatile变量时，使缓存失效，强制从内存中读取最新的值
+- 由于内存屏障的存在，volatile变量还能阻止重排序
+
+# 原子类型
+
+多种类型，如 AtomicInteger、AtomicBoolean 等。都是 lock-free 及线程安全的。
+
+```java
+    private AtomicInteger x = new AtomicInteger();
+    public void inc() {
+        x.incrementAndGet();
+    }
+```
+
+整数类型：
+- 自增、自减：getAndIncrement(), incrementAndGet(), getAndDecrement(), decrementAndGet()
+- 更新：`boolean compareAndSet(int expect_val, int update_val)`, `int getAndAdd(int delta)`, `int addAndGet(int delta)`
+
+[用法示例：代码](code/AtomicTest.java)。用了 assert，运行时 `java -ea AtomicTest`。
+
+## lazySet() vs. set()
+
+AtomicInteger 中有一个被 volatile 关键字修饰的 value 成员属性。调用 set 方法为 value 设置新值后，立刻强制刷新到主内存中，不是仅先放在 cache 中。这样其他线程就会立即看见。
+
+lazySet() 不是。lazySet() does not act as happens-before edges in the code.
+
+何时需要用 lazySet()？
+
+# concurrent 包中的 synchronizer
+
+`java.util.concurrent` 包含的，如下，都称为 synchronizer。可避免使用「lock + condition object + synchronized keyword」。 
+
+- CyclicBarrier
+- Phaser
+- CountDownLatch
+- Exchanger
+- Semaphore
+- SynchronousQueue
+
+# CountDownLatch
+
+[例子，代码](code/CountDownLatchEx1.java)
+
+- 创建一个 latch：`CountDownLatch latch = new CountDownLatch(cnt)`
+- 创建 cnt 个线程；每个线程内，工作完成后，调 `latch.countDown()`
+- 主线程中，`latch.await()` 等待 latch 计数降为 0，也就是等待所有工作线程结束。
+
+我注：很像 c++ 中，最后所有 `t.join()`。
+
+# CyclicBarrier
+
+多个线程（parties）互相等，到一个称为 barrier point 的地点。
+
+称为 cyclic，因为可复用。
+
+意为「分片」而不是「计数器」，但其作用于「计数器」几乎一样。
+
+「已经有指定数目的线程调用了 await()」，这个情况，称为 tripping the barrier。
+
+使用方法：[例子，代码](code/CyclicBarrierEx1.java)
+- 创建一个 cyclic barrier：`CyclicBarrier barrier = new CyclicBarrier(parties)`
+- 创建 parties 个线程；每个线程内，工作完成后，调 `barrier.await()`，等待其他线程到达 barrier point
+  - `barrier.await()` 的返回值，int 类型，表示：我是第几个完成的
+- 主线程中，调每个线程的 `t.join()`，等待所有工作线程结束。然后收尾（if any）。
+
+另一种方法：
+- 创建时，多创建一个 `new CyclicBarrier(parties + 1)`
+- 每个工作线程：与上面一样
+- 主线程中，也用 `barrier.await()`，一起等。然后收尾（if any）。
+
+还有一种方法：[例子，代码](code/CyclicBarrierDemo.java)
+- 创建时，不多创建一个，但指定一个 runnable：`new CyclicBarrier(parties, new AggregatorThread())`。最后一个 trip the barrier 的线程将去执行该 runnable（就是原来主线程要做的事情）。
+- 每个工作线程：与上面一样
+- 单独定义步骤一中的 runnable AggregatorThread。其中
+- 主线程中，只要启动各工作线程就行，不用操心 `t.join()`。收尾工作（if any）被最后一个完成的工作线程接着干了。
+
+# Exchanger
+
+## Semaphore
 
 since java 1.5。可支持多个线程同时访问。特点：任何 thread 都可以 release；但通常希望最初上锁的 thread 才能 release。
 
@@ -66,12 +189,32 @@ since java 1.5。可支持多个线程同时访问。特点：任何 thread 都�
     }
 ```
 
+3.4.2 用 semaphore 实现 try-lock
+
+# Phaser
+
+since java 1.7. 类似 CountDownLatch 和 CyclicBarrier，但更强大，难度也大。
+
+
+
+
 # 异步编程：概述
 
 - by threads
 - by Future
 - by CompletableFuture
 - by ListenableFuture (by Google Guava)
+
+# Executor, ExecutorService 两个 interface
+
+就是通常所说的 thread pool。
+
+两者都是 interface。ExecutorService 继承自 Executor。提供的方法，用于任务提交和管理。
+
+ExecutorService 的两个重要实现：
+- ThreadPoolExecutor
+- ScheduledThreadPoolExecutor
+
 
 # by threads
 

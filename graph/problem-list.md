@@ -10,11 +10,12 @@
 
 ## [`leet 743. 网络延迟时间`](https://leetcode.cn/problems/network-delay-time/)
 
-完整代码：[`network-delay-leet-743-dijkstra.cpp`](code/network-delay-leet-743-dijkstra.cpp)
+- [使用 priority_queue 的代码](code/network-delay-leet-743-dijkstra.cpp)
+- [使用 set 的代码](code/network-delay-leet-743-dijkstra-set.cpp)
 
 跟标程几乎一样。不同之处：
 - 有向图，生成 `adj[]` 时是单方向的
-- priority queue 的比较函数，重载了 `operator<()`，最方便。但 `operator<()` 得放在 `class Solution` 之外，不然会报错。
+- priority queue 的比较函数，在结构体内部，重载了 `operator<()`，最方便。若在结构体外重载 `operator<()`，得放在 `class Solution` 之外，不然会报错。
 - 顶点编号从 1 开始
 - src 不是 0，而可能是任何顶点
 - 若有顶点不可到达，返回 -1

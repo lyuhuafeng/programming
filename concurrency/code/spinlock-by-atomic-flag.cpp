@@ -1,4 +1,5 @@
 #include <atomic>
+#include <thread>
 
 // 用 atomic_flag 来实现 spinlock mutex
 // flag == true,  mutex 是 locked
@@ -24,4 +25,17 @@ public:
     }
 };
 
-int main() {}
+spinlock_mutex spin;
+
+void work_on_resource() {
+    spin.lock();
+    spin.unlock();
+}
+
+int main() {
+    std::thread t1(work_on_resource);
+    std::thread t2(work_on_resource);
+    t1.join();
+    t2.join();
+    return 0;
+}

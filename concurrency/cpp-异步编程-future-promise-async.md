@@ -1,4 +1,23 @@
 
+task 机制，可以认为是 future 和 promise 之间的 data channel
+
+三个变种
+- asynchronous function call: std::async
+- 一个 callable 对象的简单 wrapper: std::packaged_task
+- 显式的一对: std::future 和 std::promise
+
+```cpp
+// 使用 thread
+    int res;
+    std::thread t([&]{ res = 3 + 4; });
+    t.join();
+    // res 已被赋值
+
+// 使用 task 的 async
+    auto f = std::async([]{ return 3 + 4; });
+    int res = f.get();
+```
+
 ## 异步操作：future、promise
 
 - promise: 代表 producer/write 端，used by the producer to set (and "send") the data
@@ -19,6 +38,7 @@ future 封装的是一种访问异步操作的「机制」，也是一种线程�
     - 各种 wait() 的返回结果是三种状态之一：`future_status::ready`、`future_status::timeout`(还没 ready)、`future_status::deferred`(计算还没开始)
 
 future 和 promise 间的关系，最简示例
+
 ```cpp
     std::promise<int> p;                 // produce/write 端
     std::future<int> f = p.get_future(); // consume/read 端
@@ -35,7 +55,8 @@ int main() {
     std::promise<int> p;                 // produce/write 端
     std::future<int> f = p.get_future(); // consume/read 端
     std::thread t([&p] (int x) { p.set_value(foo(x)); }, 5); // write 端：异步调用 foo(x) 并将结果放入
-    std::cout << f.get() << std::endl;   // read 端：从 future 中读取结果
+    int val = f.get();                   // read 端：从 future 中读取结果
+    printf("val:%d\n", val);
     t.join();
     return 0;
 }
@@ -58,6 +79,18 @@ int main() {
     return 0;
 }
 ```
+
+场景三：promise 和 future 都 move 到一个单独 thread 中，promise、future 两者间的通信发生在两个线程间。
+
+[代码](code/promise-future-div-prod.cpp)
+
+### shared_future
+
+promise 和 future 是 1:1 的关系；但 shared_future 可使一个 promise 对应多个 future。
+
+例子：[代码](code/shared-future-ex.cpp)
+
+注意，shared_future 可以 copy，而 future 只能 move。
 
 ## packaged_task
 
@@ -97,6 +130,13 @@ packaged_task 对象内部包含了两个最基本元素，
 
 把 future、promise 和 packaged_task 封装了起来。代码最简洁。
 
+- eager evaluation: 任务立即执行
+- lazy evaluation (call-by-need): 当 future.get() 执行时，任务才执行
+
+缺省：std::async 立即执行任务
+- 指定 std::launch::async：是 eager 的，立即执行，在新线程中执行 work package
+- 指定 std::launch::deferred：是 lazy 的，不立即执行；要求 async 在同一线程中执行
+
 ```cpp
     #include <future> // std::async()
 
@@ -111,6 +151,11 @@ packaged_task 对象内部包含了两个最基本元素，
     int return_two() { return 2; }
 
     future<int> f = async(launch::async, return_two);
-    if (f.valid()) { cout << f.get() << endl; }
-    else { cout << "invalid state" << endl; }
+    if (f.valid()) {
+        cout << f.get() << endl;
+    } else {
+        cout << "invalid state" << endl;
+    }
 ```
+
+另一个例子，[代码](code/async-lazy.cpp)

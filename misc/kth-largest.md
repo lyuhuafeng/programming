@@ -1,18 +1,14 @@
-# 第 k 大 (kᵗʰ largest)，或前 k 大 (k largests, top k)
+# 第 k 大 (kᵗʰ largest)
 
-在未排序的序列中，找第 k 小的元素，或前 k 小（从小到大的前 k 个）元素。（kᵗʰ smallest 或 k smallests）
+在未排序的序列中，找第 k 小的元素（kᵗʰ smallest，又叫 kᵗʰ order statistic）。
 
-或，反过来，找第 k 大的元素，或前 k 大（从大到小的前 k 个）元素。（kᵗʰ largest 或 k largests 或 top-k）
-
-kᵗʰ smallest element, 又叫 kᵗʰ order statistic。
+或，反过来，找第 k 大的元素（kᵗʰ largest）。
 
 k，通常从 1 开始，但若使用 quick select，则从 0 开始比较方便。
 
 1. 排序后直接取数
 2. 用 binary search
-3. 用 heap 或 priority queue
-4. 不用 heap，用类似 binary insertion sort 的方法，自己维护一个最长为 k 的数组
-5. 快速选择 quick select
+3. 快速选择 quick select
 
 ## 1. 排序后直接取数
 
@@ -40,47 +36,7 @@ C++ 代码：[kth-smallest-binary-search.cpp](code/kth-smallest-binary-search.cp
 
 时间复杂度：`O(n * log(max_val - min_val))`。在此范围内二分，是 `O(log(max_val - min_val))`，但每次遍历数组找小于 `m` 的元素个数，用 `O(n)`。 
 
-## 3. 用 heap 或 priority queue
-
-找 kᵗʰ largest
-
-初始化一个 min-heap，其堆顶元素最小。堆内存放「从大到小前 k 个元素」。
-
-先将数组的前 k 个元素依次入堆。
-
-从第 k+1 个元素开始，若 `a[i]` 大于堆顶元素（top k 里最小的），则将堆顶元素出堆，并将 `a[i]` 入堆。
-
-遍历完成后，堆中保存的就是最大的 k 个元素，堆顶就是 kᵗʰ largest 的。
-
-C++ 代码：[kth-largest-priority-queue.cpp](code/kth-largest-priority-queue.cpp)
-
-若求 kᵗʰ smallest，则
-- 改为 max-heap。
-- 入堆时。从第 k+1 个元素开始，若 `a[i]` <font color=red>小于</font>堆顶元素（top k 里最小的），则将堆顶元素出堆，并将 `a[i]` 入堆。
-- 遍历完成后，堆中保存的就是最小的 k 个元素，堆顶就是 kᵗʰ smallest 的。
-
-代码上看，因 max-heap 是 priority queue 的缺省类型，所以定义 pq 类型时不用给出 `greater<int>` 参数，简单了一点。
-
-<font color=red>代码中没有处理元素值相同的情况。好像 heap 的定义也要求元素不重复。to check later.</font>
-
-C++ 代码：[kth-smallest-priority-queue.cpp](code/kth-smallest-priority-queue.cpp)
-
-时间复杂度：总共执行了 `n` 轮入堆和出堆，堆的最大长度为 `k`，因此时间复杂度为 `O(nlogk)`。
-
-当 `k` 较小时，时间复杂度趋向 `O(n)`；当 `k` 较大时，时间复杂度不会超过 `O(nlogn)`。
-
-另，该法适用于动态数据流。在不断加入数据时，堆内元素始终为 k 个。
-
-
-java code,
-
-python code
-
-## 4. 不用 heap，用类似 binary insertion sort 的方法，自己维护一个最长为 k 的数组
-
-参见 [leet 347 的解法一](leet-347-top-k.md)
-
-## 5. 快速选择 quick select
+## 3. 快速选择 quick select
 
 与 quick sort 类似，但分成两部分后，只需在 pivot 的某一侧继续找，不用管另一侧。所以，递归调用只用调一次，iterative 方法也不用 stack。
 

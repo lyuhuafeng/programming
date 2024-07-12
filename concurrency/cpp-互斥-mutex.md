@@ -44,7 +44,7 @@ RAII，也称为「资源获取就是初始化」(resource acquisition is initia
     } // 出了此作用域，mutex.unlock() 在 lock_guard() 的析构函数中被调用
 ```
 
-复杂一点的例子：[完整代码](code/list_protectedy_by_mutex.cpp)
+复杂一点的例子：[完整代码](code/list-protected-by-mutex.cpp)
 
 ```cpp
     // 为演示简单，被保护的数据、提供保护的 mutex，都是 global 变量

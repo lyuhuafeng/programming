@@ -1,6 +1,6 @@
 #include <cstdio>
 #include <vector>
-#include <queue>
+#include <set>
 #include <limits> // INT_MAX
 using namespace std;
 
@@ -22,43 +22,43 @@ void add_edge(vector<edge_weight> adj[], int u, int v, int wt) {
     adj[v].push_back({u, wt});
 }
 
-// 缺省：max-heap，出 max 值，比较函数返回 a < b
-// 我们这里：min-heap，出 min 值，比较函数相应取反，返回 a > b
+// 比较函数，与用 priority_queue 相反，返回「a < b」。
+//   对比：priority_queue，min-heap，出 min 值，比较函数与缺省的相反，返回 a > b
+// 注意！比较大小其实只比较 dist 就行了，为何还要在 dist 相等时比较 id？
+// 因为 set 除了对其中的元素排序（要判断 <)，还不能有重复（要判断 ==）。如果 ==，则 insert() 会失败。
+// 如何判断两元素是否相等？用 !comp(a, b) && !comp(b, a)。如果只比较 dist，两个元素的 dist 相等时，会认为这两元素「相等」。
 bool operator<(const vertex_dist& v1, const vertex_dist& v2) {
-    return v1.dist > v2.dist;
+    return v1.dist < v2.dist || (v1.dist == v2.dist && v1.vertex < v2.vertex);
 }
 
 void shortest_path(const vector<edge_weight> adj[], int V, int src) {
-    priority_queue<vertex_dist> q;
+    set<vertex_dist> q;
 
     vector<int> dist(V, INT_MAX);
-    vector<bool> visited(V, false);
     vector<int> prevs(V, -1); // 每个顶点的前驱顶点，方便打印最终的 shortest path
 
     // 插入src，距离为0
-    q.push({src, 0});
+    q.insert({src, 0});
     dist[src] = 0;
     prevs[src] = src;
 
     int reached = 0;
     while (!q.empty()) {
-        int u = q.top().vertex;
-        q.pop();
-        if (visited[u]) {
-            // printf("min:%d. dist:%d. already visited. skip.\n", u, dist[u]);
-            continue;
-        }
+        int u = q.begin()->vertex;
+        q.erase(q.begin());
         reached++;
         printf("vertex:%d, min_dist:%d, prev_vertex:%d\n", u, dist[u], prevs[u]);
-        visited[u] = true;
         for (auto x : adj[u]) {
             int v = x.to;
             int weight = x.weight;
             printf("  calc %d -> %d (w:%d)\n", u, v, weight);
             if (dist[v] > dist[u] + weight) {
+                if (q.count({v, dist[v]}) > 0) {
+                    q.erase({v, dist[v]});
+                }
                 // 更新 v 的「最短距离」和「前驱顶点」
                 dist[v] = dist[u] + weight;
-                q.push({v, dist[v]});
+                q.insert({v, dist[v]});
                 prevs[v] = u;
             }
         }

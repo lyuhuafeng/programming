@@ -28,15 +28,15 @@ The mutex protects the shared state. The condition lets you block until signaled
 unique_lock is an RAII (Resource Acquisition Is Initialization) wrapper for locking and unlocking the given mutex. It's conceptually identical to the lock statement in C#. It simplifies exception handling by tying the mutex acquisition and release to the lifetime of the unique_lock instance. I don't know if there's a reason why condition_variable forces you to use it other than the fact that it's good practice. The only difference between unique_lock and lock_guard is that unique_lock can be unlocked... which is why you have to use it instead of lock_guard with condition_variable.
 
 
+cv 总是与 mutex 同时使用。
+
 
 全局变量，或 class 成员变量，或 static 变量。
 ```cpp
-    condition_variable cv;
-    mutex mtx;
-    bool ready; // 两个线程共享的状态变量
+    std::condition_variable cv;
+    std::mutex mtx;
+    bool data_ready; // 两个线程共享的状态变量
 ```
-
-producer 里：
 
 注意：
 
@@ -46,14 +46,15 @@ producer 中，只要 lock 一次，用来保护改写 condition，然后直接�
 
 https://stackoverflow.com/questions/13099660/c11-why-does-stdcondition-variable-use-stdunique-lock 这里有关于 condition_variable_any 的讨论
 
+producer 里：
+
 ```cpp
 {
-    ... // do some work
-    {   // 在 mtx 的保护下，修改「状态变量」的值
+    ... // 干活
+    {   // 活干完，在 mtx 的保护下，修改「状态变量」data_ready 的值
         std::lock_guard<std::mutex> guard(mtx);
-        ready = true;
+        data_ready = true;
     } // release lock and mutex
-    // Trigger thread B to recheck conditions
     cv.notify_one(); // 通知 consumer 线程，去再次检查「状态变量」的值
     ... // continue with some other work
 }
@@ -64,17 +65,17 @@ consumer 的四种写法。推荐把 predicate 作为参数传给 wait()，也�
 {
     ...
     //--- wait until data are prepared ---
-    std::unique_lock<std::mutex> ulock(myDataMutex);
-    while (!ready) {
+    std::unique_lock<std::mutex> ulock(mtx);
+    while (!data_ready) {
         cv.wait(ulock); // waiting 时，自动 unlock，以使 producer 线程可以修改「状态变量」
         // wait 返回后（收到了对方的 notify），自动 relock
         // 此时 locked。在其保护下，可重新检查「状态变量」（就是 while (!ready) 这句）
     }
-    // mutex 仍然/还是 处于 locked 状态，可以读写访问「状态变量」
+    // 此时 mutex 仍然/还是 处于 locked 状态，可以读写访问「状态变量」
 }
 ```
 
-wait(ulock) 函数会自动释放 ulock（若不释放，producer 线程无法修改「状态变量」），使线程进入 wait 状态，等待 cv 信号；收到信号后，wait() 会自动重新 acquire the mutex 并返回。也就是说，wait 返回后，mtx 是被 locked 的，此时可以检查或写「状态变量」。
+consumer 中的 cv.wait(ulock) 函数会自动释放 ulock（若不释放，producer 线程无法修改「状态变量」），使线程进入 wait 状态，等待 cv 信号；consumer 收到信号后，wait() 会自动重新 acquire mutex 并返回。也就是说，wait 返回后，mtx 是 locked 状态，此时可以检查或写「状态变量」。
 
 consumer 中，法二，check 和 wait 合并
 
@@ -84,6 +85,7 @@ consumer 中，法二，check 和 wait 合并
 {
     unique_lock<mutex> ulock(mtx);
     cv.wait(ulock, []{ return data_ready; });
+    // 此时 mutex 仍然/还是 处于 locked 状态，可以读写访问「状态变量」
 }
 ```
 
@@ -94,19 +96,20 @@ consumer 写法三，增加 wait 最大时长
 
 ```cpp
     auto timePoint = std::chrono::system_clock::now() + chrono::seconds(5); // 最多等 5 秒钟
-    std::unique_lock<std::mutex> uLock(myDataMutex);
+    std::unique_lock<std::mutex> ulock(mtx);
 
-    while (!ready) {
-        if (cv.wait_until(uLock, timePoint) == std::cv_status::timeout) {
-            // 超时了，但「状态变量」还没满足。做一些 error handling
-            break;
+    while (!data_ready) {
+        if (cv.wait_until(ulock, timePoint) == std::cv_status::no_timeout) {
+            // 没超时，且条件满足：正确处理
         } else {
-            // 返回值为 cv_status::no_timeout，没超时，且条件满足：正确处理
+            // 返回值为 cv_status::no_timeout，超时了，但「状态变量」还没满足。
+            // 做一些 error handling
+            break;
         }
     }
 
     // 或
-    if (cv.wait_for(uLock, timeoutPeriod, []{ return ready; })) {
+    if (cv.wait_for(ulock, timeoutPeriod, []{ return data_ready; })) {
         // 没超时，且条件满足：正确处理
     } else {
         // 超时，条件还没满足：error handling
@@ -115,21 +118,21 @@ consumer 写法三，增加 wait 最大时长
 
 不安全的用法：
 
-在 producer 中直接 notify_one() 或 notify_all()，在 consumer 中直接 wait()
+没有「状态变量」（也就不需要 lock/mutex 来保护对该「状态变量」的访问）。在 producer 中直接 notify_one() 或 notify_all()，在 consumer 中直接 wait()。
 ```cpp
     // global condition variable, shared by both
-    condition_variable cv;
+    std::condition_variable cv;
     // in producer
     cv.notify_all();
     // in consumer
-    wait(cv);
+    cv.wait(ulock); // how?
 ```
 
 这样简单粗暴的使用，在大多数情况下都是 work 的。但不安全，有两个问题：
 - lost wakeup: 若 notify 发生在 wait() 之前，其 signal 不会被 consumer 收到，而 consumer 稍后调用 wait() 就会一直等下去。
 - spurious wakeup: 有些库写得有 bug，在没有 notify 的情况下，wait 也会返回。导致不能确定，是否是 thread A 唤醒了我。
 
-所以，不能单独使用 cv。必须有个状态变量（condition），如上面代码中的 ready。
+所以，不能单独使用 cv。必须有个状态变量（condition），如上面代码中的 data_ready。
 - 简单粗暴：notify() 通知：现在好了
 - 正确：notify() 通知：现在可以去检查一下 condition，看是不是好了
 
@@ -150,15 +153,3 @@ If not then it releases the lock and waits for Condition Variable to get signale
 - producer: 当 condition 满足时，producer 通知（signals the condition varialbe)
 
 - consumer: 当 condition varialbe 被 signal 了，正在等待该 signal 的 consumer 重新开始运行。它重新 acquire mutex 并检查 doncition 是否满足，或者是个 superiors call. 若 superiors，它再次调用 wait.
-
-
-
-
-
-
-
-条件变量是c++11引入的一种同步机制，它可以阻塞一个线程或者个线程，直到有线程通知或者超时才会唤醒正在阻塞的线程，条件变量需要和锁配合使用，这里的锁就是上面介绍的std::unique_lock。
-
-condition_variable（条件变量）是 C++11 中提供的一种多线程同步机制，它允许一个或多个线程等待另一个线程发出通知，以便能够有效地进行线程同步。
-
-condition_variable 需要与 mutex（互斥锁）一起使用。当线程需要等待某个条件变成真时，它会获取一个互斥锁，然后在条件变量上等待，等待期间会自动释放互斥锁。另一个线程在满足条件后会获取相同的互斥锁，并调用条件变量的 notify_one() 或 notify_all() 函数来唤醒等待的线程。

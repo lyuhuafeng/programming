@@ -62,6 +62,8 @@ Workaround 是，不更新 `(v1, d1)`，而是再增加一个 `(v1, d2)` 元素�
 - priority queue 里存放 pair 类型，就不用自定义比较函数，用系统自带的 `greater<pair<int, int>>` 函数。pair 默认根据 first 来排序，所以要把 dist 作为 first，vertex 作为 second。与原来自定义的结构体顺序相反。priority queue 声明时要指定这个 `greater` 函数，以及被迫指定底层容器为 vector。[`dijkstra-using-pair.cpp`](code/dijkstra-using-pair.cpp)
 - 小图灵标程：用了链式前向星而不是 vector 来存储邻接表；重载了 `operator<` 操作符。[`dijkstra-little-turing.cpp`](code/dijkstra-little-turing.cpp)
 
+- 也可以用 set 代替 priority_queue，因为 set 也是排序的。[代码](code/dijkstra-set.cpp)。与使用 priority_queue 不同之处：(1) 比较函数，从返回 `a > b` 返回 `a < b`，而且还要处理相等的情况；(2) 更新一个顶点的 dist 时，要想看它是否已在 set 里（带一个较大的 dist），若已在，则先删掉 `{v, old_dist}` 再加入 `{v, new_dist}`；(3) `visited[]` 不用了；原来 priority_queue 无法判断某顶点是否已在 q 中，也无法更新其 dist，所以用 `visited[]` 来判断某顶点是否已经被加入过 queue；有了 (2) 的方法，就不需要 `visited[]` 了。
+
 最佳实现的核心代码：
 ```cpp
     // 边，包含 to 和 weight
