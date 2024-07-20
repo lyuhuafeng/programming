@@ -152,3 +152,6 @@ https://www.jiuzhang.com/solution/traveling-salesman-problem/ 很多方法，有
 - full walk 的总 cost，最多是 MST cost 的两倍。（MST 的每条 edge，最多访问两次）
 - preorder 遍历 MST，不是 full walk，所需 cost 肯定少于 full walk。
 
+# 遗传算法
+
+https://towardsdatascience.com/evolution-of-a-salesman-a-complete-genetic-algorithm-tutorial-for-python-6fe5d2b3ca35

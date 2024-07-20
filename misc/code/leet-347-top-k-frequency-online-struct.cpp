@@ -10,6 +10,7 @@ struct freq_item {
     // set 中不能有重复元素，所以 freq 相等时还要用 val 再比较
     bool operator<(const freq_item &b) const {
         return freq < b.freq || (freq == b.freq && val < b.val);
+        // return tie(freq, val) < tie(b.freq, b.val); // 更简洁直观的写法，用 tie()
     }
 };
 

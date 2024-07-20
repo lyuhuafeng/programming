@@ -1,4 +1,8 @@
-## thread 用法
+## thread(c++ 11), jthread (c++20)
+
+jthread 在生命结束或抛出异常时可自动 join。从而不用自己用 raii 方式封装 thread。
+
+### thread
 
 基本用法。注意 thread 对象构造后，要调用 t.join() 或 t.detach()。
 
@@ -49,15 +53,31 @@ raii 用法
         std::thread t = std::thread{do_something, local_status};
         thread_guard g{t};
         do_domething_in_current_thread();
+        // g 析构时，会调用 t.join()
     }
 ```
 
-https://www.modernescpp.com/index.php/tasks/  task 比 thread 更好使？since c++11.
+thread 用类的（非静态）成员函数，函数名要用 `&class_name::func_name`，所有参数之前还要多加一个「类对象的地址」参数。
 
+- 若在类内调用，`thread(&class_name::func_name, this, arg1, arg2)`
+- 若在类外调用，`thread(&class_name::func_name, &class_inst, arg1, arg2)`
 
-- 线程间共享数据：用 mutex
-- 线程间同步操作：用 condition variable
-- atomic
+[完整代码](code/thread-using-class-member-func.cpp)
+
+### jthread
+
+to add
+
+## overview
+
+- mutex, lock, lock()
+- condition variable
+- cooperative interruption (c++20)
+- semaphores (c++20)
+- latches, barriers (c++20)
+- synchronized outputstreams (c++20)
+
+英语学习：latch n. 门闩；碰锁；弹簧锁
 
 ## semaphore
 

@@ -70,6 +70,11 @@ re-entrant lock 可重入的锁，或称 recursive mutex 递归的: 我以前拿
 
 # lock vs. binary semaphore
 
+- V: 增大; signal; release; up
+- P: 减小; wait;   acquire; down
+
+如何记忆：V 可以是 victory，胜利了自然就增大了，就可以发 signal 给别人了。
+
 binary semaphore
 - 连续的 P 操作会被 block 住
 - P、V 可由不同人操作（来自 ownership 的概念）
@@ -86,6 +91,8 @@ lock/mutex
 # semaphore vs. condition variable
 
 都是 signaling/synchronization 机制。
+
+semaphore 比 condition variable 快，性能好。
 
 很相似，区别主要在使用场景上：
 

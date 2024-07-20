@@ -44,6 +44,10 @@ consumer 中，需要（可能多次）对 mutex 执行 lock 和 unlock 操作�
 
 producer 中，只要 lock 一次，用来保护改写 condition，然后直接释放（销毁）就行，所以用 lock_guard 就行了。lock_guard also doesn't allow access to the mutex itself which most condition variable implementations probably require.
 
+lock_guard 和 unique_lock 在创建时，都会设法 lock 住 mutex。如果 mutex 已经处于 locked 状态，则 lock_guard 和 unique_lock 的创建都会 block 住，直到 mutex 被 unlock。所以，注意 mutex 的状态。
+
+wait() 会自动释放 mutex，使线程进入 wait 状态。如果有多个线程都调用 `unique_lock(mutex); wait();`，则一个拿到 mutex 的线程在 wait() 里释放 mutex 后，其他线程得以获得 mutex 并调用 wait() 并自动释放 mutex…… 从而可以实现多个线程都在 wait 状态。
+
 https://stackoverflow.com/questions/13099660/c11-why-does-stdcondition-variable-use-stdunique-lock 这里有关于 condition_variable_any 的讨论
 
 producer 里：
@@ -52,7 +56,7 @@ producer 里：
 {
     ... // 干活
     {   // 活干完，在 mtx 的保护下，修改「状态变量」data_ready 的值
-        std::lock_guard<std::mutex> guard(mtx);
+        std::lock_guard<std::mutex> guard(mtx); // 若 mtx 已经是 locked 状态，则此处创建 lock_guard 会 block 住
         data_ready = true;
     } // release lock and mutex
     cv.notify_one(); // 通知 consumer 线程，去再次检查「状态变量」的值
@@ -61,17 +65,19 @@ producer 里：
 
 consumer 的四种写法。推荐把 predicate 作为参数传给 wait()，也就是写法二、四。
 
+写法一。注意，先检查 data_ready 再 wait()；若 wait() 之前 data_ready 就已经是 true，则不用 wait() 也不用等被 notify 就继续了。
 ```cpp
 {
     ...
     //--- wait until data are prepared ---
-    std::unique_lock<std::mutex> ulock(mtx);
+    std::unique_lock<std::mutex> ulock(mtx); // 若 mtx 已经是 blocked 状态，则此处创建 uniqu_lock 会 block 住
+    // 此时，mtx 处于 locked 状态
     while (!data_ready) {
         cv.wait(ulock); // waiting 时，自动 unlock，以使 producer 线程可以修改「状态变量」
         // wait 返回后（收到了对方的 notify），自动 relock
         // 此时 locked。在其保护下，可重新检查「状态变量」（就是 while (!ready) 这句）
     }
-    // 此时 mutex 仍然/还是 处于 locked 状态，可以读写访问「状态变量」
+    // 此时，从 cv.wait() 返回后，mutex 又 处于 locked 状态，可以读写访问「状态变量」
 }
 ```
 
@@ -81,11 +87,14 @@ consumer 中，法二，check 和 wait 合并
 
 把 check 用到的 predicate 条件（callable 类型），作为参数，传给 wait()。
 
+注意，这个版本的 wait()，相当于 `while (!data_ready) { cv.wait(ulock); }`，所以，类似地，若调用 wait() 时 data_ready 已经是 true，则不用等到被 notify 就返回了。
+
 ```cpp
 {
-    unique_lock<mutex> ulock(mtx);
-    cv.wait(ulock, []{ return data_ready; });
-    // 此时 mutex 仍然/还是 处于 locked 状态，可以读写访问「状态变量」
+    unique_lock<mutex> ulock(mtx); // 若 mtx 已经是 blocked 状态，则此处创建 uniqu_lock 会 block 住
+    // 此时，mtx 处于 locked 状态
+    cv.wait(ulock, []{ return data_ready; }); // waiting 时，自动 unlock，以使 producer 线程可以修改「状态变量」
+    // 从 cv.wait() 返回后，mutex 又处于 locked 状态，可以读写访问「状态变量」
 }
 ```
 
@@ -125,7 +134,7 @@ consumer 写法三，增加 wait 最大时长
     // in producer
     cv.notify_all();
     // in consumer
-    cv.wait(ulock); // how?
+    cv.wait(); // 没有 lock 的存在
 ```
 
 这样简单粗暴的使用，在大多数情况下都是 work 的。但不安全，有两个问题：

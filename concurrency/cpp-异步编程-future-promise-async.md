@@ -86,11 +86,13 @@ int main() {
 
 ### shared_future
 
-promise 和 future 是 1:1 的关系；但 shared_future 可使一个 promise 对应多个 future。
+promise 和 future 是 1:1 的关系；每个 future 只能调用一次 get()。但可用 shared_future，它可多次调用 get()，每次都得到同样的结果。
 
-例子：[代码](code/shared-future-ex.cpp)
+较简单的示例：[代码](code/shared-future-demo2.cpp)
 
-注意，shared_future 可以 copy，而 future 只能 move。
+较复杂的例子：[代码](code/shared-future-ex.cpp)
+
+注意，shared_future 可以 copy 构造，而 future 只能 move 构造。
 
 ## packaged_task
 
@@ -133,9 +135,20 @@ packaged_task 对象内部包含了两个最基本元素，
 - eager evaluation: 任务立即执行
 - lazy evaluation (call-by-need): 当 future.get() 执行时，任务才执行
 
+系统自己决定，是否在单独的线程中执行 std::async。也可以自己指定。
+
 缺省：std::async 立即执行任务
-- 指定 std::launch::async：是 eager 的，立即执行，在新线程中执行 work package
-- 指定 std::launch::deferred：是 lazy 的，不立即执行；要求 async 在同一线程中执行
+- 指定 std::launch::async：是 eager 的，立即执行；在新线程中执行。
+- 指定 std::launch::deferred：是 lazy 的，不立即执行；在同一线程中执行，相当于串行执行。
+
+<font color=red>那为啥还要提供 deferred 方式呢？直接用 do_work() 取代 f = std::async(do_work); f.get(); 不好吗？</font>
+一个可能的场景：lazy evaluation。第一个 get 的人，实际执行，后续 get 的人，直接返回结果。要用 shared_future。相当于把结果储存在 future 中。但为何不存在某对象中呢？ result_object 呢？
+
+用 std::launch::async 启动
+- 若返回的 future 赋给变量：async() 立即返回；但 future.get() 会 block 直到任务结束
+- 若返回的 future 没赋给变量（称为 fire-and-forget 模式）：实际上 block 直到任务结束。（具体：asnyc() 返回的 future 会等在其析构函数里，直到相应的 promise 完事。实际上达到了 block 的效果。）
+
+<font color=red>何时用 fire-and-forget 方式？</font>
 
 ```cpp
     #include <future> // std::async()

@@ -1,6 +1,6 @@
 # cpp sleep
 
-# 法一：`sleep()`
+# 法一：std 的 `sleep()`
 
 - C++ 11 标准库提供
 - macos, linux
@@ -12,7 +12,10 @@
     #include <thread>
     
     // 4500 ms
-    this_thread::sleep_for(chrono::milliseconds(4500));
+    std::this_thread::sleep_for(std::chrono::milliseconds(4500));
+
+    using namespace std::literals;
+    std::this_thread::sleep_for(3s);
 ```
 
 # 法二：`usleep()`
@@ -31,7 +34,7 @@
 # 法三：`sleep()`
 
 - POSIX 标准，windows 上也有兼容版本
-- macos, linux。
+- macos, linux
 - 秒 (seconds)
 
 ```cpp
@@ -39,5 +42,4 @@
     #include <unistd.h>
 
     sleep(5); // 5 sec
-}
 ```

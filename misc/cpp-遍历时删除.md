@@ -74,3 +74,28 @@
         it = must_delete(it) ? m.erase(it) : std::next(it);
     }
 ```
+
+# 总结
+
+https://mp.weixin.qq.com/s/Tm1qRRVdVyNm0_qzozsrQQ
+
+小伙伴在 std::map 的遍历中使用 map.erase(iter++) 删除元素，稣在审查代码时提醒：最好养成习惯使用 iter = map.erase(iter)，因为对于其它容器，前者可能是错的。
+
+在 std::vector（和 std::deque）中，删除元素会导致后续元素移动，当删除最后一个元素 9 时，有以下具体步骤：
+
+对 iter 取值（给 erase），它指向 9；
+
+iter++，使 iter 变成 end；
+
+erase 9 使“现 end”前移了一位，那么 iter 指向的“原 end”就不再是“现 end”；
+
+循环条件 iter != c.end(); 满足，继续循环……
+
+其它容器，比如 std::list（链表）、std::map/std::set（红黑树），其删除操作不会影响到其他迭代器，所以使用 .erase(iter++) 是安全且高效的。
+
+唯一安全并通用的方式是 it = c.erase(it);，要养成习惯。
+
+# to check later
+
+Erase-Remove Idiom in C++
+

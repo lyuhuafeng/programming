@@ -1,6 +1,6 @@
 #include <cstdio>
 #include <cstring> // memset()
-#include <algorithm> // max()
+#include <algorithm> // max(), fill_n()
 using namespace std;
 
 int main() {
@@ -50,7 +50,7 @@ int main() {
     // 为了正序输出物品序号，需用数组x[]记录每件物品是否被放入。
     printf("max weight: %d\n", dp[n][W]);
     int x[n + 1];
-    memset(x, 0, sizeof x);
+    fill_n(x, n + 1, 0);
     for (int i = n, j = W; i > 0; i--) {
         if (dp[i][j] > dp[i - 1][j]) {
             x[i] = 1;

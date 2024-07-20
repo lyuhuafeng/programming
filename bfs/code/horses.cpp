@@ -16,6 +16,7 @@ void bfs(int sx, int sy) {
     int num = 1;
     q.push({sx, sy});
     memset(dis, -1, sizeof dis);
+    // 或 fill_n(&dis[0][0], 405 * 405, -1);
     dis[sx][sy] = 0;
     while (!q.empty()) {
         int nx = q.front().x, ny = q.front().y;

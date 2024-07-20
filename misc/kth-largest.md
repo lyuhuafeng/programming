@@ -54,3 +54,7 @@ C++ 代码，kᵗʰ smallest，数组序列：[kth-smallest-quick-select.cpp](co
 C++ 代码，kᵗʰ largest，vector 序列：[kth-largest-quick-select-vector.cpp](code/kth-largest-quick-select-vector.cpp)
 
 时间复杂度：partition 过程耗时 `O(n)`。若 pivot 选得好，每次砍掉一半，则总次数为 `n + n/2 + n/4 + … + 1 = 2n`。故 qselect 平均耗时 `O(n)`.
+
+[leet 215 数组第 k 大元素](https://leetcode.cn/problems/kth-largest-element-in-an-array) 代码
+
+https://leetcode.com/problems/kth-largest-element-in-an-array/solutions/115721/on-bfprt-algorithm-in-c/

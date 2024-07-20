@@ -1,6 +1,5 @@
 #include <cstdio>
-#include <cstring> // memset()
-#include <algorithm> // max()
+#include <algorithm> // max(), fill_n()
 using namespace std;
 
 void display(int i, int j, int dp[], int W) {
@@ -13,7 +12,7 @@ void display(int i, int j, int dp[], int W) {
 
 int opt1(int n, int w[], int v[], int W) {
     int dp[W + 1];
-    memset(dp, 0, sizeof dp);
+    fill_n(dp, W + 1, 0);
 
     for (int i = 1; i <= n; i++) {
         for (int j = w[i]; j <= W; j++) { // 正序遍历

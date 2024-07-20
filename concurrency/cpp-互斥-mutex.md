@@ -77,24 +77,6 @@ RAII，也称为「资源获取就是初始化」(resource acquisition is initia
     }
 ```
 
-## stack 的问题
-
-std::stack 在多线程环境下的问题。api interface 设计缺陷。
-
-- empty() 和 size() 不可靠。常见用法 `if (!st.empty()) { st.pop() 或 t = st.top(); }`。若在调用 empty() 和 pop() 之间，另一个线程做了 pop()，则出错。
-- 常见用法 `t = st.top(); st.pop();`。两个线程都如此操作，可能两个 top() 拿到同样内容，两个 pop() 弹出两个不同元素，其中一个其实未被读到就被扔了。
-
-解法：结合 top 和 pop 为一（poptop()）。问题：若对象的 copy constructor 可抛出异常，则 pop_top() 可能有问题。例，stack<vector<int>>。复制 vector 时，若分配内存失败，则 vector 的 copy constructor 可能抛出 bad_alloc 异常。新的 pop_top() 函数，先修改 stack (pop)，再把弹出的 vector 返回。若 pop 成功，但把弹出的 vector 拷贝赋值以待返回时，抛出上述异常，则弹出的数据就丢失了。
-... 没看太明白, to check later.
-
-option 1: 传入引用 `vector<int> res; st.pop(res)`。问题：凭空构建一个 object 可能很贵甚至不可能；很多自定义对象不支持 assignment.
-
-option 2：要求不抛出异常的 copy/move constructor。问题：受限制
-
-option 3：返回指向被弹出元素的指针，而不是 by value，然后就可以安全 copy。问题：需要自己管理内存，开销很大（尤其是基本类型如 integer）。但若用此方法，应使用 shared_ptr，可避免内存泄漏。
-
-option 4：结合 2,3. [代码](code/thread-safe-stack.cpp)
-
 ## deadlock
 
 避免 deadlock 的关键：总是用同样的顺序 lock 两个 mutex。
@@ -190,7 +172,7 @@ unique_lock 保存「本 lock 是否拥有此 mutex」的标志。
     }
 ```
 
-更实际些的场景：lock 不是单独返回，而是作为某 gateway 对象的成员返回。所有数据访问都通过该 gatewa 类。需访问数据时，获取一个 gateway 对象，也就获得了 lock。然后通过 gateway 对象的成员函数访问数据。完事后，销毁 gateway 对象，也就释放了 lock，其他线程就可以访问数据了。这样的 gateway 对象应该是 moveable 的，所以其中的 lock 成员也得是 moveable 的。
+更实际些的场景：lock 不是单独返回，而是作为某 gateway 对象的成员返回。所有数据访问都通过该 gateway 类。需访问数据时，获取一个 gateway 对象，也就获得了 lock。然后通过 gateway 对象的成员函数访问数据。完事后，销毁 gateway 对象，也就释放了 lock，其他线程就可以访问数据了。这样的 gateway 对象应该是 moveable 的，所以其中的 lock 成员也得是 moveable 的。
 
 场景：在 unique_lock 对象被析构前，如果确认不再需要锁，可调用 unlock 主动提前释放锁。目的：提高性能。
 

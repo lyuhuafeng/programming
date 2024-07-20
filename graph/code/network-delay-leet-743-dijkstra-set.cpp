@@ -22,7 +22,8 @@ struct vertex_dist {
     // 因为 set 除了对其中的元素排序（要判断 <)，还不能有重复（要判断 ==）。如果 ==，则 insert() 会失败。
     // 如何判断两元素是否相等？用 !comp(a, b) && !comp(b, a)。如果只比较 dist，两个元素的 dist 相等时，会认为这两元素「相等」。
     bool operator<(const vertex_dist& v2) const {
-        return dist < v2.dist || (dist == v2.dist && vertex < v2.vertex);
+        // return dist < v2.dist || (dist == v2.dist && vertex < v2.vertex); // 下一行用 tie() 更简洁直观
+        return tie(dist, vertex) < tie(v2.dist, v2.vertex);
     };
 };
 
@@ -85,7 +86,7 @@ public:
     int networkDelayTime(vector<vector<int>>& times, int n, int k) {
         vector<edge_weight> adj[n + 1]; // 每个顶点可到达的顶点、权重
         for (vector<int>& t : times) {
-            adj[t[0]].push_back({t[1], t[2]});
+            adj[t[0]].emplace_back(t[1], t[2]);
         }
         return shortest_path(adj, n, k);
     }

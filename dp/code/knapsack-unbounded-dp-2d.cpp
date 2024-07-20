@@ -1,5 +1,4 @@
 #include <cstdio>
-#include <cstring> // memset()
 #include <algorithm> // max()
 using namespace std;
 

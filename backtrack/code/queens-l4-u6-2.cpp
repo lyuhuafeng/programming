@@ -1,3 +1,5 @@
+// https://oj.youdao.com/course/13/74/1#/1/9416
+
 #include <cstdio>
 using namespace std;
 
