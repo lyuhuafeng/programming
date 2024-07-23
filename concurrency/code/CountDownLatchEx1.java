@@ -9,7 +9,7 @@ import static java.util.stream.Collectors.toList;
 public class CountDownLatchEx1 {
      public static void main(String[] args) throws InterruptedException {
         final int[] products = getProductsByCategoryId(); // 获取商品编号列表
-        // 通过stream的map运算将商品编号转换为ProductPrice 
+        // 通过 stream 的 map 运算将商品编号转换为 ProductPrice 
         List<ProductPrice> list = Arrays.stream(products)
                 .mapToObj(ProductPrice::new)
                 .collect(toList());
@@ -17,11 +17,11 @@ public class CountDownLatchEx1 {
 
         // 2. 为每一件商品的计算都开辟对应的线程
         list.forEach(pp -> new Thread(() -> {
-                    System.out.println(pp.getProdID() + "-> start calculate price.");
+                    System.out.println(pp.getProdID() + "-> start calculating price.");
                     try {
                         TimeUnit.SECONDS.sleep(current().nextInt(10)); // 计算商品价格
                         pp.setPrice(pp.prodID * (pp.prodID % 2 == 0 ? 0.9D : 0.71D));
-                        System.out.println(pp.getProdID() + "-> price calculate completed.");
+                        System.out.println(pp.getProdID() + "-> price calculation completed.");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } finally {

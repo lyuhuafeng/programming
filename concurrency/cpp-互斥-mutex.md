@@ -25,13 +25,15 @@ mutex 基本用法
     m.unlock(); // 在 mutex 上释放 lock
 ```
 
-通常不直接用，而是结合 lock_guard 或 unique_lock 使用。
+通常不直接用，而是结合 lock_guard 或 unique_lock 使用。这些 lock，用 RAII 方式，方便 mutex 的使用。RAII「资源获取就是初始化」(resource acquisition is initialization)
 
 - std::lock_guard，以 RAII 方式封装了 mutex，防止忘记 mutex.unlock() 或在调用 mutex.unlock() 之前抛出异常而导致无法调到 mutex.unlock()。基本上，lock_guard 构造时，会调用 mutex.lock()，析构时，会调用 mutex.unlock()。
 - std::unique_lock，比 lock_guard 提供了更好的上锁和解锁控制，提供了 lock()、unlock()、try_lock() 等方式。除了在销毁时能自动解锁，平常也能通过 raii 容器来 lock/unlock 容器内的 mutex。
 - std::shared_lock
 
-RAII，也称为「资源获取就是初始化」(resource acquisition is initialization)
+std::lock() 函数，可对多个 mutex 和 lock_guard, unique_lock 等，以 atomic 方式一次性上多个锁。
+
+std::lock() 可对任何 Lockable 对象上锁。Lockable 就是有 lock()、unlock()、try_lock() 成员函数的类型。
 
 重大原则：所有对被保护数据的访问，都要遵循同样的保护方式。所以，被保护数据的指针或引用，不能（以返回值、函数参数等方式）传给其他不可控的调用者。
 
@@ -107,7 +109,39 @@ std::lock() 函数，可一次性 lock 两个或多个 mutex，而不会造成 d
 - 按固定顺序 acquire locks
 - 使用 lock hierarchy
 
-## std::unique_lock 比 std::lock_guard 更灵活
+## 管理多个 mutex：std::lock() vs. std::scoped_lock
+
+- std::lock() 两种写法，顺序相反。
+- std::scoped_lock 一句话就行，方便。有了它，就不用 std::lock() 了。
+
+例子，安全交换，[代码](code/safe-swap-sol2.cpp)
+
+```cpp
+    friend void swap(T& a, T& b) {
+        if (&a == &b) { return; } // 确保两个对象不同
+
+        // 法一、法二顺序相反
+
+        // 法一，先用 defer 方式用 lock_guard 来管理两个 mutex。defer 方式：创建 lock 后，mutex 并不上锁。
+        // 再用 std::lock() 把它俩一起上锁。
+        // 最后 unique_lock 析构时会自动给两个 mutex 解锁。
+        std::unique_lock<std::mutex> ulock_a(a.mtx, std::defer_lock);
+        std::unique_lock<std::mutex> ulock_b(b.mtx, std::defer_lock);
+        std::lock(ulock_a, ulock_b);
+
+        // 法二，先用 std::lock() 给两个 mutex 都上锁
+        // 再用 lock_guard 来管理两个 mutex。用 adopt 方式，「收养」两个已上锁的 mutex。
+        // 最后 unique_lock 析构时会自动给两个 mutex 解锁。
+        std::lock(a.mtx, b.mtx);
+        std::lock_guard<std::mutex> guard_a(a.mtx, std::adopt_lock);
+        std::lock_guard<std::mutex> guard_b(b.mtx, std::adopt_lock);
+
+        // 法三，用 scoped_lock，一句话就行。c++17 新特性
+        std::scoped_lock guard(a.mtx, b.mtx);
+
+        my_swap(a.some_detail, b.some_detail);
+    }
+```
 
 unique_lock 并不总是拥有它对应的 mutex
 
@@ -117,31 +151,6 @@ unique_lock 并不总是拥有它对应的 mutex
 - 把 unique_lock 对象传给 std::lock() 函数
 
 （对比：std::adopt_lock 选项，让 the lock object 管理 the lock on a mutex）
-
-例子，安全交换，[代码](code/safe-swap-sol2.cpp)
-
-对比三种写法：
-
-```cpp
-    friend void swap(T& lhs, T& rhs) {
-        if (&lhs == &rhs) { return; } // 确保两个对象不同
-
-        // 法一，先 lock 两个 mutex，再用两次 lock_guard
-        lock(lhs.mtx, rhs.mtx);
-        lock_guard<mutex> guard_a(lhs.mtx, adopt_lock);
-        lock_guard<mutex> guard_b(rhs.mtx, adopt_lock);
-
-        // 法二，用 scoped_lock，一句话就行。c++17 新特性
-        scoped_lock guard(lhs.mtx, rhs.mtx);
-
-        // 法三，先用两次 unique_lock(defer_lock)，再用 lock
-        unique_lock<mutex> ulock_a(lhs.mtx, defer_lock);
-        unique_lock<mutex> ulock_b(rhs.mtx, defer_lock);
-        lock(ulock_a, ulock_b);
-
-        my_swap(lhs.some_detail, rhs.some_detail);
-    }
-```
 
 unique_lock 保存「本 lock 是否拥有此 mutex」的标志。
 它决定 unique_lock 的析构函数中实际要调用 unlock()。
@@ -271,37 +280,21 @@ static 的 local 变量，其初始化发生在 control path 第一次经过其 
 
 适用场景：读操作远远多于写操作。典型应用：多线程共享的 cache
 
-shared_mutex (since c++17)
+std::shared_mutex (since c++17)
 - write：调用 lock()
 - read：调用 lock_shared()
 
-shared_lock (since c++14)
+std::shared_lock (since c++14)
 - 构造时：尝试以 lock_shared() 锁住传入的 mutex
 - 析构时：确保以 unlock_shared() 的方式释放 mutex
 - 平时：可使用 lock() 和 unlock()，以「共享方式」获取和释放 mutex
 
-例：dns cache
+reader-writer lock 读写锁
+- std::shared_mutex 或 std::shared_timed_mutex，结合 std::shared_lock
+- reader/writer 用同一个 mutex 对象
+- writer: 还用普通的 std::lock_guard 或 std::unique_lock
+- reader: 用 std::shared_lock
 
-```cpp
-    class dns_entry;
+里：电话本 [代码](code/rw-telebook.cpp)
 
-    class dns_cache {
-    public:
-        typedef unordered_map<string, dns_entry> dns_map;
-
-    private:
-        dns_map entries_;
-        mutable shared_mutex mtx_;                     // 1.
-
-    public:
-        dns_entry find_entry(const string& domain) const {
-            shared_lock<shared_mutex> slock(mtx_);  // 2.
-            const dns_map::const_iterator it = entries_.find(domain);
-            return (it != entries_.end()) ? it->second : dns_entry();
-        }
-        void update_one_entry(const string& domain, const dns_entry& entry) {
-            lock_guard<shared_mutex> guard(mtx_);  // 3.
-            entries_[domain] = entry;
-        }
-    };
-```
+例：dns cache [代码](code/rw-dns-cache.cpp)

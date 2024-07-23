@@ -92,7 +92,9 @@ lock/mutex
 
 都是 signaling/synchronization 机制。
 
-semaphore 比 condition variable 快，性能好。
+semaphore 初始化为 0，就可 block 住 acquire 操作，直到其他线程 release 从而 signal 它。
+
+semaphore 可代替 condition variable，且性能更好。
 
 很相似，区别主要在使用场景上：
 
@@ -104,3 +106,42 @@ condition variable
 - 适合 event-driven 的场景
 - 本质上是个 wait-queue，支持 block-wait 和 wakeup 操作
 
+# latch, barrier
+
+英语学习：latch n. 门闩；碰锁；弹簧锁
+
+数字电路中，latch 锁存器、闩锁
+
+- c++ std::latch = java 里的 CountDownLatch
+- c++ std::barrier = java 里的 CyclicBarrier
+
+两者都是让一些线程 block 住，直到某个 counter 变为 0。
+
+所做工作都可用 cv、thread 等完成。但更方便、性能通常更好。内部机制通常是 lock-free 的。
+
+latch
+- 只可用一次
+- to manage one task by multiple threads
+
+barrier
+- 可用多次
+- to manage repeated tasks by multiple threads
+- 可在 completion step 时执行一个函数。(completion step: counter 变为 0 的状态)
+
+boss-worker 场景：
+- 用 latch: [代码](code/boss-worker-latch-demo.cpp)，简化版 [代码](code/boss-worker-latch-simplified-demo.cpp)
+- 用 semaphore: [代码](code/boss-worker-semaphore-demo.cpp)  work: 每个工人 release(1)，boss 等待所有 worker 完事则要 acquire(6)；回家，每个 worker 要 acquire(1)，但 boss 要给每个 worker 一个，共 release(6)。逻辑上不如 latch 直接。但代码还行。
+- 用 cv：[代码](code/boss-worker-cv-demo.cpp) 代码确实比 semaphore 麻烦，比 latch 就更麻烦了。
+- 用 barrier: [代码](code/boss-worker-barrier-demo.cpp)
+
+barrier vs. memory barrier (fence)
+
+posix-style: pthread_barrier_wait ... since around 2000
+
+Memory barriers and POSIX-style barriers are semantically related; both mechanisms ensure that certain events are not re-ordered between adjacent phases; they stay on their side of the barrier.
+
+Apparently databases historically call shared-memory locks "latches" to distinguish them from locks used for transaction conflict detection.
+
+The full name is typically CountDownLatch [0]. The latch still has 2 states, closed and open.
+
+latches can be edge or level triggered. The important concept is that once they are triggered, they latch the input value, and maintain it after the input has disappeared. That's what std::latch does... Once triggered it's always triggered. Same as Java's CountDownLatch

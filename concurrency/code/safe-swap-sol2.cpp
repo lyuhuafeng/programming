@@ -1,7 +1,7 @@
 #include <mutex>
 using namespace std;
 
-class some_big_object;
+class some_big_object {};
 
 void my_swap(some_big_object& lhs,some_big_object& rhs);
 
