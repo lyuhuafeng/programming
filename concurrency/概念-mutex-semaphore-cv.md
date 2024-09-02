@@ -14,7 +14,28 @@
 
 从概念上，没本质区别。
 
-# spinlock
+# spinlock vs. mutex
+
+https://stackoverflow.com/questions/5869825/when-should-one-use-a-spinlock-instead-of-mutex
+
+概念上：
+- mutex: 若拿不到，则线程进入 sleep（则其他线程可以运行），直到被 wake up（因为 lock 被其他线程释放）
+- spinlock: 若拿不到，并不 sleep，而是不停重试，直到拿到。（不 sleep，则其他线程不能运行，直到本线程的时间额度用完，os 强制切换线程）
+
+问题：
+- mutex: 线程进入 sleep 和被 wake up，都开销大。在多核/多 cpu 系统上，若锁很多，且持有锁时间都短，则 sleep/wake 开销大。
+- spinlock: 无需 sleep/wake，但不停重试，也浪费 cpu。
+  - 在单核/单 cpu 系统上，spinlock 无太大意义，因为在本线程未用尽时间额度时，其他线程无法运行，也就无法释放 spinlock 试图获得的锁。
+  - 有些 os（如 ios），线程调度器不能保证低优先级的线程被调度运行。如果某低优先线程拿到了 spinlock，未释放就用尽时间额度，停止运行；后续也未有机会运行，无机会释放 spinlock，可能导致永久性死锁。解法：ios 的 os_unfair_lock。
+
+实际：
+- 多数 os 不严格区分二者。
+- 多数 os 使用 hybrid mutex 和 hybrid spinlock。
+  - hybrid mutex: 若没拿到，先 spin，若干时间或若干重试后，再 sleep。也称为 adaptive mutex，如 POSIX 的 PTHREAD_MUTEX_ADAPTIVE_NP、Win32 的 SetCriticalSectionSpinCount。
+  - hybrid spinlock: 若没拿到，先 spin，若干时间后可主动 yield 已让其他线程运行。
+
+编程：
+先用 mutex
 
 A lock which uses busy waiting. (The acquiring of the lock is made by xchg or similar atomic operations).
 
