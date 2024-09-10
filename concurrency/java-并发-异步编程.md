@@ -1,6 +1,36 @@
 # 同步机制
 
 
+java 中的 lock 可分成两类
+- synchronization lock
+- java.util.concurrent 包中的 lock
+  - Lock interface, ReadWriteLock interface
+  - LockSupport blocking primitive
+  - Condition condition
+  - Abstract{Ownable, Queued, QueuedLong}Synchronizer abstract classes
+  - ReentrantLock exclusive lock, ReentrantReadWriteLock read-write lock
+
+JUC lock 的不同语义：
+- fair/unfair: 不同线程 acquire lock 的机制是否 fair
+- reentrant：有些 lock 可被同一个线程 acquire 多次
+
+AQS, AbstractQueuedSynchronizer 类：管理各种 lock 的抽象类。lock 的很多 public 方法是在这个类中定义的。是 exclusive lock 和 shared locks 的共同的父类。
+
+- exclusive lock: lock 在某一时刻只能被一个 thread 持有。如 ReentrantLock 和 ReentrantReadWriteLock.WriteLock。
+  - 可分为 fair 和 unfair 两种
+- shared lock: lock 在某一时刻可被多个 thread 持有，可共享。如 ReentrantReadWriteLock.ReadLock, CyclicBarrier, CountDownLatch and Semaphore 等。<font color=red>(吕：存疑，从概念上，后面这些不算 lock 吧？)</font>
+
+CLH queue (Craig, Landin, and Hagersten lock queue): AQS 中的 waiting-for-lock thread queue
+- 是个 non-blocking FIFO queue。意思是，当 insert/remove 一个元素，it will not block under concurrent conditions, but through spin lock and CAS to ensure the atomicity of node insertion and removal. <font color=red>没看太明白</font>
+
+fair, unfair: 在 ReentrantLock 的构造函数中指定。缺省为 unfair（效率高）。
+- fair: 每个想 acquire lock 的 thread 都会被放到 CLH queue 中，按照 FIFO 方式排队。
+- unfair: 先试图直接拿 lock；若不成功，则放入 CLH queue，后面跟 fair 情况一样。
+比较：
+- unfair 效率高，fair 因大量线程切换而有性能损失。
+- unfair 刚释放锁的线程再次获取同步状态的概率比较大，会出现连续获取锁的情况。fair 可减少「饥饿」发生的概率，等待越久的请求越是可以得到最先满足。
+
+
 # synchronized 关键字，利用 object 的 intrinsic lock
 
 java 1.5 之前，只能用 synchonized 关键字
@@ -13,6 +43,7 @@ synchronization 的两个方面：
 - enforcing exclusive access to an object's state
 - establishing happens-before relationships that are essential to visibility
 
+两类：
 - synchronized method 同步方法
 - synchronized statement 同步代码块：一段代码，显式
 
@@ -91,7 +122,7 @@ since java 1.5。比 synchronized 关键字更好。
 
 例，[代码](code/rw-counter-demo.java)
 ```java
-    private final ReadWriteLock rwlock = new ReentrantReadWriteLock(); // 找不到符号？
+    private final ReadWriteLock rwlock = new ReentrantReadWriteLock();
     private final Lock rlock = rwlock.readLock();
     private final Lock wlock = rwlock.writeLock();
 ```
@@ -110,6 +141,19 @@ https://www.liaoxuefeng.com/wiki/1252599548343744/1309138673991714
 
 https://medium.com/@aayushbhatnagar_10462/java-concurrency-through-stamped-locks-eb65e9a675c1
 
+注意，StampedLock 的 writeLock()、tryOptimisticRead()、readLock() 三个方法，返回的结果并不是个 lock，而是一个 long 类型的「版本」，该「版本」用做各 unlock 方法的参数。以 write 为例：
+
+```java
+// 初以为的方式
+    Lock wlock = stampedLock.writeLock(); // 获取写锁
+    wlock.unlock(); // 释放写锁
+// 实际的方式
+    long stamp = stampedLock.writeLock(); // 获取写锁
+    stampedLock.unlockWrite(stamp); // 释放写锁
+```
+
+实际代码示例：
+
 ```java
     private final StampedLock stampedLock = new StampedLock();
     
@@ -126,23 +170,25 @@ https://medium.com/@aayushbhatnagar_10462/java-concurrency-through-stamped-locks
     }
 ```
 
-
 # concurrent 包中的 synchronizer
 
 `java.util.concurrent` 包含的，如下，都称为 synchronizer。可避免使用「lock + condition object + synchronized keyword」。 
 
+- Condition (不是 `java.util.concurrent` 中的，而是 `java.util.concurrent.locks` 中的。<font color=red>严格说可能不算 synchronizer?</font>)
+- Semaphore
 - CyclicBarrier
 - Phaser
 - CountDownLatch
 - Exchanger
-- Semaphore
 - SynchronousQueue
 
 # Condition (就是 condition variable)
 
 wait-and-notify 机制是与特定对象及其上的锁是绑定在一起的，锁和唤醒对象不能分开，这在某些情况下不是很方便
 
-更好的方法：jdk 1.5 提供的 Condition，与其它语言几乎一致的 condition variables 机制
+更好的方法：jdk 1.5 提供的 Condition，与其它语言几乎一致的 condition variables 机制。只是方法名不同。对比：
+- Java: `await()`, `signal()`, `signalAll()`
+- C++: `wait()`, `notify_one()`, `notify_all()`
 
 Condition 对象由 Lock.newCondition() 方法生成，从而允许一个 lock 产生多个 condition，可以根据实际情况来等待不同条件
 
@@ -286,18 +332,24 @@ lazySet() 不是。lazySet() does not act as happens-before edges in the code.
 
 两者都是 interface。ExecutorService 继承自 Executor。提供的方法，用于任务提交和管理。
 
+Executor 只有一个方法：`void execute(Runnable command)`。用法示例：
+
+```java
+    Executor executor = Executors.newSingleThreadExecutor();
+    executor.execute(() -> System.out.println("Hello World"));
+```
+
 ExecutorService 的两个重要实现：
 - ThreadPoolExecutor
 - ScheduledThreadPoolExecutor
 
-FixedThreadPool：线程数固定的线程池；
-CachedThreadPool：线程数根据任务动态调整的线程池；
-SingleThreadExecutor：仅单线程执行的线程池。
-
-关闭 thread pool：
-- shutdown() 等正在执行的任务完成，再关闭
-- shutdownNow() 立刻停止正在执行的任务
-- awaitTermination() 等待指定的时间，再关闭
+由 Executors 的静态方法创建：
+- `newSingleThreadExecutor()`：仅单线程执行的线程池。
+- `newFixedThreadPool()`：线程数固定的线程池；
+- `newCachedThreadPool()`：线程数根据任务动态调整的线程池；
+- `newScheduledThreadPool()`：可过一段时间执行，或周期性重复执行
+- `newSingleThreadScheduledExecutor()`：结合 single thread 和 scheduled
+- `newWorkStealingPool()`：用所有 available processors 作为其 target parallelism level
 
 ExecutorService 可执行 Runnable 和 Callable 两种类型的 task。
 
@@ -307,10 +359,10 @@ ExecutorService 可执行 Runnable 和 Callable 两种类型的 task。
 - `T invokeAny()`：任意执行一个任务，返回其结果
 - `List<Future<T>> invokeAll()`：返回所有任务的 future list
 
-关闭任务：
-- `shutdown()`
-- `shutdownNow()`
-- `awaitTermination()`
+关闭任务、关闭 thread pool：
+- `shutdown()` 等正在执行的任务完成，再关闭
+- `shutdownNow()` 立刻停止正在执行的任务
+- `awaitTermination()` 等待指定的时间，再关闭
 
 ExecutorService 的多种类型：
 
@@ -366,23 +418,34 @@ Thread 和 Runnable 的共同缺陷：执行完任务后，无法获取结果
 Callable，可以认为是增强版的 Runnable。表示一个待执行的 task。泛型接口。只有一个 call() 方法，返回类型就是泛型 V。
 
 Runnable vs. Callable
-- Callable.call() 有返回值，可用 Future 或 FutureTask 得到。Runnable.run() 无返回值，自然也无机制得到返回值。
+- `Callable.call()` 有返回值，可用 Future 或 FutureTask 得到。`Runnable.run()` 无返回值，自然也无机制得到返回值。
 - Callable 可抛出异常，Runnable 不能。
+- Callable 需 `import java.util.concurrent.Callable`，Runnable 不需要。
 
 Runnable 和 Callable 的两种用法：(1) 用 thread; (2) 用 executor service。
 
 两种用法，[完整代码](code/runnable_callable_demo.java)
+
 ```java
+// 以下用 Wrapper 表示：待执行的实际代码包装而成的 Runnable 或 Callable 类
+
+// Runnable 用法一，用 thread 启动 task
+    new Thread(new Wrapper(args)).start();
+
+// Runnable 用法二，用 executor service 启动 task
+    ExecutorService es = Executors.newSingleThreadExecutor();
+    es.submit(new Wrapper(args)); // 不用管返回值
+    es.shutdown();
+
 // Callable 用法一，用 thread 启动 task，得到 future task 对象，再从中 get()
-    FactorialTask task = new FactorialTask(6); // task 也可用 Callable<> 类型
-    FutureTask<Integer> futureTask = new FutureTask<>(task);
+    Wrapper t = new Wrapper(args); // task 也可用 Callable<> 类型
+    FutureTask<Integer> futureTask = new FutureTask<>(t);
     new Thread(futureTask).start(); // 启动线程
     Integer result = futureTask.get();
-    
+
 // Callable 用法二，用 executor service 提交 task，返回 Future 对象，再从中 get()
     ExecutorService es = Executors.newSingleThreadExecutor();
-    FactorialTask task = new FactorialTask(5);
-    Future<Integer> future = es.submit(task);
+    Future<Integer> future = es.submit(new Wrapper(args));
     Integer result = future.get();
     es.shutdown();
 ```
@@ -421,6 +484,12 @@ to add later
 	    implements Future, CompletionStage
 ```
 
+是 Future 的演进（受 google Listenable Future 刺激）。可把多个 task 串在一起。You can use them to tell some worker thread to "go do some task X, and when you're done, go do this other thing using the result of X"。可使用某操作的结果，而不用阻塞线程地等该结果。
+
+使用 thread pool
+- 默认情况下，CompletableFuture 用 `ForkJoinPool.commonPool()` 作为它的线程池
+- 也可自行提供 executor 作为 `supplyAsync()` 和 `runAsync()` 的第二个参数
+
 简单用法
 
 ```java
@@ -428,6 +497,16 @@ to add later
     // ...
     String result = cf.get(); // 其值为 "Hello"
 ```
+
+取结果，用 `get()` 或 `join()`。二者都 blocking 直至任务完成。区别：
+- `get()`
+  - 继承自 Future。为向后兼容。
+  - 可一直等，也可设置 timeout
+  - 抛出 checked exception，可能是 Interrupted、Execution 或 Timeout。（注意，checked exception 必须 declare 或 catch）
+- `join()`
+  - CompletableFuture 特有。推荐使用。
+  - 只能一直等
+  - 抛出 unchecked exception，是 CompletionException。（注意，unchecked exception 不需要 declare 或 catch）
 
 异步计算阶乘，[完整代码](code/CompletableFutureTest.java)
 
@@ -437,9 +516,79 @@ to add later
     while (!cf.isDone()) {
         System.out.println("CompletableFuture is not finished yet...");
     }
-    long result = cf.get();
+    long result = cf.join();
 ```
-to add later
+
+可以手动强行结束任务
+
+```java
+    CompletableFuture<String> cf = CompletableFuture.supplyAsync(() -> threadSleep()); // sleep 很长时间
+    cf.complete("manually completed"); // 强行结束，并提供了一个返回值
+    System.out.println("result: " + completableFuture.get()); // 输出人工提供的返回值 "manually completed"
+    System.out.println("done? " + cf.isDone()); // 输出 True！人工强行结束，也是结束！
+```
+
+提交任务
+- supplyAsync(): 有返回值
+- runAsync(): 无返回值
+
+任务正常完成后：
+- `thenApply()`, `thenApplyAsync()`: 对任务结果做「转换」：以任务结果为输入，有返回值
+- `thenAccept()`, `thenAcceptAsync()`: 对任务结果做「消费」：以任务结果为输入，无返回值
+- `thenRun()`, `thenRunAsync()`: 执行一个额外任务，不依赖于任务结果：无输入，无返回值
+
+
+两个操作串起来，前者的返回值作为后者的输入。`thenApply()` 貌似就是所谓 continuation。
+
+```java
+    ExecutorService exec = Executors.newSingleThreadExecutor(); // 自行提供 thread pool
+    CompletableFuture<Integer> cf = CompletableFuture.supplyAsync(new MySupplier(), exec); // 自行提供 thread pool
+    System.out.println(cf.isDone()); // False
+    CompletableFuture<Integer> cf2 = cf.thenApply(new PlusOne());
+    System.out.println(cf2.get()); // waits until the "calculation" is done, then prints 2
+
+// 或简单点：
+    CompletableFuture<Integer> cf = CompletableFuture.supplyAsync(new MySupplier())
+            .thenApply(new PlusOne());
+    Integer result = cf.get();
+```
+
+例：转换、消费
+
+```java
+    cf.thenApply(i -> { return "Processed " + i; })
+      .thenAccept(i -> { System.out.println(i); });
+```
+
+合并多个 CompletableFuture，等它们全部完成、或其中任意一个完成：
+
+- `allOf()`: 等所有完成
+- `anyOf()`: 等任意一个完成
+
+```java
+    CompletableFuture<String> f1 = CompletableFuture.supplyAsync(() -> "Result 1");
+    CompletableFuture<String> f2 = CompletableFuture.supplyAsync(() -> "Result 2");
+
+// Void (注意不是 void) 类型。不处理「每个」返回值，也没有「合并」的返回值。
+    CompletableFuture<Void> cf = CompletableFuture.allOf(f1, f2);
+    cf.thenRun(() -> System.out.println("All tasks completed."));
+
+// Void 类型。用 thenAccept()，处理「每个」返回值；但没有「合并」的返回值
+    CompletableFuture.allOf(f1, f2, f3)
+      .thenAccept(__ -> sayHelloToAll(f1.join(), f2.join(), f3.join()));
+
+// String 类型。用 thenApply()，以「每个」返回值为输入，经运算得到「合并」的返回值
+    CompletableFuture<String> names = CompletableFuture.allOf(f1, f2, f3)
+      .thenApply(__ -> f1.join() + "," + f2.join() + "," + f3.join());
+
+// 再加上 error handling
+    CompletableFuture<String> names = CompletableFuture.allOf(f1, f2, f3)
+      .thenApply(__ -> f1.join() + "," + f2.join() + "," + f3.join())
+      .exceptionally(err -> {
+          System.out.println("oops, there was a problem! " + err.getMessage());
+          return "names not found!";
+      });
+```
 
 ref: https://www.baeldung.com/java-completablefuture
 
@@ -461,7 +610,7 @@ Optional 的  orElse() vs. orElseGet()
 orElse() 不管 optional 是否为空，都会执行。（不为空时，返回值不会使用）
 orElseGet() 只在 optional 为空时执行
 
-vela框架中，用了 ListenableFuture, 但取结果仍然用了 future.get(timeout, unit) 而不是 listener 方式。
+vela 框架中，用了 ListenableFuture, 但取结果仍然用了 future.get(timeout, unit) 而不是 listener 方式。
 它包装了 exception handling。
 我要不要自己试试，直接用 get 而不用他包装了的 catchingOptional(get) 方式，看看 exception？
 

@@ -120,23 +120,23 @@ std::lock() 函数，可一次性 lock 两个或多个 mutex，而不会造成 d
     friend void swap(T& a, T& b) {
         if (&a == &b) { return; } // 确保两个对象不同
 
-        // 法一、法二顺序相反
+    // 法一、法二顺序相反
 
-        // 法一，先用 defer 方式用 lock_guard 来管理两个 mutex。defer 方式：创建 lock 后，mutex 并不上锁。
-        // 再用 std::lock() 把它俩一起上锁。
-        // 最后 unique_lock 析构时会自动给两个 mutex 解锁。
-        std::unique_lock<std::mutex> ulock_a(a.mtx, std::defer_lock);
-        std::unique_lock<std::mutex> ulock_b(b.mtx, std::defer_lock);
-        std::lock(ulock_a, ulock_b);
-
-        // 法二，先用 std::lock() 给两个 mutex 都上锁
-        // 再用 lock_guard 来管理两个 mutex。用 adopt 方式，「收养」两个已上锁的 mutex。
-        // 最后 unique_lock 析构时会自动给两个 mutex 解锁。
+    // 法一，先用 std::lock() 给两个 mutex 都上锁
+    // 再用 lock_guard 来管理两个 mutex。用 adopt 方式，「收养」两个已上锁的 mutex。
+    // 最后 lock_guard 析构时会自动给两个 mutex 解锁。
         std::lock(a.mtx, b.mtx);
         std::lock_guard<std::mutex> guard_a(a.mtx, std::adopt_lock);
         std::lock_guard<std::mutex> guard_b(b.mtx, std::adopt_lock);
 
-        // 法三，用 scoped_lock，一句话就行。c++17 新特性
+    // 法二，先用 defer 方式用 lock_guard 来管理两个 mutex。defer 方式：创建 lock 后，mutex 并不上锁。
+    // 再用 std::lock() 把它俩一起上锁。
+    // 最后 unique_lock 析构时会自动给两个 mutex 解锁。
+        std::unique_lock<std::mutex> ulock_a(a.mtx, std::defer_lock);
+        std::unique_lock<std::mutex> ulock_b(b.mtx, std::defer_lock);
+        std::lock(ulock_a, ulock_b);
+
+    // 法三，用 scoped_lock，一句话就行。c++17 新特性
         std::scoped_lock guard(a.mtx, b.mtx);
 
         my_swap(a.some_detail, b.some_detail);
@@ -146,6 +146,7 @@ std::lock() 函数，可一次性 lock 两个或多个 mutex，而不会造成 d
 unique_lock 并不总是拥有它对应的 mutex
 
 初始化 unique_lock 时，第二个参数用 std::defer_lock 选项，表示：在构造期间，mutex 应处于 unlocked 状态。
+
 晚点，有两种方式给 mutex 上锁：
 - 调用 unique_lock.lock()（注意，不是调用 mutex.lock()）
 - 把 unique_lock 对象传给 std::lock() 函数
@@ -246,7 +247,7 @@ lazy initialization
         connection_handle connection;
         std::once_flag connection_init_flag;
         void open_connection() {
-            connection=connection_manager.open(connection_details);
+            connection = connection_manager.open(connection_details);
         }
         X(connection_info const& c_): connection_details(c_) {}
     
@@ -284,12 +285,12 @@ std::shared_mutex (since c++17)
 - write：调用 lock()
 - read：调用 lock_shared()
 
-std::shared_lock (since c++14)
+std::shared_lock (since c++14)，以 raii 方式管理 std::shared_mutex
 - 构造时：尝试以 lock_shared() 锁住传入的 mutex
 - 析构时：确保以 unlock_shared() 的方式释放 mutex
 - 平时：可使用 lock() 和 unlock()，以「共享方式」获取和释放 mutex
 
-reader-writer lock 读写锁
+reader-writer lock 读写锁，用 std::shared_mutex 和 std::shared_lock 实现
 - std::shared_mutex 或 std::shared_timed_mutex，结合 std::shared_lock
 - reader/writer 用同一个 mutex 对象
 - writer: 还用普通的 std::lock_guard 或 std::unique_lock

@@ -78,3 +78,7 @@ MERGE_THRESHOLD，缺省值 50%，对应 B+ tree 定义里「每个 node 至少�
 
 - page merges 在 delete 或 update 时发生。(update 的 row size 变小，导致 page size 低于 threshold)
 - page splits 在 Insert 或 Update 时发生，通常导致 page dislocation（逻辑上连续，但物理上不连续，很多时候在不同的 extent 里）
+
+## 
+
+[一篇介绍B树和数据库索引的文章](https://planetscale.com/blog/btrees-and-database-indexes)

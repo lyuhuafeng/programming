@@ -17,13 +17,12 @@ class FactorialRunnable implements Runnable {
         }
         System.out.println("Factorial of " + number + ": " + fact);
     }
-
 }
 
-class FactorialTask implements Callable<Integer> {
+class FactorialCallable implements Callable<Integer> {
     int number;
 
-    public FactorialTask(int number) {
+    public FactorialCallable(int number) {
         this.number = number;
     }
     public Integer call() throws Exception {
@@ -41,7 +40,7 @@ public class runnable_callable_demo {
     }
     private static void test_runnable_es() {
         ExecutorService es = Executors.newSingleThreadExecutor();
-        Future future = es.submit(new FactorialRunnable(7));
+        es.submit(new FactorialRunnable(7)); // 返回类型为 Future<?>，但不需要
         es.shutdown();
     }
     private static void test_runnable_anonymous() {
@@ -74,9 +73,9 @@ public class runnable_callable_demo {
     }
 
     private static void test_callable_thread() {
-        FactorialTask task = new FactorialTask(6); // 也可以用 Callable<> 类型
+        FactorialCallable task = new FactorialCallable(6); // 也可以用 Callable<> 类型
         // 紧凑写法
-        // FutureTask<Integer> futureTask = new FutureTask<>(new FactorialTask(6));
+        // FutureTask<Integer> futureTask = new FutureTask<>(new FactorialCallable(6));
         FutureTask<Integer> futureTask = new FutureTask<>(task);
         new Thread(futureTask).start();
         try {
@@ -89,7 +88,7 @@ public class runnable_callable_demo {
 
     private static void test_callable_es() {
         ExecutorService es = Executors.newSingleThreadExecutor();
-        FactorialTask task = new FactorialTask(5);
+        FactorialCallable task = new FactorialCallable(5);
         Future<Integer> future = es.submit(task);
         try {
             Integer result = future.get();

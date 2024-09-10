@@ -8,7 +8,9 @@ key 不是直接保存在节点中。一个节点对应的 key 值，是从 root
 
 注意，root 节点不包含字符，是个 dummy 节点。
 
-![pic](pics/trie-demo.png) 本 trie 包括的 key 集合：{"a", "to", "tea", "ted", "ten", "i", "in", "inn"} 。
+![pic](pics/trie-demo.png)
+
+本 trie 包括的 key 集合：{"a", "to", "tea", "ted", "ten", "i", "in", "inn"} 。
 
 ## 用法一：统计单词数量
 

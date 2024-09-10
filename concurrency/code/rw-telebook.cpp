@@ -13,7 +13,7 @@ std::unordered_map<std::string, int> tele_book {
 
 std::shared_timed_mutex mtx;
 
-void addToTeleBook(const std::string& na, int tele){
+void addToTeleBook(const std::string& na, int tele) {
     std::lock_guard<std::shared_timed_mutex> wlock(mtx);
     std::cout << "\nSTARTING UPDATE " << na;
     std::this_thread::sleep_for(std::chrono::milliseconds(500));

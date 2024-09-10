@@ -17,14 +17,12 @@
 
 ## 避免使用 subtraction trick
 
-因为不用返回 -1, 0, +1，所以一个常见 trick 是直接返回二值相减的结果。
+因为不用返回 -1, 0, +1，所以一个常见 trick 是直接返回二值相减的结果。此法逻辑上正确，但减法结果可能超出数据范围，导致出错，故应避免此法。
 
 ```java
 // 逻辑正确，但应避免
 Comparator<Player> comparator = (p1, p2) -> p1.getRanking() - p2.getRanking();
 ```
-
-此法逻辑上正确，但减法结果可能超出数据范围，导致出错，故应避免此法。
 
 # Comparable interface vs. Comparator interface
 
@@ -39,8 +37,8 @@ Comparable 和 Comparator 二者，首选 Comparable。定义了 natural orderin
 二者分别重载 compareTo() 和 compare() 方法。
 
 如何记忆？从英文含义看，
-* "compare to sth" 表示“与 sth 比较”，可见应该只有一个参数，所以属于 Comparable；
-* "compare a and b" 表示“比较 a、b 二者”，自然有两个参数，所以属于 Comparator。
+* "compare to sth" 表示「与 sth 比较」，可见应该只有一个参数，所以属于 Comparable；
+* "compare a and b" 表示「比较 a、b 二者」，自然有两个参数，所以属于 Comparator。
 
 ```java
 class T implements Comparable<T> {

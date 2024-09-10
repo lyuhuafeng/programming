@@ -22,6 +22,7 @@ class TaskQueue {
         }
     }
 
+    // 消费者
     public String getTask() throws InterruptedException {
         mtx.lock(); // 写共享数据前，先上锁
         try {

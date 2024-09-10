@@ -42,9 +42,9 @@ public:
         _cv.wait(ulock, [this]{return _c == 2;});
         // printThird() outputs "third". Do not change or remove this line.
         printThird();
-        _c = 0;
-        ulock.unlock();
-        _cv.notify_all();
+        // _c = 0;
+        // ulock.unlock();
+        // _cv.notify_all();
     }
 };
 

@@ -133,16 +133,16 @@ packaged_task 对象内部包含了两个最基本元素，
 把 future、promise 和 packaged_task 封装了起来。代码最简洁。
 
 - eager evaluation: 任务立即执行
-- lazy evaluation (call-by-need): 当 future.get() 执行时，任务才执行
+- lazy evaluation (call-by-need): 当 `future.get()` 执行时，任务才执行
 
-系统自己决定，是否在单独的线程中执行 std::async。也可以自己指定。
+系统自己决定，是否在单独的线程中执行 `std::async()`。也可以自己指定。
 
-缺省：std::async 立即执行任务
+缺省：`std::async()` 立即执行任务
 - 指定 std::launch::async：是 eager 的，立即执行；在新线程中执行。
 - 指定 std::launch::deferred：是 lazy 的，不立即执行；在同一线程中执行，相当于串行执行。
 
 <font color=red>那为啥还要提供 deferred 方式呢？直接用 do_work() 取代 f = std::async(do_work); f.get(); 不好吗？</font>
-一个可能的场景：lazy evaluation。第一个 get 的人，实际执行，后续 get 的人，直接返回结果。要用 shared_future。相当于把结果储存在 future 中。但为何不存在某对象中呢？ result_object 呢？
+一个可能的场景：lazy evaluation。第一个 get 的人，实际执行，后续 get 的人，直接返回结果。要用 shared_future。相当于把结果储存在 future 中。但为何不存在某对象中呢？result_object 呢？
 
 用 std::launch::async 启动
 - 若返回的 future 赋给变量：async() 立即返回；但 future.get() 会 block 直到任务结束

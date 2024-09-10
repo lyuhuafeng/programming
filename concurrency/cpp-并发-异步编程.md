@@ -1,4 +1,4 @@
-## thread(c++ 11), jthread (c++20)
+## thread (c++ 11), jthread (c++20)
 
 jthread 在生命结束或抛出异常时可自动 join。从而不用自己用 raii 方式封装 thread。
 
@@ -59,14 +59,43 @@ raii 用法
 
 thread 用类的（非静态）成员函数，函数名要用 `&class_name::func_name`，所有参数之前还要多加一个「类对象的地址」参数。
 
-- 若在类内调用，`thread(&class_name::func_name, this, arg1, arg2)`
-- 若在类外调用，`thread(&class_name::func_name, &class_inst, arg1, arg2)`
+- 若在类内调用，`thread(&class_name::func_name, this, arg1, arg2)`。「类对象的地址」是 this。
+- 若在类外调用，`thread(&class_name::func_name, &class_inst, arg1, arg2)`。「类对象的地址」是 &class_inst。
 
 [完整代码](code/thread-using-class-member-func.cpp)
 
 ### jthread
 
 to add
+
+### thread 的返回值
+
+上面介绍的用法，对 thread 是「发射后不管」的（fire-and-forget），或者「发射后无法管」，无法拿到其返回值。
+
+（更严格地说，再 detach 以下，才是真正的「不管」：`std::thread([](){ run_async_task(); }).detach();`。）
+
+如何得到返回值？
+
+法一：用 promise/future。在 thread 中，把结果放到 promise 中，在 thread 外从相应的 future 里读。例：[代码](code/thread-result-by-future-promise.cpp)，[promise-future-div-prod.cpp](code/promise-future-div-prod.cpp)
+
+```cpp
+    // 注意 move 语义，两个 &
+    void func(std::promise<int> && p) { p.set_value(17); }
+
+    std::promise<int> p;
+    std::future<int> f = p.get_future();
+    std::thread t(func, std::move(p)); // 必须用 move()
+    t.join();
+    int i = f.get();
+```
+
+法二：用 async 结合 future，不用 promise，连 thread 都不用了。
+
+```cpp
+    int func() { return 17; }
+    std::future<int> ret = std::async(&func);
+    int i = ret.get();
+```
 
 ## overview
 

@@ -1,9 +1,9 @@
 #include <mutex>
 using namespace std;
 
-class some_big_object {};
+class some_big_object { /* omitted */};
 
-void my_swap(some_big_object& lhs,some_big_object& rhs);
+void my_swap(some_big_object& lhs,some_big_object& rhs) { /* omitted */ };
 
 class T {
 private:
@@ -15,7 +15,7 @@ public:
     friend void swap(T& lhs, T& rhs) {
         if (&lhs == &rhs) {
             return;
-        } // 确保两个对象不同，否则下面 lock() 将试图对一个 mtx 做两次 lock，后果 undefined
+        } // 确保两个对象不同。否则，下面 lock() 将对一个 mtx 做两次 lock，后果 undefined
 
         std::unique_lock<std::mutex> ulock_a(lhs.mtx, std::defer_lock);
         std::unique_lock<std::mutex> ulock_b(rhs.mtx, std::defer_lock);

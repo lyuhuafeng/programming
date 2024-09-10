@@ -1,5 +1,6 @@
-import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 class Counter {
     private final ReadWriteLock rwlock = new ReentrantReadWriteLock();
@@ -23,5 +24,13 @@ class Counter {
         } finally {
             rlock.unlock(); // 释放读锁
         }
+    }
+}
+
+class rw_counter_demo {
+    public static void main(String[] args) {
+        Counter counter = new Counter();
+        counter.inc(5);
+        System.out.println("count[5] = " + counter.get(5));
     }
 }

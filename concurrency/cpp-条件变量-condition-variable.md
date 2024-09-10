@@ -81,22 +81,22 @@ consumer 的四种写法。推荐把 predicate 作为参数传给 wait()，也�
 }
 ```
 
-consumer 中的 cv.wait(ulock) 函数会自动释放 ulock（若不释放，producer 线程无法修改「状态变量」），使线程进入 wait 状态，等待 cv 信号；consumer 收到信号后，wait() 会自动重新 acquire mutex 并返回。也就是说，wait 返回后，mtx 是 locked 状态，此时可以检查或写「状态变量」。
+consumer 中的 `cv.wait(ulock)` 函数会自动释放 ulock（若不释放，producer 线程无法修改「状态变量」），使线程进入 wait 状态，等待 cv 信号；consumer 收到信号后，`cv.wait()` 会自动重新 acquire mutex 并返回。也就是说，wait 返回后，mtx 是 locked 状态，此时可以检查或写「状态变量」。
 
 注意，即使 data_ready 是 atomic 类型的，也需要用 mutex 来保护它。为何？如下所示，如无 mutex 保护，则可能：(1) data_ready == false; (2) producer 在这个 time window 里改了 data_ready 并发了 notification，但此时我这边还没进入 wait 状态，没收到该 notification; (3) 一直 wait 下去。
 
 ```cpp
-    //--- wait until data are prepared ---
+    //--- 若 data_ready 没有用 mutex 来保护 ---
     std::unique_lock<std::mutex> ulock(mtx);
-    while (!data_ready.load()) { // (1)
-        do_work(); // (2) a time window
-        cv.wait(ulock); (3)
+    while (!data_ready.load()) { // (1) 此时 data_ready == false，从而进入循环体
+        do_work(); // (2) a time window，对方在这个 time window 里改了 data_ready 并发了通知（但我没收到）
+        cv.wait(ulock); // (3) 收不到通知，一直 wait 下去
     }
 ```
 
 所以，mutex 保护的是 check-wait 这个整体。若有了 mutex 保护，则有两种可能的执行顺序，都是正确的：
 - (1) consumer 先拿到锁，进入 wait 状态并释放锁；producer 拿到锁，改了 data_ready 并发通知；consumer 从 wait 中醒来，在 while 处检查成功，退出 while 循环，进入后续流程。
-- 或者(2) producer 先拿到锁，干活，改 data_ready 并发通知；consumer 在 producer 改完 data_ready（并自动释放锁）之后，拿到锁，在 while 处检查成功，不用 wait 就继续了，对方发的通知被忽略但没关系。
+- 或者 (2) producer 先拿到锁，干活，改 data_ready 并发通知；consumer 在 producer 改完 data_ready（并自动释放锁）之后，拿到锁，在 while 处检查成功，不用 wait 就继续了，对方发的通知被忽略但没关系。
 
 <font color=red>吕注：其实 mutex 除了保护这个 data_ready，还保护了真正的写数据。为啥书上好像都没提这事？</font>
 
@@ -104,7 +104,7 @@ consumer 中，法二，check 和 wait 合并
 
 把 check 用到的 predicate 条件（callable 类型），作为参数，传给 wait()。
 
-注意，这个版本的 wait()，相当于 `while (!data_ready) { cv.wait(ulock); }`，所以，类似地，若调用 wait() 时 data_ready 已经是 true，则不用等到被 notify 就返回了。
+注意，这个版本的 `wait()`，相当于 `while (!data_ready) { cv.wait(ulock); }`，所以，类似地，若调用 `wait()` 时 data_ready 已经是 true，则不用等到被 notify 就返回了。
 
 ```cpp
 {
@@ -117,8 +117,8 @@ consumer 中，法二，check 和 wait 合并
 
 consumer 写法三，增加 wait 最大时长
 
-- wait_until(): 返回值是 std::cv_status::timeout 或 std::cv_status::no_timeout:
-- wait_for(): 嵌入式的，返回值是 bool 类型，表示是否超时。
+- `wait_until()`: 返回值是 `std::cv_status::timeout` 或 `std::cv_status::no_timeout`
+- `wait_for()`: 嵌入式的，返回值是 bool 类型，表示是否超时。
 
 ```cpp
     auto timePoint = std::chrono::system_clock::now() + chrono::seconds(5); // 最多等 5 秒钟
@@ -144,7 +144,8 @@ consumer 写法三，增加 wait 最大时长
 
 不安全的用法：
 
-没有「状态变量」（也就不需要 lock/mutex 来保护对该「状态变量」的访问）。在 producer 中直接 notify_one() 或 notify_all()，在 consumer 中直接 wait()。
+没有「状态变量」（也就不需要 lock/mutex 来保护对该「状态变量」的访问）。在 producer 中直接 `notify_one()` 或 `notify_all()`，在 consumer 中直接 `wait()`。
+
 ```cpp
     // global condition variable, shared by both
     std::condition_variable cv;
@@ -155,12 +156,12 @@ consumer 写法三，增加 wait 最大时长
 ```
 
 这样简单粗暴的使用，在大多数情况下都是 work 的。但不安全，有两个问题：
-- lost wakeup: 若 notify 发生在 wait() 之前，其 signal 不会被 consumer 收到，而 consumer 稍后调用 wait() 就会一直等下去。
+- lost wakeup: 若 notify 发生在 `wait()` 之前，其 signal 不会被 consumer 收到，而 consumer 稍后调用 `wait()` 就会一直等下去。
 - spurious wakeup: 有些库写得有 bug，在没有 notify 的情况下，wait 也会返回。导致不能确定，是否是 thread A 唤醒了我。
 
 所以，不能单独使用 cv。必须有个状态变量（condition），如上面代码中的 data_ready。
-- 简单粗暴：notify() 通知：现在好了
-- 正确：notify() 通知：现在可以去检查一下 condition，看是不是好了
+- 简单粗暴：`notify()` 通知：现在好了
+- 正确：`notify()` 通知：现在可以去检查一下 condition，看是不是好了
 
 既然有了变量 condition，就得用 mutex 来保护它。
 
@@ -176,6 +177,6 @@ consumer 写法三，增加 wait 最大时长
 Thread 1 calls the wait on condition variable, which internally acquires the mutex and check if required condition is met or not.
 If not then it releases the lock and waits for Condition Variable to get signaled ( thread gets blocked). Condition Variable’s wait() function provides both these operations in atomic manner.
 
-- producer: 当 condition 满足时，producer 通知（signals the condition varialbe)
+- producer: 当 condition 满足时，producer 通知（signals the condition varialbe）
 
 - consumer: 当 condition varialbe 被 signal 了，正在等待该 signal 的 consumer 重新开始运行。它重新 acquire mutex 并检查 doncition 是否满足，或者是个 superiors call. 若 superiors，它再次调用 wait.
