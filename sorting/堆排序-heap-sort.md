@@ -24,7 +24,7 @@ Ordering property
 英语学习：sift: v. 筛、筛选
 
 - sift down: 若一节点值太小，则将它与其 larger child 交换。若还小，继续同样交换，使其一路向下，直至合适位置（它大于它的两个 children）。
-- sift up: 若一节点值太大，则将它与其 parent 交换。若还大，继续同样交换，使其一路向上，直至合适位置（它大于它的两个 children）。
+- sift up: 若一节点值太大，则将它与其 parent 交换。若还大，继续同样交换，使其一路向上，直至合适位置（它小于其 parent）。
 
 ## sift_down，调整 `a[start, end]` 范围，使之成为 heap
 

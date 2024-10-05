@@ -1,3 +1,102 @@
+## thread (c++ 11), jthread (c++20)
+
+jthread 在生命结束或抛出异常时可自动 join。从而不用自己用 raii 方式封装 thread。
+
+### thread
+
+基本用法。注意 thread 对象构造后，要调用 `t.join()` 或 `t.detach()`。
+
+```cpp
+    class tag_node { int a; int b; };
+    void func(tag_node node) { ... }
+    void func2(tag_node &node) { ... }
+
+    tag_node node;
+
+    // 函数参数是 value 类型，传 value 或传 reference 都可正常运行，但没有改变 node 内容
+    thread t(func, node);
+    thread t(func, ref(node));
+    tag_node& n2 = node;
+    thread t(func, n2);
+    thread t(func, ref(n2));
+    t.join();
+
+    // 函数参数是 reference 类型，传 value 则编译报错，传 reference 可正常运行，且改变了 node 内容
+    // thread t(func2, node); // 编译出错
+    // thread t(func2, n2); // 编译出错
+    thread t(func2, ref(node)); // 正确
+    thread t(func2, ref(n2));   // 正确：n2 已经是个 reference，但也要用 ref()
+    t.join();
+```
+
+raii 用法
+
+```cpp
+    class thread_guard {
+    private:
+        std::thread& t_;
+    public:
+        explicit thread_guard(std::thread& t) : t_(t) {}
+        ~thread_guard() {
+            if (t_.joinable()) {
+                t_.join();
+            }
+        }
+        thread_guard(const thread_guard&) = delete;
+        thread_guard& operator=(const thread_guard&) = delete;
+    };
+
+    void do_something(int local_status);
+
+    void show() {
+        int local_status = 0;
+        std::thread t = std::thread{do_something, local_status};
+        thread_guard g{t};
+        do_domething_in_current_thread();
+        // g 析构时，会调用 t.join()
+    }
+```
+
+thread 用类的（非静态）成员函数，函数名要用 `&class_name::func_name`，所有参数之前还要多加一个「类对象的地址」参数。
+
+- 若在类内调用，`thread(&class_name::func_name, this, arg1, arg2)`。「类对象的地址」是 this。
+- 若在类外调用，`thread(&class_name::func_name, &class_inst, arg1, arg2)`。「类对象的地址」是 &class_inst。
+
+[完整代码](code/thread-using-class-member-func.cpp) 内含 `std::bind()` 的用法说明。
+
+### jthread
+
+to add
+
+### thread 的返回值
+
+上面介绍的用法，对 thread 是「发射后不管」的（fire-and-forget），或者「发射后无法管」，无法拿到其返回值。
+
+（更严格地说，再 detach 一下，才是真正的「不管」：`std::thread([](){ run_async_task(); }).detach();`。）
+
+如何得到返回值？
+
+法一：用 promise/future。在 thread 中，把结果放到 promise 中，在 thread 外从相应的 future 里读。例：[代码](code/thread-result-by-future-promise.cpp)，[promise-future-div-prod.cpp](code/promise-future-div-prod.cpp)
+
+```cpp
+    // 注意 move 语义，两个 &
+    void func(std::promise<int> && p) { p.set_value(17); }
+
+    std::promise<int> p;
+    std::future<int> f = p.get_future();
+    std::thread t(func, std::move(p)); // 必须用 move()
+    t.join();
+    int i = f.get();
+```
+
+法二：用 async 结合 future，不用 promise，连 thread 都不用了。
+
+```cpp
+    int func() { return 17; }
+    std::future<int> ret = std::async(&func);
+    int i = ret.get();
+```
+## task 机制
 
 task 机制，可以认为是 future 和 promise 之间的 data channel
 

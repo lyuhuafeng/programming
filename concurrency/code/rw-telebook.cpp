@@ -25,8 +25,8 @@ void addToTeleBook(const std::string& na, int tele) {
 void printNumber(const std::string& na){
     std::shared_lock<std::shared_timed_mutex> rlock(mtx);
 
-    // 不能直接用 [] 访问。若 key 不存在，会创建一个，是写操作！会导致 race condition!
-    // std::cout << na << ": " << tele_book[na] << std::endl; 
+    // 不能直接用 [] 访问！若 key 不存在，会创建一个，是写操作！会导致 race condition!
+    // std::cout << na << ": " << tele_book[na] << std::endl; // 错误！
 
     // 正确做法
     auto it = tele_book.find(na);

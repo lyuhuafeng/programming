@@ -16,9 +16,9 @@ JUC lock 的不同语义：
 
 AQS, AbstractQueuedSynchronizer 类：管理各种 lock 的抽象类。lock 的很多 public 方法是在这个类中定义的。是 exclusive lock 和 shared locks 的共同的父类。
 
-- exclusive lock: lock 在某一时刻只能被一个 thread 持有。如 ReentrantLock 和 ReentrantReadWriteLock.WriteLock。
+- exclusive lock: lock 在某一时刻只能被一个 thread 持有。如 ReentrantLock 和 ReentrantReadWriteLock.writeLock。
   - 可分为 fair 和 unfair 两种
-- shared lock: lock 在某一时刻可被多个 thread 持有，可共享。如 ReentrantReadWriteLock.ReadLock, CyclicBarrier, CountDownLatch and Semaphore 等。<font color=red>(吕：存疑，从概念上，后面这些不算 lock 吧？)</font>
+- shared lock: lock 在某一时刻可被多个 thread 持有，可共享。如 ReentrantReadWriteLock.readLock, CyclicBarrier, CountDownLatch and Semaphore 等。<font color=red>(吕：存疑，从概念上，后面这些不算 lock 吧？)</font>
 
 CLH queue (Craig, Landin, and Hagersten lock queue): AQS 中的 waiting-for-lock thread queue
 - 是个 non-blocking FIFO queue。意思是，当 insert/remove 一个元素，it will not block under concurrent conditions, but through spin lock and CAS to ensure the atomicity of node insertion and removal. <font color=red>没看太明白</font>
@@ -26,10 +26,10 @@ CLH queue (Craig, Landin, and Hagersten lock queue): AQS 中的 waiting-for-lock
 fair, unfair: 在 ReentrantLock 的构造函数中指定。缺省为 unfair（效率高）。
 - fair: 每个想 acquire lock 的 thread 都会被放到 CLH queue 中，按照 FIFO 方式排队。
 - unfair: 先试图直接拿 lock；若不成功，则放入 CLH queue，后面跟 fair 情况一样。
+
 比较：
 - unfair 效率高，fair 因大量线程切换而有性能损失。
 - unfair 刚释放锁的线程再次获取同步状态的概率比较大，会出现连续获取锁的情况。fair 可减少「饥饿」发生的概率，等待越久的请求越是可以得到最先满足。
-
 
 # synchronized 关键字，利用 object 的 intrinsic lock
 
@@ -127,7 +127,7 @@ since java 1.5。比 synchronized 关键字更好。
     private final Lock wlock = rwlock.writeLock();
 ```
 
-# StampedLock
+# StampedLock：更高效的读写锁
 
 是一种乐观锁。stamp（盖戳）意思就是 lock version。
 
@@ -144,7 +144,7 @@ https://medium.com/@aayushbhatnagar_10462/java-concurrency-through-stamped-locks
 注意，StampedLock 的 writeLock()、tryOptimisticRead()、readLock() 三个方法，返回的结果并不是个 lock，而是一个 long 类型的「版本」，该「版本」用做各 unlock 方法的参数。以 write 为例：
 
 ```java
-// 初以为的方式
+// 初以为的方式，错误！
     Lock wlock = stampedLock.writeLock(); // 获取写锁
     wlock.unlock(); // 释放写锁
 // 实际的方式
@@ -152,20 +152,20 @@ https://medium.com/@aayushbhatnagar_10462/java-concurrency-through-stamped-locks
     stampedLock.unlockWrite(stamp); // 释放写锁
 ```
 
-实际代码示例：
+实际代码示例：[stamped-lock-demo.java](code/stamped-lock-demo.java)
 
 ```java
     private final StampedLock stampedLock = new StampedLock();
     
-    // 写
+    // 写，跟普通 ReadWriteLock 类似
     long stamp = stampedLock.writeLock(); // 获取写锁
     try { /* write data */ } finally { stampedLock.unlockWrite(stamp); } // 写，随后释放写锁
 
     // 读
     long stamp = stampedLock.tryOptimisticRead(); // 获得一个乐观读锁
     /* read data */
-    if (!stampedLock.validate(stamp)) { // 检查：乐观读锁后，是否有其他写锁发生
-        stamp = stampedLock.readLock(); // 获取一个悲观读锁
+    if (!stampedLock.validate(stamp)) { // 检查：乐观读锁后，是否有其他写入。若有写入，则版本号变化，检查失败
+        stamp = stampedLock.readLock(); // 检查失败：获取一个悲观读锁，重新读一次
         try { /* read data */ } finally { stampedLock.unlockRead(stamp); } // 读，随后释放悲观读锁
     }
 ```
@@ -257,7 +257,22 @@ since java 1.5。可支持多个线程同时访问。特点：任何 thread 都�
 
 # Phaser
 
-since java 1.7. 类似 CountDownLatch 和 CyclicBarrier，但更强大，难度也大。
+since java 1.7。取代了 CountDownLatch 和 CyclicBarrier。较难理解，但用起来容易。
+
+[三者比较](https://www.javaspecialists.eu/archive/Issue257-CountDownLatch-vs-CyclicBarrier-vs-Phaser.html)
+
+Phaser 的优点：
+- 可动态指定线程数（parties 数量）。（对比 CountDownLatch：需在创建实例时指定 parties 数量，然后就不能改）
+- 可以 set up Phaser in a tree to reduce contention。以另一个 Phaser 为 parent。（Latch 和 Barrier 无此功能）
+
+一次运行可分为多个 phase，每个 phase 都可重用 Phaser 实例。每个 phase 里都可指定不同的 parties 数量。
+
+- 每个线程要调用 `phaser.register()` 向 Phaser 实例注册自己
+- 每个线程到达 barrier 时，要调用 `phaser.arriveAndAwaitAdvance()` 以通知 Phaser 并等待（故该方法是 blocking 的）。
+- 到达的线程数 == 注册的线程数时，会进入下一个 phase，phase number 增加。`phaser.getPhase()` 返回当前 phase number。
+- 若某线程完事，应调用 `phaser.arriveAndDeregister()` 通知 Phaser 该线程已完成，不再计入该 phase。
+
+例：[代码](code/phaser-demo.java)
 
 # SynchronousQueue 同步队列
 
@@ -279,7 +294,7 @@ since java 1.7. 类似 CountDownLatch 和 CyclicBarrier，但更强大，难度�
 
 Exchanger 可被视为 SynchronousQueue 的双向形式
 
-两个线程之间的数据交换。它提供一个同步点，在这个同步点，两个线程可以交换彼此的数据。这两个线程通过exchange()方法交换数据，当一个线程先执行exchange()方法后，它会一直等待第二个线程也执行exchange()方法，当这两个线程到达同步点时，这两个线程就可以交换数据了。#
+两个线程之间的数据交换。它提供一个同步点，在这个同步点，两个线程可以交换彼此的数据。这两个线程通过 exchange() 方法交换数据，当一个线程先执行 exchange() 方法后，它会一直等待第二个线程也执行 exchange() 方法，当这两个线程到达同步点时，这两个线程就可以交换数据了。
 
 例：见这里：https://www.baeldung.com/java-exchanger
 

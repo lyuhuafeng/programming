@@ -78,6 +78,10 @@ https://www.geeksforgeeks.org/backtracking-introduction/
   - dfs 代码：[`subset-dfs-leet78.java`](code/subset-dfs-leet78.java) 可选项是两个：「选自己」、「不选自己」。不像其他题目，用循环遍历所有可选项。Again，Java 代码，不能直接 `res.add(t)`，而要复制一个新的再加入 `res.add(new ArrayList<>(t))`。
   - 还有一种方法，利用二进制，代码可见我的 C++ 题解。
 
+- [luogu p1088 (NOIP 2004 普及组) 火星人](https://www.luogu.com.cn/problem/P1088) 求某个排列的 next n 排列
+  - dfs by igor: [代码](code/luogu-p1088-martian-dfs-igor.cpp)
+  - 直接用 `std::next_permutation()`: [代码](code/luogu-p1088-martian-stl.cpp)
+
 ## [0-1 背包问题的 dfs 解法](01背包问题的dfs解法.md)
 
 ## dfs 但不需回溯

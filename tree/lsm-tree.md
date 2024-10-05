@@ -1,5 +1,11 @@
+# log-structured merge-tree (LSM tree)
 
-log-structured merge-tree (LSM tree)
+工作原理示意图
+- 写请求首先被存储在内存中的 memtable；当 memtable 满时，数据会刷新到磁盘上的 SSTable，同时写操作被记录在预写日志（WAL）中以确保数据安全。
+- 读请求会优先查找 memtable，然后查找 SSTable。
+- LSM 树采用分层设计，通过周期性的合并和压缩将 SSTable 文件逐步从上层移到下层，以优化磁盘存储和查询性能。
+
+![pic](pics/lsm-tree-arch-by-Saurabh-Dashora.jpeg)
 
 sorted run:
 - 数据放在若干个 sorted run 里。一个 sorted run 包括一个或多个数据文件（sstable file）。每个数据文件只能属于一个 sorted run。

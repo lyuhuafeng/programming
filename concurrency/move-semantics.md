@@ -1,13 +1,13 @@
 
 痛点：临时对象 temporary object 的创建
 
-有时，temporary objects 可被编译器优化掉。例如：the return value optimization
+有时，temporary objects 可被编译器优化掉。例如：the return value optimization (RVO)。
 
-
-
-move constructor
-move assignment operator
-
+为支持 move semantics，引入了：
+- rvalue references
+- move constructor
+- move assignment operator
+- stl 工具，如 `std::move()`, `std::forward()`, etc
 
 To appreciate the use of move semantics, we need to know the scope of it, which brings us to the topic of rvalue and lvalue.
 
@@ -24,23 +24,35 @@ move semantics 建立在 rvalue reference 之上。
     }
 
     // 调用    
-    v = doubleValues( v ); // 2
+    vector<int> v2 = doubleValues(v); // 2
 ```
+
 1. 把 new_values 拷贝一份，并返回之
-2. 返回结果，拷贝一份，赋值给 v。然后返回结果被扔掉。
+2. 返回结果，拷贝一份，赋值给 v2。然后返回结果被扔掉。
 
 
 
 # lvalue, rvalue
 
-lvalue: 可出现在等号左边或右边
-rvalue: 只能出现在等号右边
+In C++ an lvalue is something that points to a specific memory location. On the other hand, a rvalue is something that doesn't point anywhere. In general, rvalues are temporary and short lived, while lvalues live a longer life since they exist as variables. It's also fun to think of lvalues as containers and rvalues as things contained in the containers. Without a container, they would expire.
+
+Let me show you some examples right away.
+
+非正式定义，容易理解：
+lvalue
+- 对应一个内存地址（memory location）
+- 以变量形式存在，生命周期长
+- 可出现在等号左边或右边
+
+rvalue
+- 不对应内存地址。例如 `int x = 6` 中的 `6`，可能在程序运行时的某临时 register 中。
+- temporary, short-lived。无法改变（因不是变量）
+- 只能出现在等号右边
 
 更正式的定义：来自 https://eli.thegreenplace.net/2011/12/15/understanding-lvalues-and-rvalues-in-c-and-c/
 
 lvalue (locator value): 是个有地址的对象。an object that occupies some identifiable location in memory (i.e. has an address)
-rvalue: 一个表达式，不是 lvalue 的。
-所以，rvalue 是临时结果，在 register 中（<font color=red>不对吧，是在 stack 中吧？</font>）。它所在的那行代码执行完后，rvalue 就被扔掉了。
+rvalue: 一个表达式，不是 lvalue 的。所以，rvalue 是临时的，可能在程序运行时存在临时 register 中。它所在的那行代码执行完后，rvalue 就被扔掉了。
 
 历史上，l 只能出现在左边，r 只能出现在右边。现在不是了。
 
@@ -48,12 +60,38 @@ there are lvalues that cannot appear on the left-hand side of an assignment (lik
 
 An rvalue of class type is an expression whose evaluation creates a temporary object. Under normal circumstances, no other expression inside the same scope denotes the same temporary object.
 
-
-
-
 `string name = getName();`
 But you're assigning from a temporary object, not from some value that has a fixed location. getName() is an rvalue.
 
+## 返回 lvalue 和 rvalue 的函数
+
+```cpp
+    int setValue() { return 6; } // 返回 rvalue
+    setValue() = 3; // 错误！返回的 rvalue 不能出现在等号左边，不能被赋值！
+
+    int global = 100;
+    int& setGlobal() { return global; } // 返回 lvalue
+    setGlobal() = 400; // 正确！返回的 lvalue 可以被赋值
+```
+
+# rvalue reference
+
+- rvalue: 不可改变
+- rvalue refernence: 一种新类型，可 bind 到临时对象上，从而可改变这些临时变量的值
+
+传统 c++：可以取 rvalue 的地址，但只能赋给 const (immutable) 变量。更严谨地说法：可以 bind a const lvalue to an rvalue。如下：
+
+```cpp
+    int& x = 666;       // Error
+    const int& x = 666; // OK
+```
+
+since c++11，使用 rvalue reference:
+
+```cpp
+    std::string&& s_rref = s1 + s2; // s_rref 是个 rvalue
+    s_rref += ", my friend"; // 可以改变
+```
 
 c++11 之前，没有 rvalue reference 的概念。临时对象（也就是 rvalue）只能赋给 const lvalue reference，不能赋给 mutable 的。因为马上就消失了，修改没意义。
 ```cpp
@@ -110,7 +148,6 @@ std::move(s) 把 s 标记为 moveable，意为「I no longer need this value her
 
 moved-from object 处在 valid but unspecified 的状态中。
 
-
 ```cpp
     class MetaData {
     private:
@@ -146,6 +183,7 @@ moved-from object 处在 valid but unspecified 的状态中。
 # move assignment operator
 
 以 unique_ptr 为例
+
 ```cpp
     // 普通写法
     unique_ptr& operator=(unique_ptr&& source) { // 注意有 &&，是 rvalue reference
@@ -174,7 +212,7 @@ moved-from object 处在 valid but unspecified 的状态中。
     }
     // 显式返回 rvalue reference
     int && getRvalueInt() {
-        return std::move( x );
+        return std::move(x);
     }
 ```
 
@@ -209,3 +247,43 @@ https://isocpp.org/blog/2012/11/universal-references-in-c11-scott-meyers
 - v.push_back(std::move(obj)) 显式调用 obj 的 move constructor
 
 [完整代码](code/vector-emplace-vs-push.cpp)
+
+#
+
+```cpp
+    #include <utility>
+    
+    template <typename T>
+    void myswap(T &a, T &b) noexcept {
+        T t = std::move(a);
+        a = std::move(b);
+        b = std::move(t);
+    }
+```
+
+# rule of three/five
+
+rule of three, 又称为 the big three, the law of the big three
+
+在 c++ 11 之前，如果一个 class 需要自定义 copy constructor、copy assignment operator 和 destructor 中的人一个，那最好把这三个函数都自定义。
+
+c++ 11 引入了 move semantics，则 rule of 3 变成了 rule of 5：又增加了 move constructor 和 move assignment operator。
+
+注意，把 move constructors 和 move assignment operators 标记为 noexcept，意为「此函数绝对不会抛出异常」，用于优化。注意，在这两个 move 函数中，不要分配内存，也不要调用任何可能抛出异常的代码。只应该 copy data 并把其他对象设置为 null，即 non-throwing 操作。[ref1](https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#f6-if-your-function-may-not-throw-declare-it-noexcept), [ref2](https://stackoverflow.com/questions/9249781/are-move-constructors-required-to-be-noexcept)
+
+
+# RVO (return value optimization)
+
+编译器检测到函数 return object by value，会做优化，避免无用的复制。可用 -fno-elide-constructors 选项关闭此功能。
+
+但，既然有了 RVO，可自动做优化，为何还要自己显式实现 move semantics？
+
+因为 RVO 只是关于函数返回值（output），而不是函数参数（input），即，入参是 moveable objects 的情况。
+
+# copy-and-swap idiom
+
+All the constructors/assignment operators in the Holder class are full of duplicate code, which is not so great. Moreover, if the allocation throws an exception in the copy assignment operator the source object might be left in a bad state. The copy-and-swap idiom fixes both issues, at the cost of adding a new method to the class. [ref1](https://stackoverflow.com/a/3279550/3296421), [ref2](https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Copy-and-swap)
+
+# ref
+
+https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners

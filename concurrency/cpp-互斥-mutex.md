@@ -296,6 +296,6 @@ reader-writer lock 读写锁，用 std::shared_mutex 和 std::shared_lock 实现
 - writer: 还用普通的 std::lock_guard 或 std::unique_lock
 - reader: 用 std::shared_lock
 
-里：电话本 [代码](code/rw-telebook.cpp)
+例：电话本 [代码](code/rw-telebook.cpp)
 
 例：dns cache [代码](code/rw-dns-cache.cpp)

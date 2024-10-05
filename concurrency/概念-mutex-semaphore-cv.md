@@ -34,10 +34,9 @@ https://stackoverflow.com/questions/5869825/when-should-one-use-a-spinlock-inste
   - hybrid mutex: 若没拿到，先 spin，若干时间或若干重试后，再 sleep。也称为 adaptive mutex，如 POSIX 的 PTHREAD_MUTEX_ADAPTIVE_NP、Win32 的 SetCriticalSectionSpinCount。
   - hybrid spinlock: 若没拿到，先 spin，若干时间后可主动 yield 已让其他线程运行。
 
-编程：
-先用 mutex
+编程：先用 mutex
 
-A lock which uses busy waiting. (The acquiring of the lock is made by xchg or similar atomic operations).
+spinlock: A lock which uses busy waiting. (The acquiring of the lock is made by xchg or similar atomic operations).
 
 # lock/mutex vs. semaphore
 
@@ -75,9 +74,10 @@ re-entrant lock 可重入的锁，或称 recursive mutex 递归的: 我以前拿
 
 # lock/mutex shared
 
-本来 lock/mutex 从定义上就不是 shared 的。但 c++ 搞出了 std::shared_mutex
+本来 lock/mutex 从定义上就不是 shared 的。但 c++ 搞出了 std::shared_mutex，java 搞出了 ReadWriteLock。
 
 - c++ std::shared_mutex
+- java ReentrantReadWriteLock (实现了 ReadWriteLock 接口)
 
 有两个 access level
 - shared - several threads can share ownership of the same mutex.
@@ -88,6 +88,20 @@ re-entrant lock 可重入的锁，或称 recursive mutex 递归的: 我以前拿
 - 一个线程内，同时只能拿到一个 lock（shared or exclusive）。<font color=red>是「不可重入」？</font>
 
 主要用于「一写多读」的场景。
+
+```cpp
+// c++
+    std::shared_timed_mutex mtx;
+    std::lock_guard<std::shared_timed_mutex> wlock(mtx);
+    std::shared_lock<std::shared_timed_mutex> rlock(mtx);
+```
+
+```java
+// java
+    private final ReadWriteLock rwlock = new ReentrantReadWriteLock();
+    private final Lock rlock = rwlock.readLock();
+    private final Lock wlock = rwlock.writeLock();
+```
 
 # lock vs. binary semaphore
 
@@ -135,6 +149,8 @@ condition variable
 
 - c++ std::latch = java 里的 CountDownLatch
 - c++ std::barrier = java 里的 CyclicBarrier
+
+分别 since c++ 20, jdk 1.5
 
 两者都是让一些线程 block 住，直到某个 counter 变为 0。
 
