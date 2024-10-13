@@ -53,6 +53,9 @@ void shortest_path(const vector<edge_weight> adj[], int V, int src) {
         visited[u] = true;
         for (auto x : adj[u]) {
             int v = x.to;
+            if (visited[v]) {
+                continue;
+            }
             int weight = x.weight;
             printf("  calc %d -> %d (w:%d)\n", u, v, weight);
             if (dist[v] > dist[u] + weight) {

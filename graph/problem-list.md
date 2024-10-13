@@ -11,6 +11,7 @@
 ## [`leet 743. 网络延迟时间`](https://leetcode.cn/problems/network-delay-time/)
 
 - [使用 priority_queue 的代码](code/network-delay-leet-743-dijkstra.cpp)
+- [使用 priority_queue 但不用 `visited[]` 的代码](code/network-delay-leet-743-dijkstra-without-visited.cpp)
 - [使用 set 的代码](code/network-delay-leet-743-dijkstra-set.cpp)
 
 跟标程几乎一样。不同之处：
@@ -19,6 +20,12 @@
 - 顶点编号从 1 开始
 - src 不是 0，而可能是任何顶点
 - 若有顶点不可到达，返回 -1
+
+## [`luogu p1135.` 奇怪的电梯](https://www.luogu.com.cn/problem/P1135)
+
+- dijkstra 算法。任意两个顶点（层）之间的 weight 都是 1。dijkstra 本来是从求「单源」到「所有顶点」的最短距离。本解法中稍加改动，求「单源」到「某一顶点」的最短距离。[代码一，用 priority queue](code/luogu-p1135-elevator-dijkstra-pq.cpp)、[代码二，用 set](code/luogu-p1135-elevator-dijkstra-set.cpp)。
+
+- bfs 算法。[代码](code/luogu-p1135-elevator-bfs.cpp)
 
 ##
 

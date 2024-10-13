@@ -6,7 +6,7 @@ import java.util.stream.IntStream;
 import static java.util.concurrent.ThreadLocalRandom.current;
 import static java.util.stream.Collectors.toList;
 
-public class CountDownLatchEx1 {
+class countdown_latch_demo {
      public static void main(String[] args) throws InterruptedException {
         final int[] products = getProductsByCategoryId(); // 获取商品编号列表
         // 通过 stream 的 map 运算将商品编号转换为 ProductPrice 

@@ -1,4 +1,6 @@
-# [木材加工（L3，二分天下必得其一，例2）](https://oj.youdao.com/course/12/54/1#/1/8254)
+# [luogu p2440. 木材加工](https://www.luogu.com.cn/problem/P2440)
+
+also on youdao: [木材加工（L3，二分天下必得其一，例 2）](https://oj.youdao.com/course/12/54/1#/1/8254)
 
 `N` 根原木，每根长度为 `a[i]`。要总共切成 `K` 段长度相同的小段木头，希望得到的小段越长越好。求小段的最大可能长度。
 
@@ -18,6 +20,8 @@
 #include <cstdio>
 #include <algorithm>
 using namespace std;
+
+// 2024.10.13 ac
 
 // predicate: n:原木数量, a[]:每根原木长度, chunk_len:每个小段长度，k:最终小段数量
 int wood_chunks_less_than_k(int a[], int n, int chunk_len, int k) {

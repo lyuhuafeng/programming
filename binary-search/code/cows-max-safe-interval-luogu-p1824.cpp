@@ -3,11 +3,12 @@
 luogu: https://www.luogu.com.cn/problem/P1824 ac
 L3, u11, ex3: https://oj.youdao.com/course/12/59/1#/1/8194
 
-距离 interval 从小到大，对应算出的牛栏数从多到少。
-希望 interval 尽可能大，所以算出的牛栏数应该尽可能小。但合法的牛栏数应该 >= 牛数，不然放不下这些牛。
-所以，求的是最后一个使「牛栏数 >= 牛数」的 interval。
-也就是，第一个使「牛栏数 < 牛数」的 interval，再减 1。
-对应的 predicate 函数为 f(interval) = (牛栏数 < 牛数)
+距离 interval 从小到大，对应算出的「合法牛栏数」（也就是「能放下几头牛」）从多到少。
+希望 interval 尽可能大，所以算出的「能放下几头牛」应该尽可能小。但「能放下几头牛」应该 >= 牛数，不然放不下这些牛。
+所以，求的是最后一个使「能放下几头牛 >= 牛数」的 interval。
+也就是，第一个使「能放下几头牛 < 牛数」的 interval，再减 1。
+对应的 predicate 函数为 f(interval) = (「能放下几头牛」 < 牛数)，
+也就是 f(interval) = (放不下)，true 表示「放不下」，false 表示「能放下」，有点反直觉。
 */
 
 #include <cstdio>
@@ -15,7 +16,7 @@ L3, u11, ex3: https://oj.youdao.com/course/12/59/1#/1/8194
 using namespace std;
 
 bool f(int interval, int cows, int a[], int n) {
-    int cnt = 1;
+    int cnt = 1; // 能放下几头牛
     int last = a[0]; // 最后一头牛的位置。开始时，第一头牛肯定在第一个牛栏
     for (int i = 1; i < n; i++) {
         if (a[i] - last >= interval) {

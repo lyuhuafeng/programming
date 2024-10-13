@@ -33,6 +33,12 @@
 重复步骤 2、3 的操作，直到所有顶点的 visited 都为 true。（总共重复 n 次）
 ```
 
+注意：「放入 queue」vs. visited：
+- 放入 queue，是「到达」。但可能「到达」多次。每「到达」一次，要 relax，可能更新其 dist，变得更短。每「到达」一次，对应 c++ 代码中「放入 queue」一次。最终，是 dist 最短的那次，被从 queue 中取出并「处理」（也就是 visit）。其余各次，从 queue 中取出后，发现已经 visited 过，就跳过了。
+- visit，就是「从 queue 中取出并处理」。
+
+`visited[]` 数组似也可不用。若无，则已「到达」的顶点被再次放入 queue（附带一个更大的 dist）。但因为其 dist 更大，它不会导致它的相邻顶点被 relax，不会影响最终结果。
+
 # 更新 dist
 
 步骤 2 中，如何找「未 visit 过的顶点中，dist 最小的」那个？
@@ -62,7 +68,7 @@ Workaround 是，不更新 `(v1, d1)`，而是再增加一个 `(v1, d2)` 元素�
 - priority queue 里存放 pair 类型，就不用自定义比较函数，用系统自带的 `greater<pair<int, int>>` 函数。pair 默认根据 first 来排序，所以要把 dist 作为 first，vertex 作为 second。与原来自定义的结构体顺序相反。priority queue 声明时要指定这个 `greater` 函数，以及被迫指定底层容器为 vector。[`dijkstra-using-pair.cpp`](code/dijkstra-using-pair.cpp)
 - 小图灵标程：用了链式前向星而不是 vector 来存储邻接表；重载了 `operator<` 操作符。[`dijkstra-little-turing.cpp`](code/dijkstra-little-turing.cpp)
 
-- 也可以用 set 代替 priority_queue，因为 set 也是排序的。[代码](code/dijkstra-set.cpp)。与使用 priority_queue 不同之处：(1) 比较函数，从返回 `a > b` 返回 `a < b`，而且还要处理相等的情况；(2) 更新一个顶点的 dist 时，要想看它是否已在 set 里（带一个较大的 dist），若已在，则先删掉 `{v, old_dist}` 再加入 `{v, new_dist}`；(3) `visited[]` 不用了；原来 priority_queue 无法判断某顶点是否已在 q 中，也无法更新其 dist，所以用 `visited[]` 来判断某顶点是否已经被加入过 queue；有了 (2) 的方法，就不需要 `visited[]` 了。
+- 也可以用 set 代替 priority_queue，因为 set 也是排序的。[代码](code/dijkstra-set.cpp)。与使用 priority_queue 不同之处：(1) 比较函数，从返回 `a > b` 改为返回 `a < b`，还要处理相等的情况；(2) 更新一个顶点的 dist 时，要想看它是否已在 set 里（带一个较大的 dist），若已在，则先删掉 `{v, old_dist}` 再加入 `{v, new_dist}`；(3) `visited[]` 不用了；原来 priority_queue 无法判断某顶点是否已在 q 中，也无法更新其 dist，所以用 `visited[]` 来判断某顶点是否已经被加入过 queue；有了 (2) 的方法，就不需要 `visited[]` 了。
 
 最佳实现的核心代码：
 ```cpp
@@ -208,3 +214,9 @@ negative cycles 或 infinite cycles：一个cycle，所有 edge 加起来是负�
 * 每次 relax 后更新 Q：每个顶点最多 V 个相邻顶点，放入 `O(logV)`，最多 E 次。<font color="red">没太明白：实际上无法更新，只能多放入一个无用元素。可能指的是这个无用元素入堆所需时间。</font>
 
 总共 `O((V+E)logV)`
+
+# to read
+
+https://www.cs.cornell.edu/courses/cs2112/2019fa/lectures/lecture.html?id=ssp
+
+

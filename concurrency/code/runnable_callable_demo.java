@@ -20,7 +20,7 @@ class FactorialRunnable implements Runnable {
 }
 
 class FactorialCallable implements Callable<Integer> {
-    int number;
+    private int number;
 
     public FactorialCallable(int number) {
         this.number = number;

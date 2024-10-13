@@ -27,56 +27,33 @@ int shortest_path(vector<edge_weight> adj[], int V, int src) {
     priority_queue<vertex_dist> q;
 
     vector<int> dist(V + 1, INT_MAX);
-    vector<bool> visited(V + 1, false);
-    vector<int> prevs(V + 1, -1); // 每个顶点的前驱顶点，方便打印最终的 shortest path
 
     // 插入src，距离为0
     q.push({src, 0});
     dist[src] = 0;
-    prevs[src] = src;
 
-    int reached = 0; // 可到达多少顶点
-    int max_dist = 0; // 最后一个收到信号的顶点，花费的时间。
     while (!q.empty()) {
         int u = q.top().vertex;
         q.pop();
-        if (visited[u]) {
-            continue;
-        } // 已经「最终到达」过，跳过
-        max_dist = dist[u];
-        reached++;
 
-        printf("vertex:%d, min_dist:%d, prev_vertex:%d\n", u, dist[u], prevs[u]);
-        visited[u] = true;
         for (auto x : adj[u]) {
             int v = x.to;
-            if (visited[v]) {
-                continue;
-            } // 已经「最终到达」过，跳过
             int weight = x.weight;
             if (dist[v] > dist[u] + weight) {
-                // 更新 v 的「最短距离」和「前驱顶点」
+                // 更新 v 的「最短距离」
                 dist[v] = dist[u] + weight;
-                prevs[v] = u;
                 q.push({v, dist[v]});
             }
         }
     }
-    for (int i = 1; i <= V; ++i) {
-        if (i == src) {
-            printf(" vertex:%d, src\n", i);
-        } else if (prevs[i] == -1) {
-            printf(" vertex:%d, not reachable\n", i);
-        } else {
-            printf(" vertex:%d, min_dist:%d\t", i, dist[i]);
-            for (int j = i; j != src; j = prevs[j]) {
-                j == i ? printf("%d", j) : printf(" <- %d", j);
-            }
-            printf(" <- %d\n", src);
+    int max_dist = 0;
+    for (int i = 1; i <= V; i++) {
+        if (dist[i] == INT_MAX) {
+            return -1;
         }
+        max_dist = max(max_dist, dist[i]);
     }
-
-    return (reached == V ? max_dist : -1);
+    return max_dist;
 }
 
 class Solution {
@@ -99,13 +76,13 @@ int main() {
     int n = 4;
     int k = 2;
     int ans = sol.networkDelayTime(times, n, k);
-    printf("ans:%d\n", ans);
+    printf("ans:%d\n\n", ans);
 
     times = {{1,2,1}};
     n = 2;
     k = 1;
     ans = sol.networkDelayTime(times, n, k);
-    printf("ans:%d\n", ans);
+    printf("ans:%d\n\n", ans);
 
     times = {{1,2,1}};
     n = 2;

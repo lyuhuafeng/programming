@@ -1,14 +1,33 @@
 # 同步机制
 
+low-level primitives
+- synchronized 关键字
+- `java.lang.Object` 的 intrinsic lock (monitor) 及其 wait-and-notify 机制
+- standalone 的 `wait()` 和 `notify()` 方法
+
+`java.util.concurrent.locks` 包中的各种 lock
+- Lock 接口 -> ReentrantLock 类
+- Condition
+- ReadWriteLock 接口 -> ReentrantReadWriteLock 类，及「相关」的 .ReadLock 和 .WriteLock（这俩 enclose 前者）
+- StampedLock 类
+
+`java.util.concurrent` 包中的各种 Synchronizer
+- CountdownLatch
+- CyclicBarrier
+- Phaser
+- Exchanger
+- Semaphore
+- SynchronousQueue
+
 
 java 中的 lock 可分成两类
 - synchronization lock
-- java.util.concurrent 包中的 lock
-  - Lock interface, ReadWriteLock interface
+- `java.util.concurrent` 包中的 lock
+  - 两个 interface: `java.util.concurrent.locks.Lock` 和 `java.util.concurrent.locks.ReadWriteLock`
   - LockSupport blocking primitive
   - Condition condition
   - Abstract{Ownable, Queued, QueuedLong}Synchronizer abstract classes
-  - ReentrantLock exclusive lock, ReentrantReadWriteLock read-write lock
+  - ReentrantLock exclusive lock (`java.util.concurrent.locks.ReentrantLock`), ReentrantReadWriteLock read-write lock (`java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock`, `java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock`)
 
 JUC lock 的不同语义：
 - fair/unfair: 不同线程 acquire lock 的机制是否 fair
@@ -81,11 +100,95 @@ synchronized 的缺陷：
 - 第5章“线程间通信”:其中的5.4节自定义显式锁BooleanLock为 读者分析了synchronized关键字的缺陷，以及如何实现一个显式 锁的方法。 
 - 第17章“读写分离锁”:当前共 享资源在所有线程间进行读操作的情况之下无须加锁提高并发程 序性能，并且给出了解决方案以及程序实现。
 
+# synchronized，配合 `wait()`、`notify()`
+
+`wait()` 和 `notify()` 不是某个对象的方法，而是 standalone 方法。例：
+
+```java
+    class SharedResource {
+        private Queue<Integer> buf;
+        private int buf_size;
+        SharedResource(int buf_size) {
+            buf = new LinkedList<>();
+            this.buf_size = buf_size;
+        }
+
+        synchronized void addItem(int item) throws InterruptedException {
+            while (buf.size() == buf_size) {
+                wait();
+            }
+            buf.add(item);
+            notifyAll();
+        }
+
+        synchronized void removeItem() throws InterruptedException {
+            while (buf.isEmpty()) {
+                wait();
+            }
+            buf.poll();
+            notifyAll();
+        }
+    }
+```
+
+# synchronized 配合 object 的 wait-and-notify API
+
+Low-level concurrency primitives
+
+跟 condition 很像。
+
+`java.lang.Object` 类的 Wait-and-Notify API，包括 3 个 wait() 以及 notify() 和 notifyAll()。
+
+- `object.wait()`: 使当前线程 wait，直到另一线程调用该 object 的 `notify()` 或 `notifyAll()`，或其他线程 interrupt 当前线程。若被 interrupt，则抛出 `java.lang.InterruptedException`。（吕问题：... when any thread interrupted the current thread before or while the current thread was waiting for a notification。while 理解为调用 wait() 进入 wait 状态后，before 是什么意思？）
+  - `object.wait()` 调用后，（也就是进入 wait 状态后？）线程会释放该 object 的 monitor (intrinsic lock)
+
+- `object.notify()`: 唤醒其他正在该 object 上 wait 的线程。The awakened thread will not be able to proceed until the current thread relinquishes the lock on this object. The awakened thread will compete in the usual manner with any other threads that might be actively competing to synchronize on this object
+
+所有 `wait()` 和 `notify()`，都必须在 synchronized context (the current thread must be the owner of the object’s monitor) 中调用。
+
+object 的 condition queue: 存放所有 wait 状态中的线程。这些等待中的线程，称为 wait set。
+
+一定要在 while 循环中调用 `wait()`。该循环在调用 `wait()` 之前和之后，都检查 condition 是否成立。
+- 之前：保证 liveness。场景：在 `wait()` 之前，`notify()` 已调用，condition 已经成立。此时若不 test 就直接 `wait()`，则永远不会收到 notify，一直 wait 下去。若在 `wait()` 之前就 test，发现 condition 已成立，就不用 wait 了。
+- 之后：保证 safety，对抗 spurious wakeup。场景：在 `wait()` 之后，condition 其实还不成立（可能其他线程误调用了 `notify()`）。
+
+用法：
+```java
+    synchronized(obj) {
+        while (/* condition does not hold */) {
+            obj.wait();
+        }
+        // Perform an action that's appropriate to condition.
+    }
+
+    synchronized(obj) {
+        // Set the condition.
+        obj.notify();
+    }
+```
+
+例：leet 1114 按序打印 [代码](code/leet-1114-print-in-order-using-synchronized.java) 用 synchronized 关键字，和原始的同步原语（看起来挺像 cv）。形如：
+
+```java
+    private volatile int flag = 1;
+    private final Object object = new Object();
+
+    public void second(Runnable printSecond) throws InterruptedException {
+        synchronized (object) {
+            while (flag != 2) { object.wait(); }
+            printSecond.run(); flag = 3;
+            object.notifyAll();
+        }
+    }
+```
+
 # Lock 接口
 
 一般意义上的 mutex，就是 Lock 接口的实例，通常也称为 lock。
 
-# ReentrantLock
+# ReentrantLock 类
+
+ReentrantLock 是个类，实现了 Lock 接口。
 
 since java 1.5。比 synchronized 关键字更好。
 
@@ -129,7 +232,7 @@ since java 1.5。比 synchronized 关键字更好。
 
 # StampedLock：更高效的读写锁
 
-是一种乐观锁。stamp（盖戳）意思就是 lock version。
+是一种乐观锁。stamp（戳）意思就是 lock version。
 
 三种模式：write, read, optimistic read.
 
@@ -141,7 +244,7 @@ https://www.liaoxuefeng.com/wiki/1252599548343744/1309138673991714
 
 https://medium.com/@aayushbhatnagar_10462/java-concurrency-through-stamped-locks-eb65e9a675c1
 
-注意，StampedLock 的 writeLock()、tryOptimisticRead()、readLock() 三个方法，返回的结果并不是个 lock，而是一个 long 类型的「版本」，该「版本」用做各 unlock 方法的参数。以 write 为例：
+注意，StampedLock 的 `writeLock()`、`tryOptimisticRead()`、`readLock()` 三个方法，返回的结果并不是个 lock，而是一个 long 类型的「版本」，该「版本」用做各 unlock 方法的参数。以 write 为例：
 
 ```java
 // 初以为的方式，错误！
@@ -155,45 +258,84 @@ https://medium.com/@aayushbhatnagar_10462/java-concurrency-through-stamped-locks
 实际代码示例：[stamped-lock-demo.java](code/stamped-lock-demo.java)
 
 ```java
-    private final StampedLock stampedLock = new StampedLock();
+    private final StampedLock slock = new StampedLock();
     
     // 写，跟普通 ReadWriteLock 类似
-    long stamp = stampedLock.writeLock(); // 获取写锁
-    try { /* write data */ } finally { stampedLock.unlockWrite(stamp); } // 写，随后释放写锁
+    long stamp = slock.writeLock(); // 获取写锁
+    try { /* write data */ } finally { slock.unlockWrite(stamp); } // 写，随后释放写锁
 
     // 读
-    long stamp = stampedLock.tryOptimisticRead(); // 获得一个乐观读锁
+    long stamp = slock.tryOptimisticRead(); // 获得一个乐观读锁
     /* read data */
-    if (!stampedLock.validate(stamp)) { // 检查：乐观读锁后，是否有其他写入。若有写入，则版本号变化，检查失败
-        stamp = stampedLock.readLock(); // 检查失败：获取一个悲观读锁，重新读一次
-        try { /* read data */ } finally { stampedLock.unlockRead(stamp); } // 读，随后释放悲观读锁
+    if (!slock.validate(stamp)) { // 检查：乐观读锁后，是否有其他写入。若有写入，则版本号变化，检查失败
+        stamp = slock.readLock(); // 检查失败：获取一个悲观读锁，重新读一次
+        try { /* read data */ } finally { slock.unlockRead(stamp); } // 读，随后释放悲观读锁
     }
 ```
 
-# concurrent 包中的 synchronizer
-
-`java.util.concurrent` 包含的，如下，都称为 synchronizer。可避免使用「lock + condition object + synchronized keyword」。 
-
-- Condition (不是 `java.util.concurrent` 中的，而是 `java.util.concurrent.locks` 中的。<font color=red>严格说可能不算 synchronizer?</font>)
-- Semaphore
-- CyclicBarrier
-- Phaser
-- CountDownLatch
-- Exchanger
-- SynchronousQueue
-
 # Condition (就是 condition variable)
 
-wait-and-notify 机制是与特定对象及其上的锁是绑定在一起的，锁和唤醒对象不能分开，这在某些情况下不是很方便
+Condition vs. Object 的 wait-notify 机制：
 
-更好的方法：jdk 1.5 提供的 Condition，与其它语言几乎一致的 condition variables 机制。只是方法名不同。对比：
-- Java: `await()`, `signal()`, `signalAll()`
-- C++: `wait()`, `notify_one()`, `notify_all()`
+Condition 将 Object 的 wait-notify 方法分解为不同的 condition objects，与任意 Lock 结合使用，达到「每个 object 有多个 wait set」的效果。
+
+Lock 取代了 synchronized method/block，Condition 取代了 Object 的 wait/notify 方法。
+
+jdk 1.5 提供的 Condition，与其它语言几乎一致的 condition variables 机制。只是方法名不同。对比：
+- Java Object: `wait()`, `notify()`, `notifyAll()`
+- Java Condition: `await()`, `signal()`, `signalAll()`
+- C++ condition variable: `wait()`, `notify_one()`, `notify_all()`
 
 Condition 对象由 Lock.newCondition() 方法生成，从而允许一个 lock 产生多个 condition，可以根据实际情况来等待不同条件
 
 与 c++ 类似，进入 wait 时自动释放锁，从 wait 返回时重新上锁。
 
+生产者、消费者的代码都类似这样，「干活部分」用 mtx 保护起来。
+
+```java
+    mtx.lock();
+    try { /* do work */ }
+    finally { mtx.unlock(); }
+```
+
+- 生产者的「干活」部分，就是 `写数据; cv.signalAll();`。
+- 消费者的「干活」部分，就是 `while (数据不可读) { cv.await(); } 读数据;`。
+
+若生产者先拿到了 mtx：
+- 略
+
+若消费者先拿到了 mtx：
+- 若「数据可读」，则直接读数据并退出。生产者随后拿到 mtx、写数据、通知我，就不影响我了。
+- 若「数据不可读」，则调用 `cv.await()`，进入 wait 状态并释放 mtx，以使生产者可以拿到 mtx、写数据、通知我。我被唤醒，判断得知「数据可读」，则读数据并退出。
+
+较完整代码：
+
+```java
+    private final Lock mtx = new ReentrantLock(); // 全局 lock/mutex
+    private final Condition cv = mtx.newCondition(); // 全局 cv。由 lock/mutex 对象的方法创建，与 c++ 不同
+    private Queue<String> queue = new LinkedList<>(); // 被保护的共享数据
+
+    // 生产者
+        mtx.lock(); // 写共享数据之前，先上锁。没有 c++ raii 风格的 wrapper，只能放在 try-finally 中
+        try {
+            queue.add(s); // 干活，写共享数据
+            cv.signalAll(); // 通知消费者
+        } finally {
+            mtx.unlock(); // 释放锁
+        }
+
+    // 消费者
+        mtx.lock(); // 写共享数据前，先上锁
+        try {
+            while (queue.isEmpty()) {
+                cv.await(); // throws InterruptedException
+            } // 没有 c++ 风格的「既等待又判断二合一」的 wait()，只能用 while 循环
+            // 从 wait 返回后，自动重新上锁，lock/mutex 状态变为「locked」
+            return queue.remove(); // 干活，写共享数据
+        } finally {
+            mtx.unlock();
+        }
+```
 例：task queue [代码](code/task-queue-using-cv.java) 生产者、消费者代码分开，看起来更清楚些
 
 例：leet 1114 按序打印 [代码](code/leet-1114-print-in-order-using-cv.java)
@@ -202,12 +344,14 @@ Condition 对象由 Lock.newCondition() 方法生成，从而允许一个 lock �
 
 since java 1.5。可支持多个线程同时访问。特点：任何 thread 都可以 release；但通常希望最初上锁的 thread 才能 release。
 
+注意，`acquire()` 返回前，若被中断，则抛出 `InterruptedException`。所以通常要用 try ... catch ... finally 形式。
+
 ```java
     private Semaphore sem = new Semaphore(3);
 
     public int getNextSequence() {
         try {
-            sem.acquire();
+            sem.acquire(); // throws InterruptedException
             return super.getNextSequence();
         } catch (InterruptedException e) {
             // exception handling code
@@ -217,13 +361,15 @@ since java 1.5。可支持多个线程同时访问。特点：任何 thread 都�
     }
 ```
 
+例：leet 1114 按序打印 [代码](code/leet-1114-print-in-order-using-semaphore.java) 但里面没用 try ... catch ... finally。
+
 # CountDownLatch
 
-[例子，代码](code/CountDownLatchEx1.java)
+[例子，代码](code/countdown-latch-demo.java)
 
 - 1. 创建一个 latch：`CountDownLatch latch = new CountDownLatch(cnt)`
 - 2. 创建 cnt 个工作线程
-- 3. 每个线程内，工作完成后，调 `latch.countDown()`
+- 3. 每个工作线程内，工作完成后，调 `latch.countDown()`
 - 4. 主线程中，`latch.await()` 等待 latch 计数降为 0，也就是等待所有工作线程结束。
 
 我注：很像 c++ 中，最后所有 `t.join()`。
@@ -341,13 +487,20 @@ lazySet() 不是。lazySet() does not act as happens-before edges in the code.
 - by CompletableFuture
 - by ListenableFuture (by Google Guava)
 
-# Executor, ExecutorService 两个 interface
+# Executor, ExecutorService 两个 interface，以及 Executors 类
 
-就是通常所说的 thread pool。
+它仨属于 Executor framework，which 提供 thread pool 设施。
 
-两者都是 interface。ExecutorService 继承自 Executor。提供的方法，用于任务提交和管理。
+- Executor：核心 interface。把 task 及其 execution 分离开。（对比 Thread 类，把 task 及其 execution 合在一起。）
+- ExecutorService：也是 interface，继承自 Executor。提供了工具，可返回 Future 对象、关停整个 thread pool。用于任务提交和管理。
+- Executors 类：提供 factory method 以创建各种 thread pool。
 
-Executor 只有一个方法：`void execute(Runnable command)`。用法示例：
+
+任务提交：
+- Executor 只有一个方法：`void execute(Runnable command)`。无返回值。
+- ExecutorService 增加了 `submit()` 方法，可接受 Runnable 或 Callable 参数，可返回 `Future` 对象，后期得到结果。
+
+Executor 用法示例：
 
 ```java
     Executor executor = Executors.newSingleThreadExecutor();
@@ -365,6 +518,14 @@ ExecutorService 的两个重要实现：
 - `newScheduledThreadPool()`：可过一段时间执行，或周期性重复执行
 - `newSingleThreadScheduledExecutor()`：结合 single thread 和 scheduled
 - `newWorkStealingPool()`：用所有 available processors 作为其 target parallelism level
+
+方便记忆版：
+- single thread
+- fixed thread
+- cached thread
+- scheduled thread
+- single thread scheduled
+- work stealing
 
 ExecutorService 可执行 Runnable 和 Callable 两种类型的 task。
 
@@ -396,11 +557,11 @@ ExecutorService 的多种类型：
     // scheduled task
     ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
     ScheduledExecutorService ses = Executors.newScheduledThreadPool(4);
-    // 1秒后执行一次性任务:
+    // 1 秒后执行一次性任务:
     ses.schedule(new Task("one-time"), 1, TimeUnit.SECONDS);
-    // 2秒后开始执行定时任务，每3秒执行:
+    // 2 秒后开始执行定时任务，每 3 秒执行:
     ses.scheduleAtFixedRate(new Task("fixed-rate"), 2, 3, TimeUnit.SECONDS);
-    // 2秒后开始执行定时任务，以3秒为间隔执行:
+    // 2 秒后开始执行定时任务，以 3 秒为间隔执行:
     ses.scheduleWithFixedDelay(new Task("fixed-delay"), 2, 3, TimeUnit.SECONDS);
 ```
 
@@ -418,19 +579,19 @@ ExecutorService
 
 # by threads
 
-创建 thread 的两种方式：
+创建 thread 的三种方式：
 
-1. 继承 Thread 类，override 其 run() 方法。
-  - 创建该类实例，并调用其 start() 方法。
-2. 实现 Runnable 接口，实现其 run() 方法。
-3. 实现 Callable 接口，实现其 call() 方法。
+1. 继承 Thread 类，override 其 `run()` 方法。
+  - 创建该类实例，并调用其 `start()` 方法。
+2. 实现 Runnable 接口，实现其 `run()` 方法。
+3. 实现 Callable 接口，实现其 `call()` 方法。
   - Runnable 和 Callable 都可用 thread 方法或 executor service 方法启动。
 
 Thread 和 Runnable 的共同缺陷：执行完任务后，无法获取结果
 
 解法：通过 Callable 和 Future (since Java 5), 可在任务执行完后，得到结果。
 
-Callable，可以认为是增强版的 Runnable。表示一个待执行的 task。泛型接口。只有一个 call() 方法，返回类型就是泛型 V。
+Callable，可以认为是增强版的 Runnable。表示一个待执行的 task。泛型接口。只有一个 `call()` 方法，返回类型就是泛型 V。
 
 Runnable vs. Callable
 - `Callable.call()` 有返回值，可用 Future 或 FutureTask 得到。`Runnable.run()` 无返回值，自然也无机制得到返回值。
@@ -584,7 +745,7 @@ to add later
     CompletableFuture<String> f1 = CompletableFuture.supplyAsync(() -> "Result 1");
     CompletableFuture<String> f2 = CompletableFuture.supplyAsync(() -> "Result 2");
 
-// Void (注意不是 void) 类型。不处理「每个」返回值，也没有「合并」的返回值。
+// Void (注意 V 大写不是 void) 类型。不处理「每个」返回值，也没有「合并」的返回值。
     CompletableFuture<Void> cf = CompletableFuture.allOf(f1, f2);
     cf.thenRun(() -> System.out.println("All tasks completed."));
 
@@ -619,13 +780,7 @@ ListenableFuture: 结果结算完成后实时通知到监听任务
 https://www.fordawn.com/post/2020/listenablefurure-%E7%9A%84%E4%B8%80%E8%88%AC%E4%BD%BF%E7%94%A8/
 
 
-
-
-Optional 的  orElse() vs. orElseGet()
-orElse() 不管 optional 是否为空，都会执行。（不为空时，返回值不会使用）
-orElseGet() 只在 optional 为空时执行
-
-vela 框架中，用了 ListenableFuture, 但取结果仍然用了 future.get(timeout, unit) 而不是 listener 方式。
+vela 框架中，用了 ListenableFuture, 但取结果仍然用了 `future.get(timeout, unit)` 而不是 listener 方式。
 它包装了 exception handling。
 我要不要自己试试，直接用 get 而不用他包装了的 catchingOptional(get) 方式，看看 exception？
 
