@@ -20,7 +20,7 @@ ForkJoinPool
 - pool 中的每个 thread 都有自己的一个 deque，用于存放 task。用 work-stealing 算法，在不同 thread 间均衡分配 task。
 - 启动任务：与 ExecutorService 一样，用 invoke()、submit()、invokeAny()、invokeAll() 方法
 
-例：递归计算 fibonaci 数列，[代码](code/fork_join_fibonaci_demo.java)
+例：递归计算 fibonaci 数列，[代码](code/fork-join-fibonaci-demo.java)
 
 
 

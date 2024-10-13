@@ -17,7 +17,7 @@ class SquareCalculator {
     }
 }
 
-public class square_calc_callable_future_demo {
+class square_calc_callable_future_demo {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         SquareCalculator squareCalculator = new SquareCalculator();
 

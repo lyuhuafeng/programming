@@ -1,6 +1,6 @@
 import java.util.concurrent.CompletableFuture;
 
-public class CompletableFutureTest {
+class CompletableFutureTest {
     public static long factorial(int n) {
         long res = 1;
         for (int i = 1; i <= n; i++) {

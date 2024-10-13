@@ -19,7 +19,7 @@ class Fibonacci extends RecursiveTask<Integer> {
     } 
 }
 
-public class fork_join_fibonaci_demo { 
+class fork_join_fibonaci_demo {
     public static void main(String[] args) { 
         int n = 20; 
  
