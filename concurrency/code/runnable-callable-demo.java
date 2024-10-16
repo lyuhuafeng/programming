@@ -1,6 +1,7 @@
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
@@ -87,6 +88,7 @@ class runnable_callable_demo {
             e.printStackTrace();
         }
     }
+
     private static void test_callable_anonymous_thread() {
         int num = 10;
         // 用 anonymous class 实现 Runnable
@@ -125,6 +127,20 @@ class runnable_callable_demo {
         }
     }
 
+    private static void test_callable_executor() {
+        FactorialCallable c = new FactorialCallable(4);
+        FutureTask<Integer> futureTask = new FutureTask<>(c);
+        Executor ex = Executors.newSingleThreadExecutor();
+        ex.execute(futureTask);
+        try {
+            Integer result = futureTask.get();
+            System.out.println(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // exexutor 没有 shutdown() 方法。如何优雅退出呢？
+    }
+
     private static void test_callable_es() {
         ExecutorService es = Executors.newSingleThreadExecutor();
         FactorialCallable c = new FactorialCallable(5);
@@ -147,6 +163,7 @@ class runnable_callable_demo {
         test_callable_thread();
         test_callable_anonymous_thread();
         test_callable_lambda_thread();
+        test_callable_executor();
         test_callable_es();
     }
 }

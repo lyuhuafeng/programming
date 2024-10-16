@@ -4,13 +4,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 class SquareCalculator {
-    private final ExecutorService executor = Executors.newFixedThreadPool(3);
+    private final ExecutorService es = Executors.newFixedThreadPool(3);
     void shutdown() {
-        executor.shutdown();
+        es.shutdown();
     }
 
     Future<Integer> calculate(Integer i) {
-        return executor.submit(() -> {
+        return es.submit(() -> {
             Thread.sleep(1000);
             return i * i;
         });

@@ -553,8 +553,8 @@ fork/join framework
 - Executors 类：提供 factory method 以创建各种 thread pool。
 
 任务提交：
-- Executor 只有一个方法：`void execute(Runnable command)`。无返回值。
-- ExecutorService 增加了 `submit()` 方法，可接受 Runnable 或 Callable 参数，可返回 `Future` 对象，后期得到结果。
+- Executor 只有一个方法：`execute()`。只接受 runnable 对象。无返回值。无法查询状态。
+- ExecutorService 增加了 `submit()` 方法，可接受 Runnable 或 Callable 参数，可返回 `Future` 对象，可通过它查询状态、得到结果。
 
 Executor 用法示例：
 
@@ -674,7 +674,7 @@ ExecutorService
         public FactorialCallable(int n) { this.num = n; }
         public Integer call() throws Exception { return 24; /* 返回 num 的阶乘 */ }
     }
-    MyCallable c = new MyCallable(6);
+    Callable c = new MyCallable(6);
 
 // 1. 实现 Callable 接口。用匿名类。
     int num = 10;
@@ -688,7 +688,7 @@ ExecutorService
     };
 
 // 2. 用 lambda
-    int num = 6;
+    int num = 6; // 传给 lambda Callable 的参数。call() 无参数，只能用此法。
     Callable<Integer> c = () -> {
         int fact = 1;
         for (int i = 1; i <= num; i++) { fact *= i; }
@@ -736,18 +736,18 @@ ExecutorService
 - `es.invokeAll(callable_collection)`，得到 `List<Future<T>>` 对象。
 - `es.invokeAll()` 不能用于 callable 集合。
 
-通过 Executor 提交 runnable，无返回值
+通过 Executor 提交 runnable，无返回值。用 FutureTask 包装后的 callable 也可用在这里。
 - `e.execute(runnable)`
+- `e.execute(new FutureTask<>(callable))`
 
 ```java
     ExecutorService es = Executors.newSingleThreadExecutor(); // 通用的 executor service 对象
 
-    // Runnable 用法二，用 executor service 启动 task
+    // Runnable 用 executor service 启动 task
     es.submit(r); // 返回值是 Future<?> 类型，但不用管。
     ...查看状态？
 
-    // Callable 用法二，用 executor service 提交 task，返回 Future 对象，再从中 get()
-    Callable<Integer> c = ...;
+    // Callable 用 executor service 提交 task，返回 Future 对象，再从中 get()
     Future<Integer> future = es.submit(c);
     ...查看状态是否结束？
     Integer result = future.get(); // 需要 catch Interrupted, Execution, Interrupted 三种 Exception
@@ -758,10 +758,11 @@ ExecutorService
 # Runnable 用 Thread 和 ExecutorService 启动
 
 ```java
-// Runnable 用法一，用 thread 启动 task
+// Runnable 用 thread 启动
     Runnable r = ...;
     new Thread(r).start();
 
+// Runnable 用 executor service 启动
     ExecutorService es = Executors.newSingleThreadExecutor();
     es.submit(r); // 不用管返回值
 ```
@@ -769,12 +770,23 @@ ExecutorService
 # Callable 用 Thread 和 ExecutorService 启动
 
 ```java
-    FutureTask<Integer> futureTask = new FutureTask<>(new MyCallable(6));
+// Callable 经 FutureTask 包装后，用 thread 启动
+    Callable<Integer> c = MyCallable(6);
+    FutureTask<Integer> futureTask = new FutureTask<>(c);
     new Thread(futureTask).start();
     Integer result = futureTask.get(); // 需 catch Exception
 
+// Callable 经 FutureTask 包装后，用 executor 启动
+    FutureTask<Integer> futureTask = new FutureTask<>(c);
+    Executor ex = Executors.newSingleThreadExecutor();
+    ex.execute(futureTask);
+    Integer result = futureTask.get(); // 需 catch Exception
+    // executor 无 shutdown() 方法。不知如何优雅关掉。
+
+// Callable 用 executor service 启动
     ExecutorService es = Executors.newSingleThreadExecutor();
-    Future<Integer> future = es.submit(new FactorialCallable(5));
+    Future<Integer> future = es.submit(c);
+    while (!future.isDone()) { /* wait */ }
     Integer result = future.get(); // 需 catch Exception
     es.shutdown();
 ```
@@ -791,13 +803,10 @@ Runnable:接口   Future:接口
      FutureTask:类
 ```
 
-Futrue 是个接口。
-- 对某 Runnable 或者 Callable 任务的执行结果，取消、查询是否完成、获取结果
-- 通过 get 方法获取执行结果，是 blocking 的，直到任务返回结果。所以要用多个线程同时进行，线程池里的线程数要足够。
-
-通过 `executorService.submit(callable)` 得到 Future 对象。
-
-`cancel()`, `isCancelled()`, `isDone()`, `get()`
+Futrue 是个接口
+- 通过 `executorService.submit(callable or runnable)` 得到 Future 对象。
+- 对某 Runnable 或者 Callable 任务的执行结果，取消、查询是否完成：`cancel()`, `isCancelled()`, `isDone()`
+- 通过 `get()` 方法获取执行结果，是 blocking 的，直到任务返回结果。可以直接 `get()`，也可以先判断 `isDone()` 再 `get()`。
 
 例，使用 Future：[代码](code/square-calc-callable-future-demo.java)
 
@@ -805,12 +814,15 @@ Futrue 是个接口。
 
 ```java
     private final ExecutorService es = Executors.newFixedThreadPool(3);
-    Future<Integer> f = es.submit(() -> { return i * i; }); // 其实就是 f = es.submit(callable);
+    Future<Integer> f1 = es.submit(() -> { return i * i; }); // 其实就是 f = es.submit(callable);
+    while (!(f1.isDone() && f2.isDone())) { /* wait */ }
+    Integer res = f1.get() + f2.get();
+    es.shutdown();
 ```
 
 FutureTask 既可以作为 Runnable 被线程执行，又可以作为 Future 得到 Callable 的返回值。
 
-# by CompletableFuture
+# 启动线程（提交任务）方式：用 CompletableFuture 提交
 
 ```java
     CompletableFuture (since Java 8)
@@ -827,15 +839,13 @@ FutureTask 既可以作为 Runnable 被线程执行，又可以作为 Future 得
 - `get()`
   - 继承自 Future。为向后兼容。
   - 可一直等，也可设置 timeout
-  - 抛出 checked exception，可能是 Interrupted、Execution 或 Timeout。（注意，checked exception 必须 declare 或 catch）
+  - 抛出 checked exception，可能是 Interrupted、Execution 或 Timeout。代码中需 declare 或 catch。
 - `join()`
   - CompletableFuture 特有。推荐使用。
   - 只能一直等
-  - 抛出 unchecked exception，是 CompletionException。（注意，unchecked exception 不需要 declare 或 catch）
+  - 抛出 unchecked exception，是 CompletionException。代码中无需 declare 或 catch。
 
-exception: checked vs. unchecked
-（注意，checked exception 必须 declare 或 catch）
-（注意，unchecked exception 不需要 declare 或 catch）
+注意：参见文档：[exception: checked vs. unchecked](java-exception-checked-unchecked.md)
 
 简单用法
 
@@ -864,8 +874,8 @@ exception: checked vs. unchecked
 ```
 
 提交任务
-- supplyAsync(): 有返回值
-- runAsync(): 无返回值
+- `supplyAsync()`: 有返回值
+- `runAsync()`: 无返回值
 
 任务正常完成后：
 - `thenApply()`, `thenApplyAsync()`: 对任务结果做「转换」：以任务结果为输入，有返回值
@@ -936,19 +946,23 @@ Runnable:接口   Future:接口  CompletionStage:接口
      FutureTask:类
 ```
 
-对比，感觉 FutureTask 这名字起得不好。
+(1) Future
 
-Future 对象，通过 ExecutorService 提交 callable 或 runnable 得到
+通过 ExecutorService 提交 callable 或 runnable 得到
 - `es.submit(callable)`，得到 `Future<T>` 对象。可用 `future.get()` 获取结果。
 - `es.submit(runnable)`，得到 `Future<?>` 对象。不能用 `future.get()` 获取结果。但可查询状态。
 - `es.invokeAll(callable_collection)`，得到 `List<Future<T>>` 对象。
 - `es.invokeAll()` 不能用于 callable 集合。
 
-FutureTask 只用在这个场景：callable -> futureTask -> thread
+(2) FutureTask
 
-注意，FutureTask 实现了 Runnable，所以实质上还是 `Thread(runnable)` 方式。
+对比，感觉 FutureTask 这名字起得不好。应该都叫 `XxxFuture` 才一致。
 
-FutureTask 既可以作为 Runnable 被线程执行，又可以作为 Future 得到 Callable 的返回值。
+FutureTask 只用在这两个场景：`callable -> futureTask -> Thread(ft)` 或 `callable -> futureTask -> executor.execute(ft)`。这两个地方，其实都是接受 runnable 为参数。能把 callable 用在这里，是利用了「FutureTask 实现了 Runnable」这一点，实质上还是 `Thread(runnable)` 方式。
+
+FutureTask 既可作为 Runnable 被线程执行，又可作为 Future 得到 Callable 的返回值。感觉就是在 ExecutorService 和 CompletableFuture 出现之前，为了能提交 Callable 而搞出来的缝合怪。
+
+(3) CompletableFuture
 
 CompletableFuture 对象，通过 CompletableFuture 提交 callable 得到
 `CompletableFuture<String> cf = CompletableFuture.supplyAsync(() -> "Hello");`
@@ -956,15 +970,18 @@ CompletableFuture 对象，通过 CompletableFuture 提交 callable 得到
 简单记忆：
 - Future 配 ExecutorService
 - FutureTask 配 Callable + Thread
-- CompleteableFuture 配自己
+- CompleteableFuture object 配 自己的静态方法
 
-# by ListenableFuture (by Google Guava)
+# 启动线程（提交任务）方式：by ListenableFuture (by Google Guava)
 
-ListenableFuture (by Google Guava)
-	extends Future
+```java
+    ListenableFuture (by Google Guava)
+	    extends Future
+```
 
-Future: 获取结果还是不太不方便，只能以阻塞(get())或轮询(isDone())方式
-ListenableFuture: 结果结算完成后实时通知到监听任务
+- Future: 获取结果还是不太不方便，只能以阻塞 `get()` 或轮询 `isDone()` 方式
+- ListenableFuture: 完成后实时通知到监听任务
+
 相比FutureTask，本质上只是增加了任务的回调函数
 
 https://www.fordawn.com/post/2020/listenablefurure-%E7%9A%84%E4%B8%80%E8%88%AC%E4%BD%BF%E7%94%A8/
