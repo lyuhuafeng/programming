@@ -100,7 +100,11 @@ last 不在范围之内。或者说，last 是「最大下标 + 1」、「最后
 
 但通常，不是比较两个同类型的对象（或 pair），而是比较一个对象（或 pair）和一个值。例如，有一个 `vector<student>`，要找出第一个 `age >= 10` 的。比较的两者，分别是一个 student 对象、一个年龄值（跟 student.age 比较）。
 
-注意，`lower_bound()` 和 `upper_bound()` 对应的比较函数的参数顺序不同。`lower_bound()` 要求 `(age, student_object)`，而 `upper_bound()` 要求 `(student_object, age)`。函数实现都是「`return 第一个参数 < 第二个参数`」，逻辑上是一致的。
+<font color=brown>注意，`lower_bound()` 和 `upper_bound()` 对应的比较函数的参数顺序不同。</font>
+- `lower_bound()` 要求 `bool(comp(*iter, value))`，也就是 `(student_object, age)`
+- `upper_bound()` 要求 `bool(comp(value, *iter))`，也就是 `(age, student_object)`
+
+但函数实现都是「`return 第一个参数 < 第二个参数`」，逻辑上是一致的。
 
 有如下几种定义方法：重载 `operator<`、自定义函数、自定义 functor、lambda。下面用 `upper_bound()` 实例。完整代码见 [`student-bsearch.cpp`](code/student-bsearch.cpp)。
 

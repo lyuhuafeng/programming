@@ -82,6 +82,29 @@ https://www.geeksforgeeks.org/backtracking-introduction/
   - dfs by igor: [代码](code/luogu-p1088-martian-dfs-igor.cpp)
   - 直接用 `std::next_permutation()`: [代码](code/luogu-p1088-martian-stl.cpp)
 
+leetcode https://blog.csdn.net/weixin_39802680/article/details/106026618
+
+[P1443 马的遍历 - 洛谷](luogu.com.cn)(https://www.luogu.com.cn/problem/P1443)
+
+[luogu P1747 好奇怪的游戏](https://www.luogu.com.cn/problem/P1747)
+
+[luogu p1746 离开中山路](https://www.luogu.com.cn/problem/P1746)
+
+题目链接：P2298 Mzc和男家丁的游戏 - 洛谷 | 计算机科学教育新生态 (luogu.com.cn)
+
+P1332 血色先锋队 - 洛谷 | 计算机科学教育新生态 (luogu.com.cn)
+
+P1451 求细胞数量 - 洛谷 | 计算机科学教育新生态 (luogu.com.cn)
+
+洛谷5440 https://www.cnblogs.com/oQAQo/p/18420033
+
+洛谷5194 https://www.cnblogs.com/oQAQo/p/18415569
+
+- https://www.luogu.com.cn/training/156815#problems
+- https://blog.csdn.net/m0_50176535/article/details/122570838
+- https://blog.csdn.net/qq_38702697/article/details/119089653
+
+
 ## [0-1 背包问题的 dfs 解法](01背包问题的dfs解法.md)
 
 ## dfs 但不需回溯

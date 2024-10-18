@@ -1,4 +1,6 @@
 
+- [`luogu p1106` 删数问题](https://www.luogu.com.cn/problem/P1106)：[解法代码](code/luogu-p1106-remove-digits.cpp)
+
 - [179. 最大数](https://leetcode.cn/problems/largest-number/) 看 leet 上我的提交
 
 

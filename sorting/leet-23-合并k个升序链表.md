@@ -170,7 +170,7 @@ class Solution {
     }
 ```
 
-# 合并k 个已排好序的数组
+# 合并 k 个已排好序的数组
 
 采用 merge sort 思路。
 

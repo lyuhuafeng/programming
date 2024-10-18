@@ -96,12 +96,12 @@ L3, u5, 我的果汁分你一半
 
 L3, u6, 二分天下必得其一
 
-- [1. 神奇的编号对](https://oj.youdao.com/course/12/54/1#/1/8253): [题解用 stl](../binary-search/code/index-pairs-l3-u6-ex1.cpp)
-- [2. 木材加工](https://oj.youdao.com/course/12/54/1#/1/8254): [题解](../binary-search/二分搜索最佳例题-L3-06-木材加工.md)
+- x [1. 神奇的编号对](https://oj.youdao.com/course/12/54/1#/1/8253): [题解用 stl](../binary-search/code/index-pairs-l3-u6-ex1.cpp)
+- x [2. 木材加工](https://oj.youdao.com/course/12/54/1#/1/8254): [题解](../binary-search/二分搜索最佳例题-L3-06-木材加工.md)
 - [3. 伐木工](https://oj.youdao.com/course/12/54/1#/1/8255): [题解](../binary-search/)
 - [4. 萝卜好借不好还](https://oj.youdao.com/course/12/54/1#/1/8256): [题解](../binary-search/)
-- [作业1. 烦恼的高考志愿](https://oj.youdao.com/course/12/54/2#/1/8258): [题解](../binary-search/luogu-p1678-高考志愿.md)
-- [作业2. 网线主管](https://oj.youdao.com/course/12/54/2#/1/8259)，也就是[`luogu p1577` 切绳子](https://www.luogu.com.cn/problem/P1577): [题解](../binary-search/)
+- x [作业1. 烦恼的高考志愿](https://oj.youdao.com/course/12/54/2#/1/8258): [题解](../binary-search/luogu-p1678-高考志愿.md)
+- x [作业2. 网线主管](https://oj.youdao.com/course/12/54/2#/1/8259)，也就是[`luogu p1577` 切绳子](https://www.luogu.com.cn/problem/P1577): [题解](../binary-search/)
 
 L3, u7, 条条大路通罗马
 
@@ -109,17 +109,17 @@ L3, u7, 条条大路通罗马
 
 L3, u8, 第二次小测。二分
 
-- [4.钢材切割](https://oj.youdao.com/course/12/56/1#/1/8267): [题解](../binary-search/)
-- [5.疫苗接种](https://oj.youdao.com/course/12/56/1#/1/8268): [题解](../binary-search/)
+- [4.钢材切割](https://oj.youdao.com/course/12/56/1#/1/8267): 锯木头
+- [5.疫苗接种](https://oj.youdao.com/course/12/56/1#/1/8268): 有序序列里找第一个 x，太基础
 
 L3, u11, 吃得好还要吃得巧。二分
 - [1. 数列分段1](https://oj.youdao.com/course/12/59/1#/1/8192)
 - [2. 数列分段2](https://oj.youdao.com/course/12/59/1#/1/8193)
-- [3. 进击的奶牛](https://oj.youdao.com/course/12/59/1#/1/8194)，也就是 [`luogu p1824.` 进击的奶牛](https://www.luogu.com.cn/problem/P1824): [题解](../binary-search/code/cows-max-safe-interval-luogu-p1824.cpp)
-- [4. 河中跳房子](https://oj.youdao.com/course/12/59/1#/1/8195)，[`luogu p2678`, NOIP 2015 提高组, 跳石头](https://www.luogu.com.cn/problem/P2678)
-- [5. 安全距离](https://oj.youdao.com/course/12/59/1#/1/8196): [题解](../binary-search/二分搜索-luogu-p6281-社交距离.md)
+- x [3. 进击的奶牛](https://oj.youdao.com/course/12/59/1#/1/8194)，也就是 [`luogu p1824.` 进击的奶牛](https://www.luogu.com.cn/problem/P1824): [题解](../binary-search/code/cows-max-safe-interval-luogu-p1824.cpp)
+- x [4. 河中跳房子](https://oj.youdao.com/course/12/59/1#/1/8195)，[`luogu p2678`, NOIP 2015 提高组, 跳石头](https://www.luogu.com.cn/problem/P2678)
+- x [5. 安全距离](https://oj.youdao.com/course/12/59/1#/1/8196): [题解](../binary-search/二分搜索-luogu-p6281-社交距离.md)
 - [作业1. 中位数](https://oj.youdao.com/course/12/59/2#/1/8197)
-- [作业2. 月度开销](https://oj.youdao.com/course/12/59/2#/1/8198)
+- x [作业2. 月度开销](https://oj.youdao.com/course/12/59/2#/1/8198) [洛谷](https://www.luogu.com.cn/problem/P2884) l3-u11-ex2
 
 L3, u12, 第三次小测
-- [6. 郊游活动](https://oj.youdao.com/course/12/60/1#/1/8201) 二分 + 贪心
+- [6. 郊游活动](https://oj.youdao.com/course/12/60/1#/1/8201) 二分 + 贪心。noip 2016 初赛，似乎洛谷上没有。
