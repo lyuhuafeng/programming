@@ -42,7 +42,7 @@ int shortest_path(vector<edge_weight> adj[], int V, int src) {
         q.pop();
         if (visited[u]) {
             continue;
-        } // 已经「最终到达」过，跳过
+        } // 已 visited 过，跳过
         max_dist = dist[u];
         reached++;
 
@@ -50,9 +50,8 @@ int shortest_path(vector<edge_weight> adj[], int V, int src) {
         visited[u] = true;
         for (auto x : adj[u]) {
             int v = x.to;
-            if (visited[v]) {
-                continue;
-            } // 已经「最终到达」过，跳过
+            // 不用判断 v 是否 visited 过，判断 dist 可覆盖它。当然单独先判断一下 visited 也可以。
+            // 若 v 已 visited 过，则 dist[v] 一定比 dist[u] 小，比 dist[u] + weight 就更小
             int weight = x.weight;
             if (dist[v] > dist[u] + weight) {
                 // 更新 v 的「最短距离」和「前驱顶点」

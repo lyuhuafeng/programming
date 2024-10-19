@@ -36,5 +36,6 @@
 * 到目标位置的完整路径。
 
 题目
-* [马的遍历](马的遍历.md)
-* [分油](分油.md)
+- [马的遍历](马的遍历.md)
+- [分油](分油.md)
+- [`luogu p1135.` 奇怪的电梯](https://www.luogu.com.cn/problem/P1135)：[bfs 解法](code/luogu-p1135-elevator-bfs.cpp)，[从 dijkstra 改的 bfs 解法](code/luogu-p1135-elevator-bfs-sol2.cpp)

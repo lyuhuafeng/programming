@@ -5,10 +5,14 @@ using namespace std;
 
 // luogu ac 2024.10.13
 
-// pq = n, p+q = m。遍历 p，求 p(m-p) == n 的。
-// 注意到 p 从小到大，p(m-p) 也从小到大，故可用二分查找合适的 p。
-// 找第一个使 p(m-p) >= n 的。
-// 二分范围：l 显然是 1；因为 p <= q，所以上限是 min(sqrt(n), m/2)。r = 该上限 + 1.
+/*
+    pq = n, p+q = m。遍历 p，求 p(m-p) == n 的。
+    注意到 p 从小到大，p(m-p) 也从小到大，故可用二分查找合适的 p。
+    找第一个使 p(m-p) >= n 的。
+    二分范围：l 显然是 1；因为 p <= q，所以上限是 min(sqrt(n), m/2)。r = 该上限 + 1.
+
+    除了二分，当然还可以直接用一元二次方程求根公式。
+*/
 
 bool f(long long p, long long m, long long n) {
     return p * (m - p) >= n;

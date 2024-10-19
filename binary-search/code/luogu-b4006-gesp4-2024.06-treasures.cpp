@@ -4,7 +4,16 @@
 using namespace std;
 
 // https://www.luogu.com.cn/problem/B4006
-// luogu ac
+// luogu ac 2024.10.06
+
+/*
+max_val - min_val <= k
+所求总价值为 [min_val ... max_val] 范围内所有宝箱价值之和。这个可用前缀和求。
+对每个 min_val，找到所有 <= min_val + k 的，求和。
+也就是，找最后一个 <= min_val + k 的位置 idx。用二分求。然后用 prefix sum 相减。
+
+也可以逆序。对每个 max_val，找第一个 >= max - k 的位置。找「第一个」比找「最后一个」稍微简单一点。
+*/
 
 int main() {
     int n, k;

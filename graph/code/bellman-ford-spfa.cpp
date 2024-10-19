@@ -35,7 +35,7 @@ void bellman_ford(const vector<edge>& edges, int vertices, int src) {
         q.pop();
         inqueue[u] = false;
 
-        for (edge e : edges) {
+        for (const edge &e : edges) {
             if (e.from != u) {
                 continue;
             }

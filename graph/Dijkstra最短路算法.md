@@ -6,19 +6,54 @@
 
 # 思路
 
-辅助记忆：是普通 BFS 的扩展。
+辅助记忆：是普通 BFS 的扩展。若顶点之间的移动代价相同，则 Dijkstra 退化为 BFS。（常见的，两顶点间移动的代价，是「1 次」，而不是不同的「距离」或「花费」）。
 
 - 相同之处：每次把「当前」顶点能到达的各顶点放入「待处理」集合。
 - 不同之处：按什么顺序，从「待处理」集合中取出一个，作为「当前」顶点？
   - BFS：按放入的「顺序」。则「待处理」集合是个普通 FIFO queue。
   - Dijkstra：按顶点离 src 的「代价」（离起点近），离起点近的先取出来。则「待处理」集合是个 priority queue。且「待处理」集合中的顶点的「代价」是可以更新的。为了更新 pq 中的「代价」，维护 `visited[]` 数组。
 
-若顶点之间的移动代价相同，则 Dijkstra 退化为 BFS。
+维护这些数据结构：
 
-维护
 - `dist[]` 数组，`dist[i]` 表示：从起点 src 出发，到顶点 i 的最短距离。
 - `visited[]` 数组，bool 类型，`visited[i]` 表示：顶点 i 是否已「处理」过。因为 C++ priority queue 无法更新 queue 中元素，细节见下。
 - `prev[]` 数组，`prev[i]` 表示：从起点 src 出发，到顶点 i 的 shortest path，i 的前一个顶点编号
+
+<!-- newly added 2024.10.19 to clean later -->
+dijk：一个顶点可以多次「入 queue」（每次带不同的 dist），但 queue 中元素会根据 dist 排序，所以同一个顶点的「出 queue」的顺序与「入 queue」的顺序可能不同。我们平常说的「visit」，理解为「（出 queue 后）处理它、找到它能到达的各顶点并放入 queue」更合适。从这个角度看，pop 之后，若发现已 visit 过，说明「有比我后入 queue 的，因为 dist 比我小，已经被处理过了」，所以我就不用了，跳过；push之前，若发现已 visit 过，更可以跳过我（这点与 bfs 相同）
+
+两者都可以找单dst 或 多 dst。若单 dst，则找到第一个即可退出。何时判断？dijk：pop 后，真正 visit 时，dist 最小的被visit；bfs：逻辑上 push/pop 时都行，效率上应该在 push 前。
+
+dijk：若不用 visited，则后续的因为 dist 太大，导致无法松弛其邻接顶点，不会放到 queue 中。待验证。
+但 bfs：若不用 visited，则会出错。
+
+具体实现：dijk 的 pq 要按 dist 排序，所以必须把 vertex_id 和 dist 封装在一个对象里，一起放到 priority 里。bfs，不考虑这个，可以把 dist 单独作为一个数组，queue 里只放 vertex_id，代码清爽些。
+
+某顶点 v 再次入 queue(v2)，会不会比已经出 queue 的 v (v1)的 dist 更小？经分析，不会。
+v1 ... u ... v2
+假设，v1 是已经访问过，已经出 queue 的。v2 是被某个 u 邻接到的。
+若 u 的访问是在 v1 之后，则 u.dist 一定大于 v1.dist，则 v2.dist = u.dist + w(u, v2) 也一定大于 v1.dist。
+若 u 的访问是在 v1 之前，则 u.dist < v1.dist。v2.dist 若小于 v1.dist，则入队后 v2 会被拍到 v1 之前，不会出现 v1 出 queue 后若干时间 v2 才入 queue 的情况。
+
+另，enqueue(v) 前判断 `visited[v]` 可以用 `u.dist + w(u, v) > v.dist` 来代替。
+dequeue(u) 后，如何判断？dist[u] < u.dist？to think more later. 现在还是用 visited[] 吧。
+
+如果 q 里只有一个，则代表当前最优，其 dist 可更新。若再次到达该顶点，dist 更大则扔掉，dist 更小则更新。此时，pop出来的一定是全局最优，不用判断。
+
+若 q 里可能有多个，则 pop 出来得看看，我的 dist 是不是其实是那个应该被更新没了的？若是，则扔。如何判断？dist，或 visited。
+
+set
+- push: 判断 dist 并 relax
+- pop：不用判断
+
+pq
+- push(v)：判断 dist 并 relax
+- pop: 判断 dist 或 visited。（不判断也不影响结果，u 邻接的各 v，在 push 前判断 dist 时会 fail，不会入 queue。但做了无用功，所以最好判断）并设置 visited。
+
+bfs
+- push 前判断 visited 就行。push后设置 visited。
+- pop 时不用判断；
+<!-- end of newly added -->
 
 ```
 1. 初始化
@@ -64,11 +99,11 @@ Workaround 是，不更新 `(v1, d1)`，而是再增加一个 `(v1, d2)` 元素�
 # C++ 代码
 
 - 最佳实现：priority queue 里存放自定义的结构体。结构体对象的比较，重载了 `operator<()`。重载该操作符，使 priority queue 的类型声明最简。[`dijkstra-best.cpp`](code/dijkstra-best.cpp)
-- priority queue 里存放自定义的结构体（同上）。自定义比较函数。priority queue 声明时要指定该比较函数，以及（被迫）指定底层容器为 vector。[`dijkstra-custom-cmp.cpp`](code/dijkstra-custom-cmp.cpp)
-- priority queue 里存放 pair 类型，就不用自定义比较函数，用系统自带的 `greater<pair<int, int>>` 函数。pair 默认根据 first 来排序，所以要把 dist 作为 first，vertex 作为 second。与原来自定义的结构体顺序相反。priority queue 声明时要指定这个 `greater` 函数，以及被迫指定底层容器为 vector。[`dijkstra-using-pair.cpp`](code/dijkstra-using-pair.cpp)
-- 小图灵标程：用了链式前向星而不是 vector 来存储邻接表；重载了 `operator<` 操作符。[`dijkstra-little-turing.cpp`](code/dijkstra-little-turing.cpp)
+- priority queue 里存放自定义的结构体（同上）。自定义比较函数。priority queue 声明时要指定该比较函数，以及（被迫）指定底层容器为 vector。[代码](code/dijkstra-custom-cmp.cpp)
+- priority queue 里存放 pair 类型，就不用自定义比较函数，用系统自带的 `greater<pair<int, int>>` 函数。pair 默认根据 first 来排序，所以要把 dist 作为 first，vertex 作为 second。与原来自定义的结构体顺序相反。priority queue 声明时要指定这个 `greater` 函数，以及被迫指定底层容器为 vector。[代码](code/dijkstra-using-pair.cpp)
+- 小图灵标程：用了链式前向星而不是 vector 来存储邻接表；重载了 `operator<` 操作符。[代码](code/dijkstra-little-turing.cpp)
 
-- 也可以用 set 代替 priority_queue，因为 set 也是排序的。[代码](code/dijkstra-set.cpp)。与使用 priority_queue 不同之处：(1) 比较函数，从返回 `a > b` 改为返回 `a < b`，还要处理相等的情况；(2) 更新一个顶点的 dist 时，要想看它是否已在 set 里（带一个较大的 dist），若已在，则先删掉 `{v, old_dist}` 再加入 `{v, new_dist}`；(3) `visited[]` 不用了；原来 priority_queue 无法判断某顶点是否已在 q 中，也无法更新其 dist，所以用 `visited[]` 来判断某顶点是否已经被加入过 queue；有了 (2) 的方法，就不需要 `visited[]` 了。
+- 也可以用 set 代替 priority_queue，因为 set 也是排序的。[代码](code/dijkstra-set.cpp)。与使用 priority_queue 不同之处：(1) 比较函数，从返回 `a > b` 改为返回 `a < b`，还要处理相等的情况；(2) 更新一个顶点的 dist 时，先看该顶点是否已在 set 里并且带一个较大的 dist，若如此，则先删掉 `{v, old_dist}` 再加入 `{v, new_dist}`；(3) `visited[]` 不用了。
 
 最佳实现的核心代码：
 ```cpp

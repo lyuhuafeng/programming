@@ -1,4 +1,4 @@
-## [`l5-u14-ex3.` 二师兄的纪录片](https://oj.youdao.cn/course/37/283/1#/1/14230)
+## [`l5-u14-ex3.` 二师兄的纪录片](https://oj.youdao.com/course/37/283/1#/1/14230)
 
 用 dijkstra shortest path 算法。每个城市顶点的邻接顶点就是其 4 个方向的城市，以及可能的友好城市。
 
@@ -25,17 +25,19 @@
 
 - dijkstra 算法。任意两个顶点（层）之间的 weight 都是 1。dijkstra 本来是从求「单源」到「所有顶点」的最短距离。本解法中稍加改动，求「单源」到「某一顶点」的最短距离。[代码一，用 priority queue](code/luogu-p1135-elevator-dijkstra-pq.cpp)、[代码二，用 set](code/luogu-p1135-elevator-dijkstra-set.cpp)。
 
-- bfs 算法。[代码](code/luogu-p1135-elevator-bfs.cpp)
+- bfs 算法。[代码](../bfs/code/luogu-p1135-elevator-bfs.cpp)
 
 ##
 
-[1514. 概率最大的路径](https://leetcode.cn/problems/path-with-maximum-probability/)
+[1514. 概率最大的路径](https://leetcode.cn/problems/path-with-maximum-probability/)：[dijkstra 用 set 代码](code/leet-1514-path-with-max-probability.cpp)
 
-[1631. 最小体力消耗路径](https://leetcode.cn/problems/path-with-minimum-effort/) binary search or Dijkstra's
+[1631. 最小体力消耗路径](https://leetcode.cn/problems/path-with-minimum-effort/) binary search or Dijkstra's [并查集解法](../union-find/code/path-with-min-effort-leet-1631.cpp)
 
-[1334. 阈值距离内邻居最少的城市](https://leetcode.cn/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/)
+[1334. 阈值距离内邻居最少的城市](https://leetcode.cn/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/) floyd 所有 pair 间距离
 
-[787. K 站中转内最便宜的航班](https://leetcode.cn/problems/cheapest-flights-within-k-stops)
+[787. K 站中转内最便宜的航班](https://leetcode.cn/problems/cheapest-flights-within-k-stops)：bellman ford 解法、dp 解法，看题解；dijkstra 为何不行？[dijkstra 解法](code/leet-787-cheapest-within-k-dijkstra.cpp)
+
+[1928. 规定时间内到达终点的最小花费](https://leetcode.cn/problems/minimum-cost-to-reach-destination-in-time) 与 787 类似
 
 882. 细分图中的可到达节点
 https://leetcode.cn/problems/reachable-nodes-in-subdivided-graph/
@@ -59,8 +61,15 @@ vip: https://leetcode.cn/problems/the-maze-iii/
 1192. 查找集群内的关键连接
 https://leetcode.cn/problems/critical-connections-in-a-network/
 
+924. 尽量减少恶意软件的传播
 https://leetcode.cn/problems/minimize-malware-spread/
 
+928. 尽量减少恶意软件的传播 II
 https://leetcode.cn/problems/minimize-malware-spread-ii/
 
+1568. 使陆地分离的最少天数
 https://leetcode.cn/problems/minimum-number-of-days-to-disconnect-island/
+
+
+
+to read 宫水三叶笔记：https://mp.weixin.qq.com/s/2Ba8-NI7lQh2_MvMpg-CZg

@@ -1,38 +1,34 @@
-#include <queue>
-#include <vector>
 #include <cstdio>
+#include <vector>
+#include <queue>
 using namespace std;
 
-// ac 2024.10.09
+// bfs 解法，最简
+// luogu ac 2024.10.19
 
-// 图的顶点，每层楼。编号从 1 开始
-struct vertex {
-    int id; // 第几层；编号从 1 开始
-    int dist;
-};
-
-int shortest_path(const vector<int> adj[], int n, int s, int t) {
+int bfs(const vector<int> adj[], int n, int s, int t) {
     if (s == t) {
         return 0;
     }
-    queue<vertex> q;
+    queue<int> q;
     vector<bool> visited(n + 1, false);
+    vector<int> cnt(n + 1, 0); // cnt[i]: 从 start 到 i 需要几步
 
-    q.push({s, 0});
+    q.push(s);
+    visited[s] = true;
+    cnt[s] = 0;
     while (!q.empty()) {
-        int u = q.front().id;
-        int d = q.front().dist;
-        q.pop();
-        if (visited[u]) {
-            continue;
-        }
-        visited[u] = true;
-
-        for (auto &v : adj[u]) {
-            if (v == t) {
-                return d + 1;
+        int u = q.front(); q.pop();
+        for (int v : adj[u]) {
+            if (visited[v]) {
+                continue;
             }
-            q.push({v, d + 1});
+            if (v == t) {
+                return cnt[u] + 1;
+            }
+            q.push(v);
+            visited[v] = true;
+            cnt[v] = cnt[u] + 1;
         }
     }
     return -1;
@@ -54,7 +50,8 @@ int main() {
         }
     }
 
-    int ans = shortest_path(adj, n, a, b);
-    printf("%d\n", ans);
+    int ans = bfs(adj, n, a, b);
+    printf("%d", ans);
+
     return 0;
 }

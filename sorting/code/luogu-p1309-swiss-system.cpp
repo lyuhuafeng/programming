@@ -8,6 +8,9 @@ https://oj.youdao.com/course/13/71/1#/1/10148
 win[] 和lose[] 已经是有序的，无需对它们再递归排序，只要把 win[] 和lose[] 合并即可。
 这一步需调用标准 merge sort 里的 merge()，耗时 O(n)。
 总共 R 轮，再考虑到最开始要排序一次，共 O(nlogn + Rn)。
+
+英语学习：瑞士轮 Swiss-system tournament
+tournament n. 锦标赛；比赛；比武
 */
 
 // luogu ac 2024.03.21

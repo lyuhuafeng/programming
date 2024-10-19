@@ -26,10 +26,10 @@ void bellman_ford(const vector<edge>& edges, int vertices, int src) {
 
     // Relax all edges |vertices| - 1 times
     for (int i = 1; i <= vertices - 1; ++i) {
-        for (int j = 0; j < edges.size(); ++j) {
-            int u = edges[j].from;
-            int v = edges[j].to;
-            int w = edges[j].weight;
+        for (const edge &e : edges) {
+            int u = e.from;
+            int v = e.to;
+            int w = e.weight;
             if (dist[u] != INT_MAX && dist[u] + w < dist[v]) {
                 dist[v] = dist[u] + w;
                 prevs[v] = u;
@@ -41,10 +41,10 @@ void bellman_ford(const vector<edge>& edges, int vertices, int src) {
     print_dist(dist, prevs);
 
     // 检测是否存在 negative-weight cycles
-    for (int i = 0; i < edges.size(); ++i) {
-        int u = edges[i].from;
-        int v = edges[i].to;
-        int w = edges[i].weight;
+    for (const edge &e : edges) {
+        int u = e.from;
+        int v = e.to;
+        int w = e.weight;
         if (dist[u] != INT_MAX && dist[u] + w < dist[v]) {
             printf("negative cycle detected\n");
             break;
