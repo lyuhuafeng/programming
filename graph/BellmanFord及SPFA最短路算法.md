@@ -10,12 +10,34 @@ Bellman-Ford 比 Dijkstra 强的地方
 - 实现简单
 
 缺点
-- 时间复杂度高，高达 `O(V*E)`
+- 比 dijkstra 慢，时间复杂度高，高达 `O(V*E)`
+
+# dp 思路
+
+利用动态规划的思想（基于边的视角）可设计算法如下：设 `P(k, v)` 是从起点 s 到终点 v 之间最多经过 k 条边的最短路径，显然 `P(n, v)` 就是从 s 到 v 的最短路径。如果已经求得 `P(k, v)`，那 `P(k+1, v)` 可依据已有结果来寻找。假定路径 `P(k+1, v)` 中，v 的前一个顶点为 u，而从 s 到 u 不会超过 k 条边，于是：
+
+```cpp
+    w(P(k+1, v)) = min{ w(P(k, u)) + w(u->v) }, any u
+```
+《面向算法设计的数据结构-C++语言版-第2版-by-谢勰-清华大学2021》p223
+
+下面的算法应该是用 dp 推出来的。具体细节 to add later。
 
 # 原理
 
 - `dist[]` 变量定义，与 Dijkstra 相同。初始化方式也一样：src 到自己：`0`；src 到其他顶点：`INF`。
 - `prevs[]` 变量定义，与 Dijkstra 相同。
+
+```python
+    对每个顶点 v:
+        v.dist = infinity
+        v.prev = None
+    src.dist = 0
+
+    重复 |V| - 1 次:
+        对每条边 (u, v):
+            relax(u, v)
+```
 
 具体算法不同：
 
@@ -33,11 +55,16 @@ Bellman-Ford 比 Dijkstra 强的地方
 
 完整代码：[`bellman-ford-shortest-path.cpp`](code/bellman-ford-shortest-path.cpp)
 
-核心代码
+
 
 注意：relax 时的判断 `dist[u] != INT_MAX && dist[u] + w < dist[v]`。`dist[u]` 可能还是 INF，做加法后可能超出 int 范围，故要先确认 `dist[u] != INF`。
 
 <font color=red>to do: 每轮 relax 后，如何得知是哪个顶点「确定」了？貌似不能知道。</font>
+
+
+
+经过 k 轮操作后，对任何顶点 v，v.dist is at most the weight of every path from s to v using at most i edges.
+
 
 ```cpp
     void bellman_ford(const vector<edge>& edges, int vertices, int src) {
@@ -84,7 +111,7 @@ at the end of the i-th iteration, from any vertex v, following the predecessor t
 
 SPFA，shortest path faster algorithm，一般认为是有队列优化的 Bellman-Ford 算法。
 
-普通的 Bellman-Ford 算法，固定 V-1 轮，每轮都试图 relax 所有的边。可改进之处：relax 必定只会发生在路径前导节点 relax 成功过的节点上。只对这样的顶点进行 relax 操作。
+普通的 Bellman-Ford 算法，固定 `V-1` 轮，每轮都试图 relax 所有的边。可改进之处：relax 必定只会发生在路径前导节点 relax 成功过的节点上。只对这样的顶点进行 relax 操作。
 
 若顶点 v 对应的 `dist[v]` 更新了，则以 v 为起点的所有 edge 才需要试图 relax。用一个 queue 存放这样的顶点。只从这个 queue 里取顶点，每次取出一个顶点，然后尝试 relax 这个顶点出发的所有 edge。
 
@@ -92,7 +119,7 @@ SPFA，shortest path faster algorithm，一般认为是有队列优化的 Bellma
 
 另外，如果某顶点已经在 queue 里，则不需要再放进去。因无法直接查看 queue 是否已有某顶点，所以用一个 `inqueue[]` 数组，记录每个顶点是否在 queue 里。
 
-... tries to produce relaxation along each edge (a -> b; weight). Relaxation along the edges is an attempt to improve the value `dist[b]` using the value `dist[a] + weight`.
+... tries to produce relaxation along each edge `(a -> b; weight)`. Relaxation along the edges is an attempt to improve the value `dist[b]` using the value `dist[a] + weight`.
 
 注意，relax 顺序很重要。
 - 这里用普通 FIFO queue，按放入顺序 relax

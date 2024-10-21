@@ -23,22 +23,37 @@
 
 ## [`luogu p1135.` 奇怪的电梯](https://www.luogu.com.cn/problem/P1135)
 
-- dijkstra 算法。任意两个顶点（层）之间的 weight 都是 1。dijkstra 本来是从求「单源」到「所有顶点」的最短距离。本解法中稍加改动，求「单源」到「某一顶点」的最短距离。[代码一，用 priority queue](code/luogu-p1135-elevator-dijkstra-pq.cpp)、[代码二，用 set](code/luogu-p1135-elevator-dijkstra-set.cpp)。
+dijkstra 算法。任意两个顶点（层）之间的 weight 都是 1。dijkstra 本来是从求「单源」到「所有顶点」的最短距离。本解法中稍加改动，求「单源」到「某一顶点」的最短距离。[代码一，用 priority queue](code/luogu-p1135-elevator-dijkstra-pq.cpp)、[代码二，用 set](code/luogu-p1135-elevator-dijkstra-set.cpp)。
 
-- bfs 算法。[代码](../bfs/code/luogu-p1135-elevator-bfs.cpp)
+bfs 算法。[代码](../bfs/code/luogu-p1135-elevator-bfs.cpp)
 
-##
+## [1514. 概率最大的路径](https://leetcode.cn/problems/path-with-maximum-probability/)
 
-[1514. 概率最大的路径](https://leetcode.cn/problems/path-with-maximum-probability/)：[dijkstra 用 set 代码](code/leet-1514-path-with-max-probability.cpp)
+[dijkstra 用 set 代码](code/leet-1514-path-with-max-probability.cpp)
 
-[1631. 最小体力消耗路径](https://leetcode.cn/problems/path-with-minimum-effort/) binary search or Dijkstra's [并查集解法](../union-find/code/path-with-min-effort-leet-1631.cpp)
+## [1631. 最小体力消耗路径](https://leetcode.cn/problems/path-with-minimum-effort/)
 
-[1334. 阈值距离内邻居最少的城市](https://leetcode.cn/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/) floyd 所有 pair 间距离
+binary search or Dijkstra's
 
-[787. K 站中转内最便宜的航班](https://leetcode.cn/problems/cheapest-flights-within-k-stops)：bellman ford 解法、dp 解法，看题解；dijkstra 为何不行？[dijkstra 解法](code/leet-787-cheapest-within-k-dijkstra.cpp)
+[并查集解法](../union-find/code/path-with-min-effort-leet-1631.cpp)
+
+## [1334. 阈值距离内邻居最少的城市](https://leetcode.cn/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/)
+
+floyd 所有 pair 间距离
+
+## [787. K 站中转内最便宜的航班](https://leetcode.cn/problems/cheapest-flights-within-k-stops)
+
+[bellman-ford 解法](code/leet-787-cheapest-within-k-bellman.cpp)
+
+[bellman-ford 解法的 spfa 优化](code/leet-787-cheapest-within-k-bellman-spfa.cpp)、
+
+[dp 解法](code/leet-787-cheapest-within-k-dp.cpp)
+
+[dijkstra 解法](code/leet-787-cheapest-within-k-dijkstra.cpp)，为何不行？
 
 [1928. 规定时间内到达终点的最小花费](https://leetcode.cn/problems/minimum-cost-to-reach-destination-in-time) 与 787 类似
 
+## 
 882. 细分图中的可到达节点
 https://leetcode.cn/problems/reachable-nodes-in-subdivided-graph/
 

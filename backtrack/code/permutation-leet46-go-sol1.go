@@ -1,5 +1,9 @@
 package main
 
+// leet ac 2024.01.04
+
+// 运行：go run ${filename}.go
+
 import "fmt"
 
 func contains(p []int, num int) bool {
@@ -33,7 +37,6 @@ func permute(nums []int) [][]int {
     backtrack(nums, &res, p)
     return res
 }
-
 
 func main() {
     nums := []int{5, 4, 6, 2}

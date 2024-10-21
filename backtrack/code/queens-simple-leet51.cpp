@@ -1,4 +1,5 @@
-// n皇后问题
+// n 皇后问题
+// leet ac 2023.11.02
 
 #include <vector>
 #include <string>
@@ -18,13 +19,13 @@ bool is_valid(vector<int>& board, int col, int n) {
     if (find(board.begin(), board.end(), col) != board.end()) {
         return false;
     }
-    // 检查右上方是否有皇后互相冲突。新来的是第k行、第col列。
+    // 检查右上方是否有皇后互相冲突。新来的是第 k 行、第 col 列。
     for (int i = k - 1, j = col + 1; i >= 0 && j < n; i--, j++) {
         if (board[i] == j) {
             return false;
         }
     }
-    // 检查左上方是否有皇后互相冲突。新来的是第k行、第col列
+    // 检查左上方是否有皇后互相冲突。新来的是第 k 行、第 col 列
     for (int i = k - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
         if (board[i] == j) {
             return false;
@@ -44,8 +45,9 @@ void backtrack(vector<int>& board, int n) {
     }
     for (int col = 0; col < n; col++) {
         // 排除不合法选择
-        if (!is_valid(board, col, n)) 
+        if (!is_valid(board, col, n)) {
             continue;
+        }
         board.push_back(col); // 做选择；深度往下走一步
         backtrack(board, n);
         board.pop_back(); // 撤销选择；回溯一步

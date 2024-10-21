@@ -98,14 +98,17 @@ Workaround 是，不更新 `(v1, d1)`，而是再增加一个 `(v1, d2)` 元素�
 
 # C++ 代码
 
-- 最佳实现：priority queue 里存放自定义的结构体。结构体对象的比较，重载了 `operator<()`。重载该操作符，使 priority queue 的类型声明最简。[`dijkstra-best.cpp`](code/dijkstra-best.cpp)
+- 朴素实现：自己维护 queue，用普通 vector 充当 queue。自己找 dist 最大的、更新 dist 值。可用插入排序。to do later。
+
+- priority queue 优化，最佳实现：priority queue 里存放自定义的结构体。结构体对象的比较，重载了 `operator<()`。重载该操作符，使 priority queue 的类型声明最简。[`dijkstra-best.cpp`](code/dijkstra-best.cpp)
 - priority queue 里存放自定义的结构体（同上）。自定义比较函数。priority queue 声明时要指定该比较函数，以及（被迫）指定底层容器为 vector。[代码](code/dijkstra-custom-cmp.cpp)
 - priority queue 里存放 pair 类型，就不用自定义比较函数，用系统自带的 `greater<pair<int, int>>` 函数。pair 默认根据 first 来排序，所以要把 dist 作为 first，vertex 作为 second。与原来自定义的结构体顺序相反。priority queue 声明时要指定这个 `greater` 函数，以及被迫指定底层容器为 vector。[代码](code/dijkstra-using-pair.cpp)
 - 小图灵标程：用了链式前向星而不是 vector 来存储邻接表；重载了 `operator<` 操作符。[代码](code/dijkstra-little-turing.cpp)
 
 - 也可以用 set 代替 priority_queue，因为 set 也是排序的。[代码](code/dijkstra-set.cpp)。与使用 priority_queue 不同之处：(1) 比较函数，从返回 `a > b` 改为返回 `a < b`，还要处理相等的情况；(2) 更新一个顶点的 dist 时，先看该顶点是否已在 set 里并且带一个较大的 dist，若如此，则先删掉 `{v, old_dist}` 再加入 `{v, new_dist}`；(3) `visited[]` 不用了。
 
-最佳实现的核心代码：
+priority queue 最佳实现的核心代码：
+
 ```cpp
     // 边，包含 to 和 weight
     struct edge_weight {

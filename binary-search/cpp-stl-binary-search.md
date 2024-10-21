@@ -110,6 +110,8 @@ last 不在范围之内。或者说，last 是「最大下标 + 1」、「最后
 
 <font color="red">注意</font>，若是 `pair<int, int>` 而不是自定义的结构体，则重载 `operator<` 方法不能用，自定义函数方法可用。其他方法待查。
 
+另可参见实例 [`leet 2070.` 每个查询的最大美丽值](https://leetcode.cn/problems/most-beautiful-item-for-each-query) 的[解法代码](../dp/code/luogu-p2070-most-beautifuls.cpp)。此题主要考察 sparse table，但用到了`upper_bound()`，可参见其比较函数的写法。
+
 法一：自定义函数。`upper_bound()` 调用时，函数名后不用加括号。
 
 ```cpp

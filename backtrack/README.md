@@ -63,9 +63,11 @@ https://www.geeksforgeeks.org/backtracking-introduction/
 
 # 题目
 
-- 字符串的全排列：c++ 代码：[`permutation.cpp`](code/permutation.cpp)
-- [leet 46. 数字数组的全排列](https://leetcode.cn/problems/permutations) 
-  - 通过的 Java 代码：[`permutation-leet46.java`](code/permutation-leet46.java)。注意，每遇到成功的 track，不能 `res.add(track)`，要 `res.add(new ArrayList<>(track))`。
+- 字符串的全排列：[c++ 模板代码](code/permutation-string.cpp)
+
+- [leet 46. 数字数组的全排列](https://leetcode.cn/problems/permutations)
+  - [c++ 代码](code/permutation-leet46.cpp)
+  - [java 代码](code/permutation-leet46.java)。注意，每遇到成功的 track，不能 `res.add(track)`，要 `res.add(new ArrayList<>(track))`。
   - go 代码，回溯法，同上面的 Java 代码：[`permutation-leet46-go-sol1.go`](code/permutation-leet46-go-sol1.go)
   - go 代码，回溯法，little Turing 思路，用 `used[]` 和 `now`：[`permutation-leet46-go-sol1-used.go`](code/permutation-leet46-go-sol1-used.go)
   - go 代码，递归但似无回溯：[`permutation-leet46-go-sol2.go`](code/permutation-leet46-go-sol2.go) 
@@ -74,17 +76,24 @@ https://www.geeksforgeeks.org/backtracking-introduction/
 - [数的划分](数的划分.md)
 - [和为 T](和为T.md)
 
-- [leet 78. 子集](https://leetcode.cn/problems/subsets/) 无重复元素的数组，找出其所有子集。
+- [leet 78. 子集](https://leetcode.cn/problems/subsets) 无重复元素的数组，找出其所有子集。
   - dfs 代码：[`subset-dfs-leet78.java`](code/subset-dfs-leet78.java) 可选项是两个：「选自己」、「不选自己」。不像其他题目，用循环遍历所有可选项。Again，Java 代码，不能直接 `res.add(t)`，而要复制一个新的再加入 `res.add(new ArrayList<>(t))`。
-  - 还有一种方法，利用二进制，代码可见我的 C++ 题解。
+  - 还有一种方法，利用二进制，[c++ 代码](code/subset-bits-leet78.cpp)。
 
-- [luogu p1088 (NOIP 2004 普及组) 火星人](https://www.luogu.com.cn/problem/P1088) 求某个排列的 next n 排列
-  - dfs by igor: [代码](code/luogu-p1088-martian-dfs-igor.cpp)
-  - 直接用 `std::next_permutation()`: [代码](code/luogu-p1088-martian-stl.cpp)
+-[leet 62. 不同路径](https://leetcode.cn/problems/unique-paths)：[dfs 解法]()，代码看着像简单递归；[dp 解法]()，代码就是简单递推。
+
+- [leet 22. 括号生成](https://leetcode.cn/problems/generate-parentheses)
+
+-[leet 131. 分割回文串](https://leetcode.cn/problems/palindrome-partitioning)
 
 leetcode https://blog.csdn.net/weixin_39802680/article/details/106026618
 
-[P1443 马的遍历 - 洛谷](luogu.com.cn)(https://www.luogu.com.cn/problem/P1443)
+
+- [luogu p1088，noip 2004 普及组，火星人](https://www.luogu.com.cn/problem/P1088) 求某个排列的 next n 排列
+  - dfs by igor：[代码](code/luogu-p1088-martian-dfs-igor.cpp)
+  - 直接用 `std::next_permutation()`：[代码](code/luogu-p1088-martian-stl.cpp)
+
+[洛谷 p1443 马的遍历](luogu.com.cn)(https://www.luogu.com.cn/problem/P1443)
 
 [luogu P1747 好奇怪的游戏](https://www.luogu.com.cn/problem/P1747)
 

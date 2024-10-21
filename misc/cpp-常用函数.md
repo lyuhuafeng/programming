@@ -51,6 +51,9 @@
     float exp(float x);
     long double exp(long double x);
     double exp(T x); // T为各种整数类型
+
+    T log2(T x); // 适用于 float, double, long double 类型
+    log2f(float x), log2l(long double x) // 只适用指定类型
 ```
 
 # 取整
@@ -69,9 +72,7 @@
 
 `std::abs()` 在 c++14 及以前，返回值均为 float 或 double，即使参数可能是整数类型。所以，若用 `printf("%d", std::abs(...))` 打印，一定要把 `std::abs()` 的结果显示转换成 int 或 long 或其他整数类型，否则出错。（其他函数会做类型转换，但 `printf` 很特殊，不会转换，导致出错）
 
-# 乘方、开方、对数
-
-# `memset()`
+# `memset()` vs. `std::fill()`
 
 可用在整数或 bool 数组上。
 
@@ -90,4 +91,4 @@
 
 初始化 bool 数组时，`true` 或 `false` 都行。bool 占地 1 byte。
 
-但最好避免使用 `memset()`，改用 `std::fill()` 或 `std::fill_n()`，什么类型、什么值都可以。
+但最好避免使用 `memset()`，改用 `std::fill()` 或 `std::fill_n()`，（需 `#include <algorithm>`）什么类型、什么值都可以。

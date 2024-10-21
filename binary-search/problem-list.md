@@ -14,10 +14,10 @@
 
 - [`l3-u6-ex1` 神奇的编号对](https://oj.youdao.com/course/12/54/1#/1/8253)：[题解用 stl](code/index-pairs-l3-u6-ex1.cpp) 
 
-- `leet 153 & 154.` 旋转有序数组的最小值系列: [解法](二分搜索-leet-153-154-旋转数组两题.md)
-- `leet 875.` 爱吃香蕉的珂珂：[解法](leet-875-爱吃香蕉的珂珂.md) 注意，浮点数运算精度的坑。
-- [`leet 1011. medium` 在 D 天内送达包裹的能力](https://leetcode.cn/problems/capacity-to-ship-packages-within-d-days/)
-- [`leet 410. hard` 分割数组的最大值](https://leetcode.cn/problems/split-array-largest-sum/) 解法代码：[split-array-largest-sum-leet-410.cpp](code/split-array-largest-sum-leet-410.cpp)
+- `leet 153 & 154.` 旋转有序数组的最小值系列: [解法文档](二分搜索-leet-153-154-旋转数组两题.md)
+- `leet 875.` 爱吃香蕉的珂珂：[解法文档](leet-875-爱吃香蕉的珂珂.md) 注意，浮点数运算精度的坑。
+- [`leet 1011. medium` 在 D 天内送达包裹的能力](https://leetcode.cn/problems/capacity-to-ship-packages-within-d-days/)：[二分代码](code/leet-1011-ship-in-d-days.cpp)
+- [`leet 410. hard` 分割数组的最大值](https://leetcode.cn/problems/split-array-largest-sum/)：[解法代码](code/split-array-largest-sum-leet-410.cpp)
 
 - [2021 CSP-J 初赛填空题](二分搜索-矩形-cspj-2021初赛填空.md)
 

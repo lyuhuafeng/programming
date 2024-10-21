@@ -1,3 +1,5 @@
+// leet ac 2023.11.02
+
 class Solution {
     // 每个解法是 int[]，记录每行的皇后放在第几列，取值范围 0 ~ n-1
     int total;
@@ -29,7 +31,7 @@ class Solution {
 
     // 路径：board 是已经放好的若干行的皇后
     // 选择列表：第 row 行放置皇后的选择
-    // 结束条件：row == n，说明棋盘放满了（0 ~ n-1 行都放了）
+    // 结束条件：row == n (最大范围 + 1），说明棋盘已经放满了（0 ~ n-1 行都放了）
     void backtrack(int[] board, int row) {
         int n = board.length;
         // 触发结束条件
@@ -39,8 +41,9 @@ class Solution {
         }
         for (int col = 0; col < n; col++) {
             // 排除不合法选择
-            if (!is_valid(board, row, col)) 
+            if (!is_valid(board, row, col)) {
                 continue;
+            }
             board[row] = col; // 做选择；深度往下走一步
             backtrack(board, row + 1);
             // 撤销选择；回溯一步：不用显式操作
@@ -52,7 +55,7 @@ class Solution {
         // 不用初始化 board
         // Arrays.fill(board, 0);
         total = 0;
-        backtrack(board, 0);
+        backtrack(board, 0); // row 参数的初始值为 0：将要放第 0 行的皇后
         return total;
     }
 }
