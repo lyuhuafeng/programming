@@ -1,23 +1,24 @@
 
 - [`luogu p1106` 删数问题](https://www.luogu.com.cn/problem/P1106)：[解法代码](code/luogu-p1106-remove-digits.cpp)
 
-- [179. 最大数](https://leetcode.cn/problems/largest-number/) 看 leet 上我的提交
+- [146. LRU 缓存](https://leetcode.cn/problems/lru-cache) [代码](code/leet-146-lru-cache.cpp)、[逻辑更清晰的代码](code/leet-146-lru-cache-better.cpp)（`put()` 代码不同；去掉了 `removeTail()`）
 
+- [460. LFU 缓存](https://leetcode.cn/problems/lfu-cache) [代码](code/leet-460-lfu-cache.cpp)、[稍微改进的代码](code/leet-460-lfu-cache-set-of-ptr.cpp)，set 里存指针而不是对象；[另一种解法代码](code/leet-460-lfu-cache-sol2.cpp)
+
+- [232. 用栈实现队列](https://leetcode.cn/problems/implement-queue-using-stacks) 
+  - 基本思路，一个栈作为 helper 帮助另一个栈：[代码](code/leet-232-queue-by-stacks.cpp)
+  - 更好的解法，两个栈协作，分别负责 push 和 pop/peek：[代码](code/leet-232-queue-by-stacks-better.cpp)
 
 # 双指针
 
-- [11. 盛最多水的容器](https://leetcode.cn/problems/container-with-most-water/)：解法：[`container-with-most-water-leet-11.go`](code/container-with-most-water-leet-11.go)
-- [leetcode 42. 接雨水](https://leetcode.cn/problems/trapping-rain-water/) 双指针最简解法：[`trapping-rain-leet-42-vertically-12-perfect-more.go`](monotonic-stack-queue/code/trapping-rain-leet-42-vertically-12-perfect-more.go) [多种解法笔记](monotonic-stack-queue/leet-42-接雨水多种方法.md)
+- [11. 盛最多水的容器](https://leetcode.cn/problems/container-with-most-water)：解法：[`container-with-most-water-leet-11.go`](code/container-with-most-water-leet-11.go)
+- [leetcode 42. 接雨水](https://leetcode.cn/problems/trapping-rain-water) 双指针最简解法：[`trapping-rain-leet-42-vertically-12-perfect-more.go`](monotonic-stack-queue/code/trapping-rain-leet-42-vertically-12-perfect-more.go) [多种解法笔记](monotonic-stack-queue/leet-42-接雨水多种方法.md)
 
 # [byte dance list](https://mp.weixin.qq.com/s/Mczq-QdgQ7UwFlCika09Vg)
 
 - [15. 三数之和](sliding-window/leet-15-16-三数之和.md)
 - 3. 无重复字符的最长子串
-- [146. LRU 缓存](https://leetcode.cn/problems/lru-cache) [代码](code/leet-146-lru-cache.cpp)、[逻辑更清晰的代码](code/leet-146-lru-cache-better.cpp)（`put()` 代码不同；去掉了 `removeTail()`）
-- [460. LFU 缓存](https://leetcode.cn/problems/lfu-cache) [代码](code/leet-460-lfu-cache.cpp)、[代码](code/leet-460-lfu-cache-sol2.cpp)
-- [232. 用栈实现队列](https://leetcode.cn/problems/implement-queue-using-stacks) 
-  - 基本思路，一个栈作为 helper 帮助另一个栈：[代码](code/leet-232-queue-by-stacks.cpp)
-  - 更好的解法，两个栈协作，分别负责 push 和 pop/peek：[代码](code/leet-232-queue-by-stacks-better.cpp)
+
 
 - [25. K个一组翻转链表](https://leetcode.cn/problems/reverse-nodes-in-k-group/) 代码：[``]()
 - [206. 反转链表](https://leetcode.cn/problems/reverse-linked-list/) 代码：[`leet-206-reverse-linked-list.cpp`](code/leet-206-reverse-linked-list.cpp)

@@ -1,4 +1,4 @@
-# [`leet 84.` 柱状图中最大的矩形](https://leetcode.cn/problems/largest-rectangle-in-histogram/)
+# [`leet 84.` 柱状图中最大的矩形](https://leetcode.cn/problems/largest-rectangle-in-histogram)
 
 基本思路：对每个柱子 `i`，其高度 `h[i]`。以其为最低柱，往两边扩展，找到所有「不低于」它的范围 w，得到 i 对应的最大矩形，面积为 `h[i] * w`。
 
@@ -107,13 +107,12 @@
 ```cpp
     int largestRectangleArea(vector<int> &heights) {
         heights.push_back(-1); // 只用尾哨兵，不用首哨兵
-        unsigned long n = heights.size();
+        int n = heights.size();
 
         int res = 0;
         stack<int> st;
         for (int i = 0; i < n; i++) {
             while (!st.empty() && heights[st.top()] > heights[i]) { // > 或 >= 都行
-                int ti = st.top();
                 int h = heights[st.top()];
                 st.pop();
                 int w = st.empty() ? i : i - st.top() - 1; // st.empty(), 对应的 st.top() 可认为值为 -1.

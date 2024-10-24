@@ -145,7 +145,7 @@ border初始值为right。
 ```
 
 
-有道课上给出的算法伪代码：
+有道课上给出的算法伪代码：（是某次 NOIP 试题；to find out）
 输入：数组 L, 元素个数n >= 1.
 
 FLAG 记录最后一次交换发生的位置, i 表示 L(i) <-> L(i+1), 则 FLAG <- i。就是 last_swapped.

@@ -19,7 +19,7 @@
   - 时间 `O(NlogK)`，其中 `logK` 是 `K` 个链表二分。
   - 空间 `O(1)`，合并两个链表所需额外空间。
 
-## 法一：用 heap
+## 法一：用 priority queue
 
 用 priority queue 找出每次的最小值。确切地说，是各链表的头结点里最小的。
 
@@ -141,7 +141,7 @@ class Solution {
     }
     // 合并两个，非递归法
     ListNode* merge_two(ListNode* l1, ListNode* l2) {
-        ListNode dummy, *h = &dummy;
+        ListNode head, *h = &head;
         while (l1 != nullptr && l2 != nullptr) {
             if (l1->val < l2->val) {
                 h->next = l1;
@@ -153,7 +153,7 @@ class Solution {
             h = h->next;
         }
         h->next = (l1 ? l1 : l2);
-        return dummy.next;
+        return head.next;
     }
 
     ListNode* merge(vector<ListNode *> lists, int l, int r) {

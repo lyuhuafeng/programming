@@ -9,10 +9,11 @@ references:
 - [solution 2. 最佳解法，1 的改进](#sol-2)
 - [双指针扫描一次](#sol-2ptr)
 - [面积法](#sol-2-area)
-- [堆法，按列](#sol-2-heap)
+- [优先级队列法，按列](#sol-2-priority-queue)
 - [solution 3. 按行](#sol-3)
   - [直观解法](#sol-3-1)
   - [不直观解法，leetcode 官方解法](#sol-3-2)
+- SQL 解法
 
 # <a id="sol-1-vertical"></a>solution 1. 按列（竖直方向），每个柱子顶上竖直方向能存多少水
 
@@ -78,9 +79,9 @@ references:
 ```cpp
     int trap(vector<int>& height) {
         int n = height.size();
-        int maxh = 0; // 全局最高
-        int l = -1, r = -1; // l, r: 从左、右边数，第一个 maxh 的位置
-        for (int i = 0; i < n; i++) {
+        int l = 0, r = 0; // l, r: 从左、右边数，第一个 maxh 的位置
+        int maxh = height[0]; // 全局最高
+        for (int i = 1; i < n; i++) {
             if (height[i] > maxh) {
                 l = i, r = i, maxh = height[i];
             } else if (height[i] == maxh) {
@@ -90,13 +91,18 @@ references:
 
         int sum = 0;
         // 下面两部分，mh 都表示「到目前为止，最高」。第三部分不需要 mh
-        for (int i = 0, mh = 0; i <= l - 1; i++) {
+        int mh = height[0];
+        for (int i = 1; i <= l - 1; i++) {
             mh = max(mh, height[i]);
-            sum += (mh - height[i]) * 1;
+            sum += (mh - height[i]) * 1; // 这 2 句逻辑与下 5 句一样
         } // 以上遍历左部分
-        for (int i = n - 1, mh = 0; i >= r + 1; i--) {
-            mh = max(mh, height[i]);
-            sum += (mh - height[i]) * 1;
+        mh = height[n - 1];
+        for (int i = n - 1 - 1; i >= r + 1; i--) {
+            if (height[i] > mh) {
+                mh = height[i];
+             } else {
+                sum += mh - height[i];
+             } // 这 5 句逻辑与上 2 句一样，但这样写更清晰些
         } // 以上遍历右部分
         for (int i = l + 1; i <= r - 1; i++) {
             sum += (maxh - height[i]) * 1;
@@ -232,11 +238,11 @@ inspired by 3leaf
     }
 ```
 
-# <a id="sol-2-heap"></a>堆法，按列
+# <a id="sol-2-priority-queue"></a>优先级队列法，按列
 
-用 heap (priority queue)。
+用 priority queue。
 
-堆内存储 `{柱子位置, 柱子及其顶上竖直水总高度}`。
+队内存储 `{柱子位置, 柱子及其顶上竖直水总高度}`。
 
 先将左右边界柱入队；持续从队中弹出最矮的 p，看 p 两边（实际只能有一边）柱子 p1：
 - 若 p1 比 p 矮，则 p1 可存水至 p 高度。将 p1 及其顶上水总高度（就是 p 的高度）入队；
@@ -362,3 +368,6 @@ inspired by 3leaf
     }
 ```
 
+# SQL 解法
+
+ref: https://mp.weixin.qq.com/s/rXo4vd3kFXg2qXb1oN7ung

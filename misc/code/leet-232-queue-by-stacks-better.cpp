@@ -9,47 +9,48 @@ using namespace std;
 //     以后 pop/peek 直接从 b.pop() 或 b.top()。
 //     如果某次 pop/peek 时发现 b 空了，就再把 a 中元素都放入 b。
 
+// leet ac 2024.06.19
 class MyQueue {
     stack<int> a, b;
 public:
+    // 把 a 中元素全部放入 b
+    void help() {
+        while (!a.empty()) {
+            b.push(a.top());
+            a.pop();
+        }
+    }
+
     MyQueue() {}
 
     void push(int val) {
         a.push(val);
     }
-    
+
     int pop() {
-        if (b.empty() && a.empty()) {
-            // throw some exception
-            return -1;
+        if (empty()) {
+            return -1; // throw some exception
         }
         if (b.empty()) {
-            while (!a.empty()) {
-                b.push(a.top());
-                a.pop();
-            }
+            help();
         }
-        // 以上代码，top()、peek() 完全相同。这有下面一点不同。
+        // 以上代码，top()、peek() 完全相同。只有下面一点不同。
         int val = b.top();
         b.pop();
         return val;
     }
-    
+
     int peek() {
-        if (b.empty() && a.empty()) {
-            // throw some exception
-            return -1;
+        if (empty()) {
+            return -1; // throw some exception
         }
         if (b.empty()) {
-            while (!a.empty()) {
-                b.push(a.top());
-                a.pop();
-            }
+            help();
         }
-        // 以上代码，top()、peek() 完全相同。这有下面一点不同。
+        // 以上代码，top()、peek() 完全相同。只有下面一点不同。
         return b.top();
     }
-    
+
     bool empty() {
         return a.empty() && b.empty();
     }

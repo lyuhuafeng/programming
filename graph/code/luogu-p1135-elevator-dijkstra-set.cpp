@@ -41,9 +41,9 @@ int shortest_path(const vector<edge> adj[], int n, int s, int t) {
 
         for (auto &e : adj[u]) {
             int v = e.to;
-            if (visited[v]) {
-                continue;
-            }
+            // if (visited[v]) {
+            //     continue;
+            // }
             if (dist[v] > dist[u] + 1) {
                 if (q.count({v, dist[v]}) > 0) {
                     q.erase({v, dist[v]});

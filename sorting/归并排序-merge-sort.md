@@ -35,6 +35,7 @@
             return;
         }
         int mid = left + (right - left) / 2;
+        // 分成 [l, m] 和 [m+1, r] 两部分最均衡。前者可能比后者多 1 个。
         merge_sort(a, left, mid, t);
         merge_sort(a, mid + 1, right, t);
         merge_lists(a, left, mid, right, t);
@@ -66,7 +67,7 @@
 
 ## 有意思的 merge 变种方法
 
-出自 [`88.` 合并两个有序数组](https://leetcode.cn/problems/merge-sorted-array/)。合并结果还放到其中一个数组中，而不是返回一个新数组。故此，三个指针都要逆序遍历。最后 nums1 里剩的元素，自然排在 nums1 最前部，不用再处理。
+出自 [`88.` 合并两个有序数组](https://leetcode.cn/problems/merge-sorted-array)。合并结果还放到其中一个数组中，而不是返回一个新数组。故此，三个指针都要逆序遍历。最后 nums1 里剩的元素，自然排在 nums1 最前部，不用再处理。
 
 ```cpp
     void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
@@ -81,7 +82,7 @@
     }
 ```
 
-出自 [`977.` 有序数组的平方](https://leetcode.cn/problems/squares-of-a-sorted-array/)。双指针，从数组两端往中间移动，每次比较两端元素，决定 merge 顺序。
+出自 [`977.` 有序数组的平方](https://leetcode.cn/problems/squares-of-a-sorted-array)。双指针，从数组两端往中间移动，每次比较两端元素，决定 merge 顺序。
 
 ```cpp
     vector<int> sortedSquares(vector<int>& nums) {

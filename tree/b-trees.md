@@ -10,7 +10,7 @@ b-tree 中存储大量 `(key, value)` 键值对。称 `(key, value)` 为 payload
 
 b-tree 的 一个 node 可包含多个 `(key, value)` 对，可称为「大节点」。目的：放在外存中，减少访问外存的次数。
 
-a B-tree of order m (m 阶 B 树)
+a B-tree of order m (m 阶 B 树)。阶 order 又称为 branch factor。
 
 node 的 children 数量
 - 每个 node 有最多 m 个 children

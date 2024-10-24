@@ -30,7 +30,7 @@ int main() {
         }           
         // # 若退出弹出栈顶的循环后，栈中不存在任何元素
         // # 说明此时没有比【当前柱子】更高的柱子
-        // # 后续形成的凹槽肯定是一个新的凹槽，因此重置area为0
+        // # 后续形成的凹槽肯定是一个新的凹槽，因此重置 area 为0
         if (st.empty()) {
             if (area > ans || (area == ans && right - left > i - prev_top)) {
                 ans = area;

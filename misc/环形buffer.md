@@ -57,9 +57,9 @@ Typically when the tail pointer is equal to the head pointer, the buffer is empt
 
 用 mask 位运算：[代码](code/ring-buffer.cpp)。若 full 则新数据覆盖旧数据。
 
-用思路三，[leet 622. 循环队列](https://leetcode.cn/problems/design-circular-queue) [代码](code/leet-622-circular-queue.cpp)。若 full 则新数据无法写入。注意，按题意，实际容量 k，则 `capacity = k + 1`。
+用思路三，[leet 622. 循环队列](https://leetcode.cn/problems/design-circular-queue)：[代码](code/leet-622-circular-queue.cpp)。若 full 则新数据无法写入。注意，按题意，实际容量 k，则 `capacity = k + 1`。
 
-用思路三，[leet 641. 循环双端队列](https://leetcode.cn/problems/design-circular-deque) [代码](code/leet-641-circular-deque.cpp) 比 622 多了一点逻辑。
+用思路三，[leet 641. 循环双端队列](https://leetcode.cn/problems/design-circular-deque)：[代码](code/leet-641-circular-deque.cpp)。比 622 多了一点逻辑。
 
 ## 法二，一个 start 指针，一个 size 变量，不浪费空间
 

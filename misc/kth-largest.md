@@ -42,12 +42,10 @@ C++ 代码：[kth-smallest-binary-search.cpp](code/kth-smallest-binary-search.cp
 
 k 从 0 开始算。若题目要求从 1 开始，则 `k = k - 1`。
 
-若要找 k largests，则 `k = len + 1 - k` （从 1 开始）或 `k = len - k`（从 0 开始）
+若要找 kᵗʰ largest，则 `k = len + 1 - k` （从 1 开始）或 `k = len - k`（从 0 开始）
 
-k在 `[0, len-1]` 范围内。
+k 在 `[0, len-1]` 范围内。
 如果 `k > len - 1`，则最后 `assert(left <= right)` 会失败。
-
-<font color=red>注意，partition 过程中，交换元素位置，改动了数组内容。如果用 vector，则 `qselect()` 和 `partition()` 两个函数的参数里都要用引用类型。（用数组则没有这个问题）</font>
 
 C++ 代码，kᵗʰ smallest，数组序列：[kth-smallest-quick-select.cpp](code/kth-smallest-quick-select.cpp)
 
@@ -57,4 +55,4 @@ C++ 代码，kᵗʰ largest，vector 序列：[kth-largest-quick-select-vector.c
 
 [leet 215 数组第 k 大元素](https://leetcode.cn/problems/kth-largest-element-in-an-array) 代码
 
-https://leetcode.com/problems/kth-largest-element-in-an-array/solutions/115721/on-bfprt-algorithm-in-c/
+to read: https://leetcode.com/problems/kth-largest-element-in-an-array/solutions/115721/on-bfprt-algorithm-in-c/
