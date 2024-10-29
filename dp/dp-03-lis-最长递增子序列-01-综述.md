@@ -44,6 +44,8 @@
 
 `f[]` 是单调的，且「严格性」与 LIS 的「严格性」一致。若 LIS 严格上升，则 `f[]` 也严格单调上升。（证明略）
 
+（若 lis 长度固定位 i，则结尾元素越小，则上升序列的「坡度」越缓。直觉，跟单调栈有某种相似性、联系？to think later。）
+
 如何维护 `f[]` 数组
 - `llen`: 表示当前最长的 LIS 长度。
 - 若 `a[i] > f[llen]`，也就是 `a[i] > 当前最长 LIS 的结尾元素`，则 `a[i]` 可直接接在当前 LIS 结尾后，得到更长的 LIS，即 `f[++llen] = a[i]`。
@@ -65,7 +67,7 @@ a[2]:3, lower_bound() 找到的是与 a[2] 相等的，f[] 的第一个 3，f[j]
 <font color="red">重要！`f[]` 中的序列并不一定是正确的 LIS！只能得到长度，无法倒推得到序列！</font>
 
 ```
-例：3, 1, 2, 5, 4, 5, 10, 7。f[] = {1,2,4,5,7}。f[] 恰好是LIS。
+例：3, 1, 2, 5, 4, 5, 10, 7。f[] = {1,2,4,5,7}。f[] 恰好是 LIS。
 
 例：1, 4, 7, 2, 5, 9, 10, 3。f[] = {1,2,3,9,10}。f[] 不是 LIS。前面的可能已经被更新过了，不是当时决定后面的时的数据了。
 ```
@@ -145,6 +147,10 @@ https://leetcode.cn/problems/longest-increasing-subsequence/solutions/14796/dong
 # 法三，树状数组维护
 
 https://blog.csdn.net/lxt_Lucia/article/details/81206439
+
+# 法四，单调栈
+
+看到「递增」，很自然想到「单调栈」。直觉可以通过 next greater 或 previous smaller 关系串联起来。实际貌似不行。to think later。
 
 
 

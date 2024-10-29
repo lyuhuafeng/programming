@@ -72,6 +72,7 @@
 思路：用递归。具体见注释。
 
 ```java
+// java 代码
     // 返回一个size为2的数组r. r[0]: 不抢tr的结果；r[1]: 抢tr的结果
     int[] rob0(TreeNode tr) {
         if (tr == null) {
@@ -89,5 +90,23 @@
     public int rob(TreeNode root) {
         int[] r = rob0(root);
         return Math.max(r[0], r[1]);
+    }
+```
+
+```cpp
+// c++ 代码
+    // <不抢r，抢r>
+    pair<int, int> rob0(TreeNode *r) {
+        if (r == nullptr) {
+            return {0, 0};
+        }
+        pair<int, int> lr = rob0(r->left), rr = rob0(r->right);
+        int val1 = max(lr.first, lr.second) + max(rr.first, rr.second); // 不抢 r
+        int val2 = r->val + lr.first + rr.first; // 抢 r
+        return {val1, val2};
+    }
+    int rob(TreeNode* root) {
+        pair<int, int> ans = rob0(root);
+        return max(ans.first, ans.second);
     }
 ```

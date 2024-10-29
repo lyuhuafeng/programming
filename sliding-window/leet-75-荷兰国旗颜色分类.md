@@ -50,6 +50,25 @@
     }
 ```
 
+稍微不同的写法，l、r 分别表示 1、2 「目前」的边界，而不是「将要」。所以其初值变为 `l = -1, r = n`。循环条件也变成 `while (i < r)`。
+
+```cpp
+    void sortColors(vector<int>& nums) {
+        int n = nums.size();
+        int l = -1, r = n; // 左、右 0、2 的「现在」的边界位置
+        int i = 0; // 中间元素的迭代变量
+        while (i < r) {
+            if (nums[i] == 0) {
+                swap(nums[++l], nums[i++]);
+            } else if (nums[i] == 2) {
+                swap(nums[--r], nums[i]); // i 处，从右边交换来的不知道是几，所以 i 不变，下次循环继续处理 i
+            } else { // nums[i] == 1
+                i++;
+            }
+        }
+    }
+```
+
 # 另一种思路
 
 先把数组分成两部分，不超过 k 的放左边，大于 k 的放右边。

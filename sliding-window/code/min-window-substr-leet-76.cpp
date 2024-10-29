@@ -1,6 +1,8 @@
 // 76. 最小覆盖子串
 // https://leetcode.cn/problems/minimum-window-substring/solutions/258513/tong-su-qie-xiang-xi-de-miao-shu-hua-dong-chuang-k/
 
+// ac
+
 #include <string>
 #include <unordered_map>
 #include <algorithm>

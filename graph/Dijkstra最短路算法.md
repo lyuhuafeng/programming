@@ -20,20 +20,23 @@
 - `prev[]` 数组，`prev[i]` 表示：从起点 src 出发，到顶点 i 的 shortest path，i 的前一个顶点编号
 
 <!-- newly added 2024.10.19 to clean later -->
-dijk：一个顶点可以多次「入 queue」（每次带不同的 dist），但 queue 中元素会根据 dist 排序，所以同一个顶点的「出 queue」的顺序与「入 queue」的顺序可能不同。我们平常说的「visit」，理解为「（出 queue 后）处理它、找到它能到达的各顶点并放入 queue」更合适。从这个角度看，pop 之后，若发现已 visit 过，说明「有比我后入 queue 的，因为 dist 比我小，已经被处理过了」，所以我就不用了，跳过；push之前，若发现已 visit 过，更可以跳过我（这点与 bfs 相同）
+dijk：一个顶点可以多次「入 queue」（每次带不同的 dist），但 queue 中元素会根据 dist 排序，所以同一个顶点的「出 queue」的顺序与「入 queue」的顺序可能不同。我们平常说的「visit」，理解为「（出 queue 后）处理它、找到它能到达的各顶点并放入 queue」更合适。从这个角度看，pop 之后，若发现已 visit 过，说明「同一个 vertex、但比我后入 queue 的，因为 dist 比我小，已经被处理过了」，所以我就不用再次处理了，跳过；push之前，若发现已 visit 过，更可以跳过我（这点与 bfs 相同）
 
-两者都可以找单dst 或 多 dst。若单 dst，则找到第一个即可退出。何时判断？dijk：pop 后，真正 visit 时，dist 最小的被visit；bfs：逻辑上 push/pop 时都行，效率上应该在 push 前。
+两者都可以找单 dst 或 多 dst。若单 dst，则找到第一个即可退出。何时判断？dijk：第一次被 pop 出来后，真正 visit 时，dist 最小的被 visit（不能在 push 时，因为同一 vertex 可能多次被 push，可能后面的反而比前面的 dist 小）；bfs：逻辑上 push/pop 时都行，效率上应该在 push 前。
 
 dijk：若不用 visited，则后续的因为 dist 太大，导致无法松弛其邻接顶点，不会放到 queue 中。待验证。
 但 bfs：若不用 visited，则会出错。
 
 具体实现：dijk 的 pq 要按 dist 排序，所以必须把 vertex_id 和 dist 封装在一个对象里，一起放到 priority 里。bfs，不考虑这个，可以把 dist 单独作为一个数组，queue 里只放 vertex_id，代码清爽些。
 
-某顶点 v 再次入 queue(v2)，会不会比已经出 queue 的 v (v1)的 dist 更小？经分析，不会。
-v1 ... u ... v2
-假设，v1 是已经访问过，已经出 queue 的。v2 是被某个 u 邻接到的。
-若 u 的访问是在 v1 之后，则 u.dist 一定大于 v1.dist，则 v2.dist = u.dist + w(u, v2) 也一定大于 v1.dist。
-若 u 的访问是在 v1 之前，则 u.dist < v1.dist。v2.dist 若小于 v1.dist，则入队后 v2 会被拍到 v1 之前，不会出现 v1 出 queue 后若干时间 v2 才入 queue 的情况。
+(1)
+某顶点 v 先后两次入 queue，分别记作 v1 和 v2。v1 已经被 pop 出（visit 过）。问题：v2.dist 是否可能比已经出 queue 的 v1.dist 更小？（若可能，则 push 入 queue 前，必须检查 dist，不能只检查 visited；若不可能，则只用检查 visited）经分析，不会。
+
+假设，v2 是被某个 u 邻接到的。
+若 u 的访问是在 v1 之后（v1 ... u ... v2），则 u.dist 一定大于 v1.dist，则 v2.dist = u.dist + w(u, v2) 也一定大于 v1.dist。
+若 u 的访问是在 v1 之前（u ... v1 ... v2），则 u.dist < v1.dist。v2.dist 若小于 v1.dist，则入队后 v2 会被拍到 v1 之前，不会出现 v1 出 queue 后若干时间 v2 才入 queue 的情况。
+
+(2)
 
 另，enqueue(v) 前判断 `visited[v]` 可以用 `u.dist + w(u, v) > v.dist` 来代替。
 dequeue(u) 后，如何判断？dist[u] < u.dist？to think more later. 现在还是用 visited[] 吧。
@@ -48,10 +51,10 @@ set
 
 pq
 - push(v)：判断 dist 并 relax
-- pop: 判断 dist 或 visited。（不判断也不影响结果，u 邻接的各 v，在 push 前判断 dist 时会 fail，不会入 queue。但做了无用功，所以最好判断）并设置 visited。
+- pop: 判断 dist 或 visited，并设置 visited。（不判断也不影响结果，若 u 已 visit 过，则 u.dist > u_prev.dist，u 邻接的各 v，在 push 前判断 dist 时会 fail，不会入 queue。但做了无用功，所以最好判断。）
 
 bfs
-- push 前判断 visited 就行。push后设置 visited。
+- push 前判断 visited 就行。push 后设置 visited。
 - pop 时不用判断；
 <!-- end of newly added -->
 
@@ -252,6 +255,18 @@ negative cycles 或 infinite cycles：一个cycle，所有 edge 加起来是负�
 * 每次 relax 后更新 Q：每个顶点最多 V 个相邻顶点，放入 `O(logV)`，最多 E 次。<font color="red">没太明白：实际上无法更新，只能多放入一个无用元素。可能指的是这个无用元素入堆所需时间。</font>
 
 总共 `O((V+E)logV)`
+
+# 普遍最优性 universal optimality
+
+ref: 2024 年新论文 https://mp.weixin.qq.com/s/V0MlmsoZdcRIZcxsRgAzuA
+
+证明了：是解决单源最短路径问题的「近乎理想」的方法。
+
+通过改进使用的 heap 结构。在 1984 年设计的 heap 基础上，加入对最近插入项快速访问的能力，就可以显著提升算法的效率。
+
+全新的堆数据结构——具备特殊的「工作集属性」（working set property）。对于在堆中插入并随后被提取的任意元素 x，其工作集 Wx 包括了在 x 被插入后、在 x 被提取前插入的所有元素，以及 x 本身。利用操作的局部性，优先处理最近插入的元素，降低提取最小元素的成本。
+
+普遍最优性 universal optimality：不论它面对多复杂的图结构，即便在最坏情况下，都能达到理论上的最优性能。是学术界首次将这一概念应用于任何序列算法。
 
 # to read
 

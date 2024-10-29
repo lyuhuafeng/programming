@@ -1,7 +1,7 @@
 # 动态规划：`[BJOI2019]` 排兵布阵
 
-* [l5, u16, ex2: [BJOI2019] 排兵布阵](https://oj.youdao.com/course/37/285/1#/1/14238)
-* [洛谷 P5322](https://www.luogu.com.cn/problem/P5322)
+- [洛谷 `p5322`、BJOI2019：排兵布阵](https://www.luogu.com.cn/problem/P5322)
+- [l5, u16, ex2](https://oj.youdao.com/course/37/285/1#/1/14238)
 
 排兵布阵游戏。有 n 座城堡，每局对战由两名玩家来争夺这些城堡。每名玩家有 m 名士兵，可以向第 i 座城堡派遣 ai 名士兵，但显然总派兵数不能超过 m。
 

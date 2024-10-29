@@ -1,6 +1,6 @@
 # 最大连续子段和，Largest Continuous Subarray Sum
 
-- [`leet 53.` 最大子数组和](https://leetcode.cn/problems/maximum-subarray/)
+- [`leet 53.` 最大子数组和](https://leetcode.cn/problems/maximum-subarray)
 - [`luogo p1115.` 最大子段和](https://www.luogu.com.cn/problem/P1115)
 - [`l4, u14, ex1.` 最大连续子段和](https://oj.youdao.com/course/13/82/1#/1/9465)
 
@@ -14,16 +14,16 @@
 
 # dp 法（Kadane’s Algorithm）
 
-f[i] 表示以第 i 个元素 ai 结尾的最大子段和。
+`f[i]` 表示以第 `i` 个元素 `aᵢ` 结尾的最大子段和。
 
-如果 f[0], …, f[i-1] 已有，如何计算 f[i]?
+如果 `f[0], …, f[i-1]` 已有，如何计算 `f[i]`?
 
 新增一个数 ai：
-* 若 `f[i-1] > 0`，则把 ai 添加到当前子段里，`f[i] = f[i-1] + ai` 可得最大值
-* 若 `f[i-1] < 0`，则 `f[i-1] + ai` 反而小于 ai，则从 ai 重新开始新子段更合算，此时 `f[i] = ai` 是最大值
+* 若 `f[i-1] > 0`，则把 ai 添加到当前子段里，`f[i] = f[i-1] + aᵢ` 可得最大值
+* 若 `f[i-1] < 0`，则 `f[i-1] + aᵢ` 反而小于 ai，则从 ai 重新开始新子段更合算，此时 `f[i] = aᵢ` 是最大值
 
-得到所有 f[i] 后，遍历一遍，找出其最大值，即为所求。
-- 优化：每次得到一个 f[i] 后就打擂台，省去再遍历一遍。然后发现算 f[i] 只用到了前一个 f[i-1]，可只用一个变量，省去 f[] 数组。这样优化后，称为 <font color="green">Kadane’s Algorithm</font>。
+得到所有 `f[i]` 后，遍历一遍，找出其最大值，即为所求。
+- 优化：每次得到一个 `f[i]` 后就打擂台，省去再遍历一遍。然后发现算 `f[i]` 只用到了前一个 `f[i-1]`，可只用一个变量，省去 `f[]` 数组。这样优化后，称为 <font color="green">Kadane’s Algorithm</font>。
 
 问题：如果都是负数，答案是最大的负数，还是 0？取决于问题的定义。
 
@@ -52,10 +52,14 @@ f[i] 表示以第 i 个元素 ai 结尾的最大子段和。
 # 前缀和法
 
 基本思路：
+
 ```cpp
-按定义，sum[i .. j] = psum[j] - psum[i]
-则：在 j 固定时，max{ sum[i .. j] } = psum[j] - min{ psum[i] }, ∀ i ∈ [0, j-1]
+按定义，
+    sum[i .. j] = psum[j] - psum[i]
+则：在 j 固定时，
+    max{ sum[i .. j] } = psum[j] - min{ psum[i] }, ∀ i ∈ [0, j-1]
 ```
+
 代码
 ```cpp
 // 朴素前缀和
@@ -74,16 +78,18 @@ f[i] 表示以第 i 个元素 ai 结尾的最大子段和。
         int ans = INT_MIN;
         for (int j = 0; j <= n - 1; j++) {
             minps = min(minps, s[j])
-            int ansj = s[j + 1] - minps; // s[j+1] - min{s[i]}, ∀ i ∈ [0-j]
+            int ansj = s[j + 1] - minps; // s[j+1] - min{s[i]}, ∀ i ∈ [0-j]。该范围不包括 j+1
             ans = max(ans, ansj);
         }
         return ans;
     }
 
-// 或：滚动式前缀和，逻辑更清晰的版本。与上面非滚动版本更新 minps、ps 的顺序一致。
-// 初值：ps必须为0 (ps[0])，因后续不是比较而是累加。
+// 或：滚动式前缀和，逻辑更清晰的版本。
+// 与上面非滚动版本更新 minps、ps 的顺序一致。可认为是非滚动代码直接翻译过来的。
+// 初值：ps 必须为 0 (ps[0])，因后续不是比较而是累加。
 // 循环体内，
-//   先更新 minps。此时 ps 不含 i，即 ps 不含 nums[j+1]，故 minps 是 ps[0 .. j] 里最小的，符合公式里 min 的范围。
+//   先更新 minps。此时 ps 不含 i，即 ps 不含 nums[j+1]，故 minps 是 ps[0 .. j] 里最小的，
+//   符合公式里 min 的范围。
 //       s[j+1] - min{s[i]}, ∀ i ∈ [0-j]
 //   然后更新 ps，此时 ps 含 i，即 ps 含 nums[j+1]，ps 实为 ps[j+1] = sum[0 .. j]。
     int maxSubArray(vector<int>& nums) {
@@ -101,7 +107,7 @@ f[i] 表示以第 i 个元素 ai 结尾的最大子段和。
 // 或：滚动式前缀和，较绕的版本，与上面非滚动版本更新 minps、ps 的顺序略有不同。
     int maxSubArray_running_prefix_sum(vector<int>& nums) {
         int ps = 0; // 前缀和 s[0]
-        int minps = 0; // 最小前缀和
+        int minps = ps; // 最小前缀和
         int ans = INT_MIN;
         for (int i : nums) { // j: 0 ~ n-1
             ps += i; // ps[j+1] = sum[0 .. j]

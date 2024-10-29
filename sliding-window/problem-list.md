@@ -100,32 +100,44 @@ void slidingWindow(string s, string t) {
 # 题目
 
 - [209. 和大于某给定值的、长度最小的子数组](https://leetcode.cn/problems/minimum-size-subarray-sum)
-  - [更简单些的标准模板代码](code/shortest-subarray-with-sum-greater-leet-209.cpp)，[我修正的代码](code/min-window-substr-leet-76-mine.cpp)
+  - [更简单些的标准模板代码](code/shortest-subarray-with-sum-greater-leet-209.cpp)，[我修正的代码](code/leet-209-shortest-subarray-with-sum-greater-mine.cpp)
   - 类似题目，正整数数组中，连续子数组和「等于」k 而不是「大于」k：[代码](code/longest-subarray-with-sum-k.cpp)。代码结构与上题不同，需再思考。
   - 变化一点，数组含正整数、负整数、零，求连续子数组和「等于」k。不能用双指针滑动窗口，得用前缀和。[代码](code/longest-subarray-with-sum-k-all-type-numbers.cpp)
+
 - [3. 无重复字符的最长子串](https://leetcode.cn/problems/longest-substring-without-repeating-characters)
   - 代码: [longest-substr-without-dups-leet-3.cpp](code/longest-substr-without-dups-leet-3.cpp)
   - 标准模板代码，因字符不重复，不用统计出现多少次，所以用 set 而不用 map [longest-substr-without-dups-leet-3-template.cpp](code/longest-substr-without-dups-leet-3-template.cpp)
+
 - hard: [76. 最小覆盖子串](https://leetcode.cn/problems/minimum-window-substring)
-  - 代码: [min-window-substr-leet-76.cpp](code/min-window-substr-leet-76.cpp)
+  - 代码: [min-window-substr-leet-76.cpp](code/min-window-substr-leet-76.cpp) 看着逻辑有点怪。用下面简化的模版代码吧。
   - 模板代码: [min-window-substr-leet-76-template.cpp](code/min-window-substr-leet-76-template.cpp)
   - [模板代码逻辑简化](code/min-window-substr-leet-76-template-simplified.cpp)：没使用 valid 变量，改用 covered() 判断
+
 - hard: [438. 字符串中所有字母异位词](https://leetcode.cn/problems/find-all-anagrams-in-a-string)
   - [标准模板代码](code/all-anagrams-in-string-leet-438-sol2-template.cpp)
   - [标准模板代码小改动](code/all-anagrams-in-string-leet-438-sol2-template-2.cpp) 去掉了 `valid`，直接比较 `need` 和 `win` 是否一致。
   - [另一代码](code/all-anagrams-in-string-leet-438-sol1.cpp)
+
 - hard: 438的进阶：[30. 串联所有单词的子串](https://leetcode.cn/problems/substring-with-concatenation-of-all-words) 窗口大小固定，但每次移动若干字符
   - 代码（for循环，分两段）: [substr-with-concating-words-leet-30.cpp](code/substr-with-concating-words-leet-30.cpp)
   - 模板代码: [substr-with-concating-words-leet-30-template.cpp](code/substr-with-concating-words-leet-30-template.cpp) <font color="red">to check on leet</font>
+
 - [239. 滑动窗口最大值](https://leetcode.cn/problems/sliding-window-maximum) 单调队列+滑动窗口，代码: []()
+
 - [567. 字符串的排列](https://leetcode.cn/problems/permutation-in-string) 窗口大小固定
   - 代码 for 循环: [permutation-in-str-leet-567.cpp](code/permutation-in-str-leet-567.cpp)
   - 代码 for 循环简化: [permutation-in-str-leet-567.cpp](code/permutation-in-str-leet-567-sol2-simpler.cpp)
   - 标准模板 while 循环: [permutation-in-str-leet-567-sol3-template.cpp](code/permutation-in-str-leet-567-sol3-template.cpp)
   - <font color="red">即使窗口大小固定，还是用 while 循环的标准模板方便。若用 for 循环，可能分成两段处理，r 有时有 offset by 1 的问题。</font>
+
 - [632. 最小区间](https://leetcode.cn/problems/smallest-range) 代码: []()
+
+- [424. 替换后的最长重复字符](https://leetcode.cn/problems/longest-repeating-character-replacement)：[代码](code/leet-424-longest-repeating-char-after-replacing.cpp)
+
 - vip: [727. 最小窗口子序列](https://leetcode.cn/problems/minimum-window-subsequence) 代码: []()
+
 - vip: [159. 至多包含两个不同字符的最长子串](https://leetcode.cn/problems/longest-substring-with-at-most-two-distinct-characters/)
+
 - vip: [340. 至多包含 K 个不同字符的最长子串](https://leetcode.cn/problems/longest-substring-with-at-most-k-distinct-characters/)
 
 - [题目列表](https://leetcode.cn/tag/sliding-window/problemset/)

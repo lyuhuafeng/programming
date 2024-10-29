@@ -4,7 +4,7 @@
   - [luogu P1775](https://www.luogu.com.cn/problem/P1775)
   - [luogu P5569](https://www.luogu.com.cn/problem/P5569)
 - 合并石头，直线，每次合并k堆
-  - [leetcode 1000](https://leetcode.cn/problems/minimum-cost-to-merge-stones/)：[题解](leet-1000-合并石头每次k堆.md)
+  - [leetcode 1000](https://leetcode.cn/problems/minimum-cost-to-merge-stones)：[题解](leet-1000-合并石头每次k堆.md)
 - [NOI1995]石子合并；环形，每次合并两堆
   - [luogu P1880](https://www.luogu.com.cn/problem/P1880)
   - [l5-u17-ex1](https://oj.youdao.com/course/37/286/1#/1/14362)
@@ -20,7 +20,7 @@
 
 代码两种，区别只在枚举顺序。
 - 枚举顺序：i 逆序，j 正序：[`merge-stones-line-2.cpp`](code/merge-stones-line-2.cpp)
-- 枚举顺序：len 正序，(i,j) 正序：[`merge-stones-line-2-len-first.cpp`](code/merge-stones-line-2-len-first.cpp)
+- 枚举顺序：len 正序，`(i,j)` 正序：[`merge-stones-line-2-len-first.cpp`](code/merge-stones-line-2-len-first.cpp)
 
 核心代码：注意其初始化部分，只有两句，没有做多余的全面初始化。
 
@@ -51,13 +51,12 @@
         }
     }
     int ans = dp[0][n - 1];
-
 ```
 
 四边形不等式优化：两种实现，枚举顺序不同。
 
 - 先 i 逆序，再 j 正序：[`merge-stones-line-2-speedup.cpp`](code/merge-stones-line-2-speedup.cpp)
-- 先 len 正序，再 (i,j) 正序：[`merge-stones-line-2-len-first-speedup.cpp`](code/merge-stones-line-2-len-first-speedup.cpp)
+- 先 len 正序，再 `(i,j)` 正序：[`merge-stones-line-2-len-first-speedup.cpp`](code/merge-stones-line-2-len-first-speedup.cpp)
 
 # [NOI1995] 石子合并；环形，每次合并两堆
 

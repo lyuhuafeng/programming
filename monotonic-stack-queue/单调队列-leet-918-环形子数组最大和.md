@@ -27,6 +27,7 @@
 找 min 值，用上升队列。新的来，比我大的都干掉。
 
 ```c++
+// leet ac 2023.10.17
 int maxSubarraySumCircular(vector<int>& nums) {
     int n = nums.size();
     vector<int> ps(2 * n);
@@ -48,6 +49,49 @@ int maxSubarraySumCircular(vector<int>& nums) {
         }
         q.push_back(i);
         if (i + 1 >= n - 1) {
+            ans = max(ans, ps[i + 1] - ps[q.front()]);
+        }
+    }
+    return ans;
+}
+```
+
+第二种求前缀和方法
+
+```cpp
+// 窗口最大长度为 n，对应 n 个子数组的和
+    sum{i}           sum{i .. i-1}          sum{i ... i-(n-1)}
+// 分别对应如下前缀和之差
+    ps[i] - ps[i-1], ps[i] - ps[i-2], ... , ps[i] - ps[i-n]
+```
+
+子数组最大长度是 n，在上面 n 个 sum 里找最大的，也就是在 n 个 `ps[i-.]` 中找最小的。找到后，被减数 `ps[i]` 下标 i 比目前遍历到的元素下标 `i-1` 大 1。所以代码里，当前遍历到 i，要用 `ps[i+1]` 减。
+
+代码
+
+```cpp
+// leet ac 2024.10.24
+int maxSubarraySumCircular(vector<int>& nums) {
+    int n = nums.size();
+    vector<int> ps(2 * n + 1 + 1);
+    ps[0] = 0;
+    for (int i = 1; i <= 2 * n + 1; i++) {
+        int j = i % n;
+        ps[i] = ps[i - 1] + nums[j];
+    }
+    // 以上：求前缀和
+
+    deque<int> q;
+    int ans = nums[0];
+    for (int i = 1; i <= 2 * n; i++) {
+        while (!q.empty() && q.front() + n <= i) {
+            q.pop_front();
+        }
+        while (!q.empty() && ps[q.back()] >= ps[i]) {
+            q.pop_back();
+        }
+        q.push_back(i);
+        if (i >= n) {
             ans = max(ans, ps[i + 1] - ps[q.front()]);
         }
     }

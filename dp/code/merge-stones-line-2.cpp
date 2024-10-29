@@ -7,7 +7,7 @@ using namespace std;
 // luogu p5569, 7 ac, 3 tle, 2023.12.01; needs GarsiaWachs algorithm
 
 // dp[i][j]: 合并区间 [i, j] 的 cost。所求解答为 dp[0][n-1]。
-// 转移方程：dp[i][j] = min⁡{ dp[i][k] + dp[k+1][j] + sum[i...j]}, any k i<k<j (or i <= k < j ?)
+// 转移方程：dp[i][j] = min⁡{ dp[i][k] + dp[k+1][j] + sum[i...j]}, any k 满足 i <= k < j
 // 初始化：dp[i][i] = 0. 其余为 inf。
 // 遍历顺序：i 逆序，j 正序
 

@@ -6,7 +6,7 @@ using namespace std;
 // luogu p1775 ac, 2023.02.01
 
 // dp[i][j]: 合并区间 [i, j] 的 cost。所求解答为 dp[0][n-1]。
-// 转移方程：dp[i][j] = min⁡{ dp[i][k] + dp[k+1][j] + sum[i...j]}, any k i<k<j (or i <= k < j ?)
+// 转移方程：dp[i][j] = min⁡{ dp[i][k] + dp[k+1][j] + sum[i...j]}, any k 满足 i <= k < j
 // 初始化：dp[i][i] = 0. 其余为 inf。
 // 枚举顺序：len 正序，(i,j) 正序
 

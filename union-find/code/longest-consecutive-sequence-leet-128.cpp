@@ -36,14 +36,8 @@ using namespace std;
         int len = 0;
         for (int n : nums) {
             if (s.count(n - 1) == 0) {
-                // int l = 0;
-                // for (int i = n; s.find(i) != s.end(); i++, l++);
-
-                //// 上面的两行 for 循环 和 下面的三行 while 循环，都可以
-                int i = n;
-                while (s.count(i) != 0) { i++; }
-                int l = i - n;
-                
+                int j = n, l = 0;
+                while (s.count(j) > 0) { l++, j++; }
                 len = max(len, l);
             }
         }

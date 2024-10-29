@@ -2,6 +2,8 @@
 
 - [`luogu P1309`，NOIP 2011 普及组：瑞士轮](https://www.luogu.com.cn/problem/P1309)：[代码](code/luogu-p1309-swiss-system.cpp)
 
+- [`lint 165.` 合并两个排序链表](https://www.lintcode.com/problem/165)：[递归解法](code/lint-165-merge-2-lists-recursive.cpp)，巧妙。可扩展至多个链表，见 leet 23 的递归解法。
+
 - [`leet 23.` 合并 k 个升序链表](https://leetcode.cn/problems/merge-k-sorted-lists)：[解法](leet-23-合并k个升序链表.md)
 
 - [`88.` 合并两个有序数组](https://leetcode.cn/problems/merge-sorted-array)

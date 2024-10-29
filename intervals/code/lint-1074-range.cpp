@@ -10,6 +10,7 @@ struct range {
 
 bool operator<(const range &a, const range &b) {
     return a.left < b.left;
+    // 若是改为 tie(a.left, a.right) < tie(b.left, b.right); 则不能 ac，奇怪，to check later
 }
 
 class Solution {

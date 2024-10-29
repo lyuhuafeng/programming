@@ -1,15 +1,19 @@
 # 用快速幂求 Fibonaci 数列
 
 将相邻两项写成矩阵形式
+
 ![pic1](pics/binary-exp-fibonaci-1.png)
 
 也就是
+
 ![pic1](pics/binary-exp-fibonaci-2.png)
 
 递推，得到
+
 ![pic1](pics/binary-exp-fibonaci-3.png)
 
 递推到底，得到
+
 ![pic1](pics/binary-exp-fibonaci-4.png)
 
 完整代码：[`fibonaci-by-binary-exp.cpp`](code/fibonaci-by-binary-exp.cpp)
@@ -72,8 +76,10 @@
 # 推广一
 
 若 `f(n) = f(n-1) + f(n-3)` 而不是 `... + f(n-2)`，则
+
 ![pic5](pics/binary-exp-fibonaci-5.png)
 ![pic6](pics/binary-exp-fibonaci-6.png)
+
 在最终式子里，只用到了最终系数矩阵的第一行。
 
 完整代码：[`fibonaci-by-binary-exp-f13.cpp`](code/fibonaci-by-binary-exp-f13.cpp)。比较一下，发现，只有 `f()` 里有些改动，另两个函数没有改动。

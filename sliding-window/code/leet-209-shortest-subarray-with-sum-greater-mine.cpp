@@ -25,3 +25,22 @@ using namespace std;
         int ans = minl > n ? 0 : minl;
         return ans;
     }
+
+// 更好的写法，r 初值设为 -1，则在循环体内，r 变动与相应逻辑处理是一体的，而不是分开的。逻辑上更清晰。
+// ac 2024.10.28
+
+    int minSubArrayLen_better(int target, vector<int>& nums) {
+        int n = nums.size();
+        int sum = 0;
+        int minl = INT_MAX;
+        int l = 0, r = -1;
+        while (r < n - 1) {
+            sum += nums[++r]; // atomic 操作
+            while (sum >= target) {
+                minl = min(minl, r - l + 1);
+                sum -= nums[l]; l++; // atomic 操作
+            }
+        }
+        int ans = minl > n ? 0 : minl;
+        return ans;
+    }

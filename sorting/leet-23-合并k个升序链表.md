@@ -1,6 +1,6 @@
 # 合并 k 个升序链表或有序数组
 
-- [`leet 23.` 合并 k 个升序链表](https://leetcode.cn/problems/merge-k-sorted-lists/)
+- [`leet 23.` 合并 k 个升序链表](https://leetcode.cn/problems/merge-k-sorted-lists)
 - [`lint 486.` 合并 k 个有序数组](https://www.lintcode.com/problem/486/)
 
 <font color="brown">注意</font>，这里的 merge sort 法，与普通的 merge sort 相比，有一点不同。
@@ -167,6 +167,48 @@ class Solution {
         if (lists.empty()) { return nullptr; }
         int n = lists.size();
         return merge(lists, 0, n - 1);
+    }
+```
+
+## 法三：递归
+
+```cpp
+// leet ac 2024.10.25
+// 每次打擂台找到所有 list 各头结点的最小的，加入到结果中。对剩下的 lists 递归调用。
+// 是 lint 165 的递归解法的扩展。
+    void merge(vector<ListNode*>& lists, ListNode* &r) {
+        if (lists.empty()) {
+            return;
+        } else if (lists.size() == 1) {
+            r->next = lists[0];
+            r = r->next;
+            return;
+        }
+        int mini = 0;
+        for (int i = 1; i < lists.size(); i++) {
+            if (lists[mini]->val > lists[i]->val) {
+                mini = i;
+            }
+        }
+        r->next = lists[mini];
+        r = r->next;
+        if (lists[mini]->next != nullptr) {
+            lists[mini] = lists[mini]->next;
+        } else {
+            lists.erase(lists.begin() + mini);
+        }
+        merge(lists, r);
+    }
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        vector<ListNode *> v;
+        for (ListNode *l : lists) {
+            if (l != nullptr) {
+                v.push_back(l);
+            }
+        } // 先去掉空指针，免得 merge() 里麻烦
+        ListNode dummy, *p = &dummy;
+        merge(v, p);
+        return dummy.next;
     }
 ```
 

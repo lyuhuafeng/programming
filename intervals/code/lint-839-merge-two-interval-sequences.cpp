@@ -23,7 +23,7 @@ public:
      * @param list2: another list
      * @return: the new sorted list of interval
      */
-    void add0(vector<Interval> &v, Interval &iv) {
+    void add0(vector<Interval> &v, const Interval &iv) {
         if (v.empty()) {
             v.emplace_back(iv);
             return;
