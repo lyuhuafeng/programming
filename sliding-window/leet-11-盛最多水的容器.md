@@ -1,4 +1,4 @@
-# [`11.` 盛最多水的容器](https://leetcode.cn/problems/container-with-most-water/)
+# [`11.` 盛最多水的容器](https://leetcode.cn/problems/container-with-most-water)
 
 灌水多少，与两个柱子的高度、两个柱子的距离有关。定义 l 和 r 两个指针，分别指向数组的左右两端，向中间搜索。
 
@@ -15,13 +15,8 @@
         while (i < j) {
             int c = (j - i) * min(height[i], height[j]);
             maxc = max(maxc, c);
-            if (height[i] < height[j]) {
-                i++;
-            } else {
-                j--;
-            }
+            height[i] < height[j] ? i++ : j--;
         }
-
         return maxc;
     }
 ```

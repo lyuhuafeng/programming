@@ -140,9 +140,48 @@ c++ 代码的两个实现
 
 相关题目：[`1713.` 得到子序列的最少操作次数](leet-1713-得到子序列的最少操作次数.md)。这个题解没用 `lower_bound()`，而是自己实现了二分法。
 
-这里有个讲解，可参考一下
+###  另一种理解方式
 
-https://leetcode.cn/problems/longest-increasing-subsequence/solutions/14796/dong-tai-gui-hua-she-ji-fang-fa-zhi-pai-you-xi-jia/
+基于 solitaire 纸牌游戏（又叫做 patience card game）和 patience sort 排序算法，又跟 Dilwith 有千丝万缕的联系。与上面的思路差别不小，但写出来代码居然是一样的。
+
+步骤：
+- 若干张扑克牌，从左到右依次遍历每张牌（online 处理），最终将其分成若干堆。
+- 每堆，从上到下（从底到顶），依次减小。
+- 多个堆，从左到右，堆顶依次增加。
+- 每来一张新牌，要放入某堆，但只能压在比它大的牌上面，以保持「从底到顶递减」的性质。
+- 如果找不到可以放进去的堆（也就是，所有堆的顶都比它小），则新建一堆。
+- 若找到多个可以放进去的堆，则选最左边的那堆，以保持「从左到右堆顶递增」的性质。
+
+按这种方法、步骤，所有牌分好后，所有堆顶的牌，从左到右，就是 LIS；堆的数量，就是 LIS 长度。
+
+细节：`top[]` 数组保存各堆顶元素。找哪堆可以放入时，在 `top[]` 里用二分搜索。
+
+重复的元素，怎么处理？若求严格上升的 LIS，则堆顶从左到右不能重复，每堆内部可以重复，二分在 `top[]` 里找「`第一个 >= val`」的，用 `lower_bound()`。若求非严格上升的 LIS，则堆顶可以重复，每堆内部不能重复，二分在 `top[]` 里找「`第一个 > val`」的，用 `upper_bound()`。
+
+基于此思路，`300. 最长递增子序列` 的代码，如下。跟上面思路的代码，是完全一样的。
+
+```cpp
+    int lengthOfLIS(vector<int>& nums) {
+        vector<int> top(nums.size());
+        int piles = 0; // 目前各堆范围：[0, piles) 右开
+        for (int i = 0; i < nums.size(); i++) {
+            int j = lower_bound(top.begin(), top.begin() + piles, nums[i]) - top.begin();
+            if (j == piles) {
+                piles++;
+            }
+            top[j] = nums[i];
+        }
+        return piles; // 堆数就是 LIS 长度
+    }
+```
+
+两种方法的对比图
+
+![pic](pics/lis-greedy-bsearch.png)
+
+再看，发现这种思路跟 Dilworth 有某种关系：每堆对应一个 chain，所有堆顶合在一起就是 anti-chain。而且这步骤还给出了拆分 chain 的具体方法。<font color=red>to think more; to do: 合并此文档和 Dilworth 文档。</font>
+
+网上搜索到此 [UB 的 paper](https://www.stat.berkeley.edu/~aldous/Research/OP/patience.pdf)，1993 年的，但貌似还是个草稿。里面提到：与 theorem of Dilworth 是对偶（duality）关系。Dilworth: in any partially ordered set, the length of the longest chain equals the size of the minimal partition into antichains. A permutation `π` determines a partial order on `{1,...,n}` by `i≪j` iff `i ≤ j` and `π(i) ≤ π(j)`. Here a maximal chain is a LIS and an antichain is a decreasing subsequence.
 
 # 法三，树状数组维护
 

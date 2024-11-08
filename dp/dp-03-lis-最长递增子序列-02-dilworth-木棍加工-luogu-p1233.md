@@ -2,10 +2,22 @@
 
 # 概念定义
 
-* 偏序集 (partially ordered set, 简称 poset)：有些元素之间不是 comparable 的。
-* 全序集 (totally ordered set, 简称 toset)：所有元素之间都是 comparable 的。
-  * 两个元素是 comparable 的：按某种排序规则，其中一个元素排在另外一个之前。
-  * 两个元素不是 comparable 的：按某种排序规则，每个元素都不排在另一个元素之前。
+- 偏序集 (partially ordered set, 简称 poset)：有些元素之间不是 comparable 的。
+- 全序集 (totally ordered set, 简称 toset)：所有元素之间都是 comparable 的。
+
+comparable
+- 两个元素是 comparable 的：按某种排序规则，其中一个排在另外一个之前。英语学习：precede。
+- 两个元素不是 comparable 的：按某种排序规则，这两个元素，哪个都不排在另一个之前。
+
+partial order：若一个关系 `≤`，满足下面三个属性
+- reflexivity 自反性：`a ≤ a`（每个元素都关系到它自己）
+- antisymmetry 反对称性：if `a ≤ b` and `b ≤ a`, then `a = b`。no two distinct elements precede each other。
+- transitivity 传递性：if `a ≤ b` and `b ≤ c`, then `a ≤ c`
+
+（其实是 weak partial order。还有一种 strict partial order，定义关系 `<`。）
+
+partial order 再加上下面这个属性，就是 total order
+- connexity (connected relation) 又叫 connected、complete 或 total 全关系：`a ≤ b` or `b ≤ a` 必满足其一
 
 例 1：
 
@@ -36,6 +48,8 @@ antichain:
 
 若用 graph 来理解，chain 中的各顶点，根据其排序关系，可以构成一个单向连接的链表；antichain 中的个顶点，两两之间都不能连通。
 
+（吕 2024.10.30 感悟：跟并查集有点类似。一个 chain 就是并查集里的一个 tree 或连通分量。不过并查集的 tree 里，除了 root，各元素间似无先后顺序。）
+
 # Dilworth's theorem
 
 有限的偏序集 (partially ordered set) 上，最小的链划分 (smallest chain decomposition) 中，链 (chain) 的数量，等于其反链 (antichain) 长度的最大值。
@@ -57,6 +71,8 @@ antichain:
   则它的「最长上升子序列」的长度就是 m=n=3，如 {5 6 7}, {4 7}, 每个单个元素。长度最长为 3。
 ```
 
+<font color=red>吕注：有点不直观。</font>antichain 里各元素之间，是「不可比」的。但用普通数的序列打比方，各数之间是「可比」的。（<font color=red>所以上面的「通俗解释」结论到底对吗？</font>）下面木棍加工，倒确实是「不可比」的。
+
 # 例题：木棍加工
 
 - [`luogu P1233.` 木棍加工](https://www.luogu.com.cn/problem/P1233)
@@ -74,17 +90,31 @@ antichain:
 
 5 根棍子，`(l,w)` 分别为 `(4,9),(5,2),(2,1),(3,5),(1,4)`。
 
-排序后为 `(5,4),(4,9),(3,5),(2,1),(1,4)`。
+排序后为 `(5,2),(4,9),(3,5),(2,1),(1,4)`。
 
 划分的两个 chain 分别是 `(5,2),(2,1)` 和 `(4,9),(3,5),(1,4)`。（加工时，chain 内顺序不能变，不同的 chain 可以交换顺序）
 
-想求 chain 的个数，需要找 anti-chain 的最大长度。anti-chain 其实是从每个 chain 中取出一个构成的，其各元素之间是「不可比」的。我们已经按 l（不严格）递减排序，所以找 w 时要按（严格）升序，这样保证每俩个之间都「不可比」。而 w 的严格升序，就是 w 的严格 LIS 长度。最后找到的，可能是 2->9, 2->5, 2->4, 1->4，长度都为 2，所以 chain 的个数也是 2。<font color="red">总觉得很绕，to think later</font>
+纵向排列起来，较直观，较容易理解。
+
+```cpp
+  +  (5  2)
+  -  [4  9]
+  -  [3  5]
+  +  (2  1)
+  -  [1  4]
+```
+
+先按 l、再按 w 排序。l 肯定都是递降的。再看 w，若 w 遇到更小的，则肯定能与上一个「可比」，属于同一 chain。否则，与上一个「不可比」，属于不同 chain。
+
+如何「从每个 chain 中取出一个」？就是找 w 递增序列。也就是找 w 的 LIS 序列。
+
+想求 chain 的最小个数，需要找 anti-chain 的最大长度。anti-chain 其实是从每个 chain 中取出一个构成的，其各元素之间是「不可比」的。我们已经按 l（不严格）递减排序，所以找 w 时要按（严格）升序，这样保证每俩个之间都「不可比」。而 w 的严格升序，就是 w 的严格 LIS 长度。最后找到的，可能是 2->9, 2->5, 2->4, 1->4，长度都为 2，所以 chain 的最小个数也是 2。<font color="red">总觉得很绕，to think later</font>
 
 c++ 代码：[`luogo-p1233-sticks-using-dilworth.cpp`](code/luogo-p1233-sticks-using-dilworth.cpp)
 
 # 其他例题
 
-- [354. 俄罗斯套娃信封问题](https://leetcode.cn/problems/russian-doll-envelopes/) 最长递增子序列 LIS (Longes Increasing Subsequence) 的变种。也是 partial ordered set，但是找最长 chain 的长度，而不是 chain 的个数，所以没用到 Dilworth 定理。排序时，两个维度，其中一个是逆序的，跟「木棍加工」不同。为啥不同？因为「相等」不行，而「木棍」「相等」是可以的。若「相等」也能套进去，则排序方法与「木棍」一样。<font color="red">to think later</font>
+- [354. 俄罗斯套娃信封问题](https://leetcode.cn/problems/russian-doll-envelopes) 最长递增子序列 LIS (Longes Increasing Subsequence) 的变种。也是 partial ordered set，但是找最长 chain 的长度，而不是 chain 的个数，所以没用到 Dilworth 定理。排序时，两个维度，其中一个是逆序的，跟「木棍加工」不同。为啥不同？因为「相等」不行，而「木棍」「相等」是可以的。若「相等」也能套进去，则排序方法与「木棍」一样。<font color="red">to think later</font>
 
 代码：[`leet-354-russian-doll-envelopes.cpp`](code/leet-354-russian-doll-envelopes.cpp) 思路见代码中注释。其中用多种方法求 LIS 长度。
 

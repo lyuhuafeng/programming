@@ -1,4 +1,13 @@
 
+### quoted from 数据密集型应用的系统架构:
+
+b-tree 需要一些其他额外支持：
+- 预写日志 (write-ahead log, WAL)，又叫 redo log。每个对 B-tree 的修改，必须先更新 WAL，再修改树本身的页。用处：crash recovery，db 崩溃后能从 WAL 中恢复。
+- latches（轻量级 locks）。多线程并发访问 b-tree 时。
+
+#
+
+
 MySQL 的默认存储引擎 InnoDB 使用 B+ tree 做索引。
 
 普通磁盘（非 SSD）加载数据需要经过队列、寻道、旋转以及传输的这些过程，大概要花费 10ms

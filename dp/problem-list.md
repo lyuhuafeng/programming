@@ -122,7 +122,7 @@ https://github.com/shinezzz/LeetCode-Topic/tree/master/5%E5%8A%A8%E6%80%81%E8%A7
 
 - [152. 乘积最大子数组](https://leetcode.cn/problems/maximum-product-subarray/) [`leet-152-max-product-subarray.cpp`](code/leet-152-max-product-subarray.cpp)
 
-- [354. 俄罗斯套娃信封问题](https://leetcode.cn/problems/russian-doll-envelopes/) 最长递增子序列 LIS (Longes Increasing Subsequence) 的变种。[`leet-354-russian-doll-envelopes.cpp`](code/leet-354-russian-doll-envelopes.cpp) 参考[关于 Dilworth 定理的笔记](dp-03-lis-最长递增子序列-02-dilworth-木棍加工-l5-u16-ex4.md)。
+- [354. 俄罗斯套娃信封问题](https://leetcode.cn/problems/russian-doll-envelopes/) 最长递增子序列 LIS (Longes Increasing Subsequence) 的变种。[`leet-354-russian-doll-envelopes.cpp`](code/leet-354-russian-doll-envelopes.cpp) 参考[关于 Dilworth 定理的笔记](dp-03-lis-最长递增子序列-02-dilworth-木棍加工-luogu-p1233.md)。
 
 - [题目列表](https://github.com/itcharge/LeetCode-Py/blob/main/Contents/10.Dynamic-Programming/03.Linear-DP/03.Linear-DP-List.md)
 
@@ -261,7 +261,7 @@ https://github.com/itcharge/LeetCode-Py/blob/main/Contents/10.Dynamic-Programmin
 多维
 
 - 474. 一和零：[题解](背包-1-01背包-两维-一和零-leet474.md)
-- 879. 盈利计划：[3leaf 题解, to study later](https://mp.weixin.qq.com/s?__biz=MzU4NDE3MTEyMA==&mid=2247488103&idx=1&sn=5767d5691b6c87f15ca3182c3742fc79)
+- 879. 盈利计划：[3leaf 题解, to study later](https://mp.weixin.qq.com/s/JH4mlep_7JxzGZNCmcKl5w)
 - 1995. 统计特殊四元组：[题解](leet-1995-统计特殊四元组.md)
 
 树形

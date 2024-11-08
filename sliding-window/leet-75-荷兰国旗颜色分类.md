@@ -1,10 +1,12 @@
-# [75. 荷兰国旗颜色分类](https://leetcode.cn/problems/sort-colors/)
+# [75. 荷兰国旗颜色分类](https://leetcode.cn/problems/sort-colors)
 
 # 一次遍历法
 
 数组分成三部分，从左到右，依次放 0、1、2。l、r 分别是「将要」放下一个 0、2 的位置。l 从左往右走；r 从右往左走。
 
 注意下面提到的三个坑。写完发现，类似 quick sort 中的 partition 过程。
+
+最不好理解的地方：i 和 l 交换后，`i++`；i 和 r 交换后，i 不用 `++`。为何？i 和 l 从同一个位置开始动。若开始 i 连续都为 0，其实没有交换，i 和 l 一起成长；若 i 为 1，则 i 自己右移，l 不动，轨迹开始分开，l 是「最后一个 0」，l+1 为「第一个 1」；下次再遇到 i 为 0，i 和 l+1 交换（「新遇到的 0」与「第一个 1」交换）…… 所以得到「i 处，从左边交换来的肯定是 1，所以 `i++`」。
 
 ```cpp
     void sortColors(vector<int>& nums) {
@@ -40,7 +42,7 @@
         int i = 0; // 中间元素的迭代变量
         while (i <= r) {
             if (nums[i] == 0) {
-                swap(nums[l++], nums[i++]);
+                swap(nums[l++], nums[i++]); // i 处，从左边交换来的肯定是 1，放在 i 这里没问题，所以 i++
             } else if (nums[i] == 2) {
                 swap(nums[r--], nums[i]); // i 处，从右边交换来的不知道是几，所以 i 不变，下次循环继续处理 i
             } else { // nums[i] == 1
@@ -59,7 +61,7 @@
         int i = 0; // 中间元素的迭代变量
         while (i < r) {
             if (nums[i] == 0) {
-                swap(nums[++l], nums[i++]);
+                swap(nums[++l], nums[i++]); // i 处，从左边交换来的肯定是 1，放在 i 这里没问题，所以 i++
             } else if (nums[i] == 2) {
                 swap(nums[--r], nums[i]); // i 处，从右边交换来的不知道是几，所以 i 不变，下次循环继续处理 i
             } else { // nums[i] == 1

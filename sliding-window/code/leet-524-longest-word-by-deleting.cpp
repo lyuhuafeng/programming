@@ -1,8 +1,12 @@
-# [`524.` 通过删除字母匹配到字典里最长单词](https://leetcode.cn/problems/longest-word-in-dictionary-through-deleting/)
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
 
-重点：如何匹配是否子序列
+// https://leetcode.cn/problems/longest-word-in-dictionary-through-deleting
+// 重点：如何匹配是否子序列
+// leet ac 2024.02.18
 
-```cpp
     string findLongestWord(string s, vector<string>& dictionary) {
         // dict 中的词，按长度，从长到短排序；若长度相同，按字典序升序排。
         sort(dictionary.begin(), dictionary.end(), [](const string& a, const string& b) {
@@ -30,4 +34,3 @@
         }
         return "";
     }
-```

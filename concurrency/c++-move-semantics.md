@@ -141,10 +141,11 @@ https://stackoverflow.com/questions/3106110/what-is-move-semantics/11540204#1154
 
 如果成员不是指针，而是个普通对象。得用 std::move() 才行。
 
-std::move() 把 lvalue 转换成 rvalue。
+std::move() 的唯一作用，无论输入是 lvalue 还是 rvalue，都转换成 rvalue。
+
 std::move() 本质上是个 type casting，用了 static_cast。
 
-std::move(s) 把 s 标记为 moveable，意为「I no longer need this value here.」。但并不真正移动。
+std::move(s) 把 s 标记为 moveable，意为「I no longer need this value here」。但并不真正移动。随后，将该 moveable 对象用于触发 move constructor 或 move assignment operator，对方可能直接利用（移走）moveable object 中已分配的资源（并将 moveable object 中相应字段置为 nullptr），则该 moveable object 就变成不可用了。
 
 moved-from object 处在 valid but unspecified 的状态中。
 

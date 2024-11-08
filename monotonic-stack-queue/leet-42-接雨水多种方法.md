@@ -1,4 +1,4 @@
-# [leetcode 42. 接雨水](https://leetcode.cn/problems/trapping-rain-water/)
+# [leetcode 42. 接雨水](https://leetcode.cn/problems/trapping-rain-water)
 
 references:
 - [四种方法](https://mp.weixin.qq.com/s/XyiYcDwEv3VW5Zs-WmRbDQ)
@@ -137,11 +137,11 @@ references:
 
 一种只需要遍历一次即可的解法，需要两个指针 l 和 r，开始分别指向首尾位置，从两边向中间扫描。若 l 较低，则从左向右扫，l++；若 r 较低，则从右向左扫，r--。若二者等高，谁移动都可以。
 
-左右两边各维护一个「当前最高」maxl、maxr。以左边为例，若 `maxl > h[l]`，则「maxl 所在位置」与「maxl 的 next higher 所在位置」构成了一个槽，且 maxl 是较矮的一端。（考虑阶梯形状；见 2024.05.28 图 1）。当前 l 在这个槽内，顶上可装水 `maxl - h[l]`。不用知道「maxl 的 next higher」具体在什么位置。右边类似。
+左右两边各维护一个「当前最高」maxl、maxr。以左边为例，若 `maxl > h[l]`，则「maxl 所在位置」与「maxl 的 next higher 所在位置」构成了一个槽，且 maxl 是较矮的一端。（考虑阶梯形状；见 2024.05.28 手绘图 1）。当前 l 在这个槽内，顶上可装水 `maxl - h[l]`。不用知道「maxl 的 next higher」具体在什么位置。右边类似。
 
 直到 l、r 重合，结束。<font color="green">为什么要两个指针、低的先移动？因为阶梯是从两边往中间逐步升高，这种移动方式可以让 l、r 在中间碰头。</font>
 
-一个小误解：若 l、r 高度相同，说明 l、r 都已在最高位置处，此时可以停止移动。遍历 l、r 中间的位置，每个位置可以装水 `maxh - h[i]`。后来一想，不对。l、r 若都到了 maxh，是等高的；但「等高」不代表就在 maxh 位置，我们实际上也不知道 maxh 是多少。所以上面逻辑不成立。见 2024.05.28 图 2。
+一个小误解：若 l、r 高度相同，说明 l、r 都已在最高位置处，此时可以停止移动。遍历 l、r 中间的位置，每个位置可以装水 `maxh - h[i]`。后来一想，不对。l、r 若都到了 maxh，是等高的；但「等高」不代表就在 maxh 位置，我们实际上也不知道 maxh 是多少。所以上面逻辑不成立。见 2024.05.28 手绘图 2。
 
 代码中注意：先处理 l，再 l++；r 类似。
 

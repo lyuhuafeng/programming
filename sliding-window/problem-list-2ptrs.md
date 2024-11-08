@@ -21,19 +21,19 @@ https://leetcode.cn/problems/minimum-absolute-difference-between-elements-with-c
 
 ## 左右指针
 
-- 167. 两数之和 II - 输入有序数组. [题解](leet-167-两数和ii有序的.md)
-- 15. 16. 三数之和为 0、三数之和最接近某值 [题解](leet-15-16-三数之和.md)
+- 167. 两数之和 II - 输入有序数组 [题解](leet-167-两数和ii有序的.md)
 - 18. 四数之和 [题解](leet-18-四数之和.md)
+- 15. 16. 三数之和为 0、三数之和最接近某值 [题解](leet-15-16-三数之和.md)
 - 11. 盛最多水的容器 [题解](leet-11-盛最多水的容器.md)
 - 42. 接雨水 [双指针法题解，见这个文档的「双指针扫描一次」法](../monotonic-stack-queue/leet-42-接雨水多种方法.md#双指针扫描一次)
-- 633. 平方数之和. [题解](https://leetcode.cn/problems/sum-of-square-numbers/submissions/471271654/)
-- 240. 搜索二维矩阵 II
-- 524. 通过删除字母匹配到字典里最长单词 [题解](leet-524-通过删除字母匹配到字典里最长单词.md)
-- 713. 乘积严格小于 K 的子数组 [代码](https://leetcode.cn/problems/subarray-product-less-than-k/submissions/503025321/)
+- 633. 平方数之和 [题解代码](code/leet-633-sum-of-squares.cpp)
+- 240. 搜索二维矩阵 II [代码，两种方法，双指针（理解成 BST）、二分](code/leet-240-search-2d-matrix-ii.cpp)
+- 524. 通过删除字母匹配到字典里最长单词 [题解代码](code/leet-524-longest-word-by-deleting.cpp)
+- 713. 乘积严格小于 K 的子数组 [代码](code/leet-713-subarray-product-less-than-k.cpp)
 - 977. 有序数组的平方 [代码，类似归并](https://leetcode.cn/problems/squares-of-a-sorted-array/submissions/503031908/)
 - 88. in-place 合并两个有序数组 [题解，归并变化](https://leetcode.cn/problems/merge-sorted-array/submissions/471274273/)
 - 75. 荷兰国旗颜色分类 [题解，类似 partition 过程](leet-75-荷兰国旗颜色分类.md)
-- 881. 救生艇 [题解](leet-881-救生艇.md)
+- 881. 救生艇 [题解](code/leet-881-boats-to-save.cpp)
 
 ## 快慢指针
 
