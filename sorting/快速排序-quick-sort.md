@@ -161,7 +161,7 @@ j 循环结束后，所有元素都处理过，未处理区没了，只有「小
  6              swap(a[++p], a[j]);
  7          }
  8      }
- 9        // 不用再交换；已在上面循环中交换
+ 9      // 不用再交换；已在上面循环中交换
 10      return p;
 11  }
 ```
@@ -437,7 +437,7 @@ Dijkstra 3-way partition，以 Edsger Dijkstra 命名，因为他提出的「荷
 
 时间复杂度：需要 `2ln2 × n × H` 次比较。其中 H 是所有 key 的 Shannon entropy（用于衡量他们的 information content），可认为是常数（<font color="red">需更深入理解</font>）：
 ```
-    H = - Σ(pᵢ × logpᵢ)) = -(p₁ × logp₁ + p₂ × logp₂ + … + pₙ × logpₙ)
+    H = - Σ(pᵢ × logpᵢ) = -(p₁ × logp₁ + p₂ × logp₂ + … + pₙ × logpₙ)
 ```
 则，时间复杂度为 `O(nH)` = `O(n)`，是线性的。
 

@@ -6,7 +6,7 @@
 
 - [leetcode 739. 每日温度](https://leetcode.cn/problems/daily-temperatures/) next greater 标准模版
 
-- [leetcode 1475. 商品折扣后的最终价格](https://leetcode.cn/problems/final-prices-with-a-special-discount-in-a-shop/) 基本模版 next smaller or equal。[代码](code/leet-1475-special-discount.cpp)
+- [leetcode 1475. 商品折扣后的最终价格](https://leetcode.cn/problems/final-prices-with-a-special-discount-in-a-shop) 基本模版 next smaller or equal。[代码](code/leet-1475-special-discount.cpp)
 
 - `leet 503.` 下一个更大元素II。环形 next greater。[题解](leet-503-下一个更大元素ii.md)
 

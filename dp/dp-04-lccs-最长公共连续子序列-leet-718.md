@@ -3,14 +3,14 @@
 * longest common continuous sub-sequence
 * longest common sub-array
 
-[leet 718: 最长重复子数组](https://leetcode.cn/problems/maximum-length-of-repeated-subarray/)
+[leet 718: 最长重复子数组](https://leetcode.cn/problems/maximum-length-of-repeated-subarray)
 
 定义
 - `dp[i][j]` 表示 `a[i]`、`b[j]` 为结尾的 LCCS 长度。
 
 递推公式
 ```cpp
-     if (i == j) {
+     if (a[i] == b[j]) {
         dp[i][j] = dp[i-1][j-1] + 1; // dp[i-1][j-1]==0 时也成立
      } else {
         dp[i][j] = 0;

@@ -5,8 +5,10 @@ import java.util.*;
 class Solution {
     // cur: 将要处理第 cur 个数。从 0 开始算起。
     // 若 cur == n（最大下标 +1），说明所有数都已处理完了，可返回（cur 也不用处理了）
+    // 可选项是两个：「选自己」、「不选自己」。不需要循环遍历所有可选项。
     void dfs(int cur, int[] nums, List<Integer> t, List<List<Integer>> res) {
         if (cur == nums.length) {
+            // 不能直接 res.add(t)，而要复制一个新的再加入
             res.add(new ArrayList<>(t));
             return;
         }

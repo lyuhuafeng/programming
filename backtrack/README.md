@@ -73,18 +73,18 @@ https://www.geeksforgeeks.org/backtracking-introduction/
   - go 代码，递归但似无回溯：[`permutation-leet46-go-sol2.go`](code/permutation-leet46-go-sol2.go) 
 
 - [n 皇后问题](queens.md)
-- [数的划分](数的划分.md)
+- [`luogu p1025` 数的划分](数的划分.md)
 - [和为 T](和为T.md)
 
 - [leet 78. 子集](https://leetcode.cn/problems/subsets) 无重复元素的数组，找出其所有子集。
   - dfs 代码：[`subset-dfs-leet78.java`](code/subset-dfs-leet78.java) 可选项是两个：「选自己」、「不选自己」。不像其他题目，用循环遍历所有可选项。Again，Java 代码，不能直接 `res.add(t)`，而要复制一个新的再加入 `res.add(new ArrayList<>(t))`。
   - 还有一种方法，利用二进制，[c++ 代码](code/subset-bits-leet78.cpp)。
 
--[leet 62. 不同路径](https://leetcode.cn/problems/unique-paths)：[dfs 解法]()，代码看着像简单递归；[dp 解法]()，代码就是简单递推。
+- [leet 62. 不同路径](https://leetcode.cn/problems/unique-paths)：[dfs 解法]()，代码看着像简单递归；[dp 解法]()，代码就是简单递推。
 
-- [leet 22. 括号生成](https://leetcode.cn/problems/generate-parentheses)
+- [leet 22. 括号生成](https://leetcode.cn/problems/generate-parentheses)：[递推解法代码](code/leet-22-generate-parentheses.cpp) 递推，用不到 dfs 或 dp
 
--[leet 131. 分割回文串](https://leetcode.cn/problems/palindrome-partitioning)
+- [leet 131. 分割回文串](https://leetcode.cn/problems/palindrome-partitioning)：[dfs 解法](code/leet-131-palindrome-partition.cpp)
 
 leetcode https://blog.csdn.net/weixin_39802680/article/details/106026618
 

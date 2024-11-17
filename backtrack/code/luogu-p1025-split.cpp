@@ -1,6 +1,8 @@
 #include <cstdio>
 using namespace std;
 
+// ac 2023.03.11
+
 int n, k, cnt;
 
 // last: 当前可以用的数的最小值

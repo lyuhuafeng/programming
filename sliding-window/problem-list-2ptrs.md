@@ -34,6 +34,7 @@ https://leetcode.cn/problems/minimum-absolute-difference-between-elements-with-c
 - 88. in-place 合并两个有序数组 [题解，归并变化](https://leetcode.cn/problems/merge-sorted-array/submissions/471274273/)
 - 75. 荷兰国旗颜色分类 [题解，类似 partition 过程](leet-75-荷兰国旗颜色分类.md)
 - 881. 救生艇 [题解](code/leet-881-boats-to-save.cpp)
+- 1004. 最大连续1的个数 III [题解](leet-1004-最大连续1的个数III.md)
 
 ## 快慢指针
 

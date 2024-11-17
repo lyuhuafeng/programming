@@ -3,11 +3,11 @@
 #include <cstdio>
 using namespace std;
 
-// leet ac 2024.12.21
+// leet ac 2024.10.21
 
 class Solution {
 public:
-    void dfs(vector<int>& nums, vector<vector<int>>& res, vector<int>& t) {
+    void dfs(const vector<int>& nums, vector<vector<int>>& res, vector<int>& t) {
         if (t.size() == nums.size()) {
             res.push_back(t);
             return;

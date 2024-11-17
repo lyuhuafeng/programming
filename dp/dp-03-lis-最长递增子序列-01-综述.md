@@ -163,7 +163,7 @@ c++ 代码的两个实现
 ```cpp
     int lengthOfLIS(vector<int>& nums) {
         vector<int> top(nums.size());
-        int piles = 0; // 目前各堆范围：[0, piles) 右开
+        int piles = 0; // 目前有多少堆；各堆范围：[0, piles) 右开
         for (int i = 0; i < nums.size(); i++) {
             int j = lower_bound(top.begin(), top.begin() + piles, nums[i]) - top.begin();
             if (j == piles) {
