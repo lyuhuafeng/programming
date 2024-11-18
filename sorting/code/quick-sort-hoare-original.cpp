@@ -1,6 +1,7 @@
 #include <utility> // swap()
-#include <vector>
+#include <chrono>
 #include <cstdio>
+#include <iostream>
 using namespace std;
 
 void display(int a[], int n) {
@@ -9,6 +10,8 @@ void display(int a[], int n) {
     }
     printf("\n");
 }
+
+// hoare 两段，[l, p] 和 [p+1, r]
 
     // impl 1
     // 来自 wikipedia https://en.wikipedia.org/wiki/Quicksort 和 mit「算法导论」书
@@ -27,7 +30,7 @@ void display(int a[], int n) {
     }
 
     // impl 2
-    // ref: leetcode 215. 数组中的第K个最大元素 官方题解
+    // ref: leetcode 215. 数组中的第K个最大元素 官方题解。跟 impl 1 其实一样。
     int partition_2(long nums[], int l, int r) {
         long key = nums[l];
         int i = l - 1, j = r + 1;
@@ -60,15 +63,15 @@ void display(int a[], int n) {
 
     void qsort(long a[], int left, int right) {
         if (left < right) {
-            int pi = partition_3(a, left, right);
+            int pi = partition(a, left, right);
             qsort(a, left, pi); // 左侧：递归
-            qsort(a, pi + 1, right); // 右侧：不递归
+            qsort(a, pi + 1, right); // 右侧：递归
         }
     }
 
     void qsort_2(long a[], int left, int right) {
         while (left < right) {
-            int pi = partition_3(a, left, right);
+            int pi = partition(a, left, right);
             qsort_2(a, left, pi); // 左侧：递归
             left = pi + 1; // 右侧：不递归
         }
@@ -95,9 +98,12 @@ int main() {
     for (int i = 0; i < n; i++) {
         scanf("%ld", &nums[i]);
     }
-    
     // display(nums, n);
+
+    auto t0 = std::chrono::steady_clock::now();
     qsort_2(nums, 0, n - 1);
+    auto t1 = std::chrono::steady_clock::now();
+    cerr << "cost " << chrono::duration<double>(t1 - t0).count() << " seconds" << endl;
 
     for (int i = 0; i < n; i++) {
         printf("%ld ", nums[i]);

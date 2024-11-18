@@ -3,30 +3,29 @@
 #include <vector>
 using namespace std;
 
-int partition(vector<int>& a, int left, int right) {
-    int key = a[right]; // 最后一个元素作为pivot值
-    int p = left - 1;   // “小于等于区”的右边界
-    for (int j = left; j <= right - 1; j++) { // 找小于key的
+// lomuto, 分三段，qselect 递归
+int partition(vector<int>& a, int l, int r) {
+    int key = a[r]; // 最后一个元素作为pivot值
+    int p = l - 1;   // “小于等于区”的右边界
+    for (int j = l; j <= r - 1; j++) { // 找小于key的
         if (a[j] <= key) {
             swap(a[++p], a[j]);
         }
     }
-    swap(a[++p], a[right]);
+    swap(a[++p], a[r]);
     return p;
 }
 
-void qselect(vector<int>& a, int left, int right, int k) {
+void qselect(vector<int>& a, int l, int r, int k) {
     // assert(left <= right); // 这个 assertion 对 qsort() 不成立
-    if (left == right) {
+    if (l == r) { return; }
+    int pi = partition(a, l, r);
+    if (pi == k) {
         return;
-    }
-    int pivot = partition(a, left, right);
-    if (pivot == k) {
-        return;
-    } else if (pivot > k) {
-        qselect(a, left, pivot - 1, k);
+    } else if (pi > k) {
+        qselect(a, l, pi - 1, k);
     } else {
-        qselect(a, pivot + 1, right, k);
+        qselect(a, pi + 1, r, k);
     }
 }
 

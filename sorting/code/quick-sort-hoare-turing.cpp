@@ -1,5 +1,7 @@
 #include <utility> // swap()
 #include <cstdio>
+#include <chrono>
+#include <iostream>
 using namespace std;
 
 void display(int a[], int n) {
@@ -97,9 +99,12 @@ int main() {
     for (int i = 0; i < n; i++) {
         scanf("%ld", &nums[i]);
     }
-    
     // display(nums, n);
+
+    auto t0 = std::chrono::steady_clock::now();
     qsort(nums, 0, n - 1);
+    auto t1 = std::chrono::steady_clock::now();
+    cerr << "cost " << chrono::duration<double>(t1 - t0).count() << " seconds" << endl;
 
     for (int i = 0; i < n; i++) {
         printf("%ld ", nums[i]);

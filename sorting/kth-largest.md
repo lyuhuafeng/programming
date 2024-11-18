@@ -55,4 +55,6 @@ C++ 代码，kᵗʰ largest，vector 序列：[kth-largest-quick-select-vector.c
 
 [leet 215 数组第 k 大元素](https://leetcode.cn/problems/kth-largest-element-in-an-array) 代码
 
-to read: https://leetcode.com/problems/kth-largest-element-in-an-array/solutions/115721/on-bfprt-algorithm-in-c/
+## 4. BFPRT 算法
+
+参见[这个文档](bfprt-select-选择.md)

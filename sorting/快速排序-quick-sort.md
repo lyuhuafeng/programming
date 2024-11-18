@@ -14,12 +14,12 @@ partition: 所有比 pivot 值小的元素放到 pivot 前，所有比 pivot 值
 
 ```c++
     void qsort(int a[], int left, int right) {
-        if (left >= right) { // 必须是 >= 而不是 ==。有时 pivot == left 或 right，导致下一次调用时 left > right。
+        if (left >= right) { // 必须是 >= 而不是 ==。有时 pi == left 或 right，导致下一次调用时 left > right。
             return;
         }
-        int pivot = partition(a, left, right);
-        qsort(a, left, pivot - 1);
-        qsort(a, pivot + 1, right);
+        int pi = partition(a, left, right);
+        qsort(a, left, pi - 1);
+        qsort(a, pi + 1, right);
     }
 ```
 
@@ -46,9 +46,18 @@ to add pic
 对比：
 - Lomuto 实现较直观、简单；Hoare 实现的微妙细节较多，容易出错，但更高效。
 - 平均情况下，Hoare 的交换次数约为 Lomuto 的三分之一。（「交换」是个很贵的操作）Hoare 更高效。
-- Hoare 对重复元素的处理，比 Lomuto 更高效，使 partition 更均衡。(to add: how?)
+- 对重复元素的处理，Hoare 比 Lomuto 更高效，partition 更均衡。体现在：与 pivot 等值的元素，分布在 pivot 两侧。
 - <font color="red">Hoare 和 Lomuto 都是不稳定的。</font>
 - https://cs.stackexchange.com/questions/11458/quicksort-partitioning-hoare-vs-lomuto/11550
+
+总结
+- Lomuto
+- Hoare
+  - partition 分两段
+    - wiki + mit 法（最佳）
+  - partition 分三段
+    - little turing 法
+    - sedgewick 法（最佳）
 
 # partition 法一：Lomuto partition scheme
 
@@ -166,8 +175,12 @@ j 循环结束后，所有元素都处理过，未处理区没了，只有「小
 11  }
 ```
 
-
 # partition 法二：Hoare partition scheme，经典双指针法
+
+与 Lomuto 最大的区别：pivot 两侧，都可能有与 pivot 相等的元素。
+
+- 原汁原味法：分成两部分。递归调用 `(l, p)` 和 `(p+1, r)`！
+- 后来改进法：分成三部分。递归调用 `(l, p-1)` 和 `(p+1, r)`。
 
 by Tony Hoare，1959-1961。
 
@@ -177,9 +190,9 @@ by Tony Hoare，1959-1961。
 
 ## 比较「原汁原味」的 Hoare 方法：
 
-初值 `i = l-1, j = r+1`；循环时先 `i++` 或 `j--` 再判断，需使用 `do ... while` 循环。
+`partition()` 分成两段 `[l, p]` 和 `[p+1, r]`，而不是三部分。配套的 `qsort()` 或 `qselect()` 也递归调用 `(l, p)` 和 `(p+1, r)`。
 
-`partition()` 返回的下标（位置），其值并不一定就是 pivot 值。所以 `partition()` 的结果是分成两部分，而不是三部分。配套的 `qsort()` 或 `qselect()` 也与分成三部分的 Lomuto 不同。
+初值 `i = l-1, j = r+1`；循环时先 `i++` 或 `j--` 再判断，需使用 `do ... while` 循环。
 
 完整代码：[`quick-sort-hoare-original.cpp`](code/quick-sort-hoare-original.cpp)。核心部分如下，三种 `partition()` 的实现，两种 `qsort()` 的实现（完全递归的、半递归的）。注意 pivot 左侧调用 `qsort(a, left, pi)` 而不是 `pi-1`。
 
@@ -258,7 +271,11 @@ by Tony Hoare，1959-1961。
 
 ## 另一种方式 Hoare 方式
 
-分成三段的。完整代码 [`quick-sort-hoare-turing.cpp`](code/quick-sort-hoare-turing.cpp)，内有两种方式共三种 partition() 实现代码，及两种 qsort() 实现代码（全递归、半递归）。
+`partition()` 分成三段，这点类似 Lomuto。
+
+（与 pivot 值相等的元素分布在 pivot 两边，这点又与 Lomuto 不同。）
+
+完整代码 [`quick-sort-hoare-turing.cpp`](code/quick-sort-hoare-turing.cpp)，内有两种方式共三种 `partition()` 实现代码，及两种 `qsort()` 实现代码（全递归、半递归）。
 
 方式一：little turing
 
@@ -295,9 +312,7 @@ by Tony Hoare，1959-1961。
 - 变化：`i` 找小的，`j` 找大的。
 - 不变：最 left 元素值作为 pivot 值。pivot 的对面方向先动手。最后 i 或 j 与 left 交换。
 
-上面的方法中，与 pivot 值相等的元素分布在 pivot 两边。如果放在一边呢？<font color="red">左 <= 右 > 或 左 < 右 > 似乎都可以，但 左< 右>= 似乎不行。to check later</font>
-
-Sedgewick《算法》：左侧扫描，最好遇到 `>= pivot` 时停下。右侧扫描，最好遇到 `<= pivot` 时停下。这样可能会导致不必要的等值元素交换，但某些场景下（所有待排序元素值都一样），可避免运行时间变成 `O(n²)`。<font color="green">（我注：但不能简单在 while 循环中把用 `a[j] >= key` 和 `a[i] <= key` 改为「`>`」或「`<`」就可以，见下面代码第 6-8, 23-25 行。如何解决？见下面 Sedgewick 方式。）</font>
+Sedgewick《算法》：左侧扫描，最好遇到 `>= pivot` 时停下。右侧扫描，最好遇到 `<= pivot` 时停下。这样可能会导致不必要的等值元素交换，但某些场景下（所有待排序元素值都一样），可避免运行时间变成 `O(n²)`。<font color="green">（我注：但不能简单地把 little turing 代码中 while 循环中的 `a[j] >= key` 和 `a[i] <= key` 改为「`>`」或「`<`」，见下面代码第 6-8, 23-25 行，否则可能死循环（为啥？）。如何解决？见下面 Sedgewick 方式。）</font>
 
 little turing 标程，核心代码。还不能完美处理 duplicate elements。
 
@@ -372,7 +387,7 @@ little turing 标程，核心代码。还不能完美处理 duplicate elements�
  7            while (i < j && a[i] <= key) { i++; } // i 随后
  8            if (i < j) { swap(a[i], a[j]); }
  9        }
-10        a[left] = a[i]; a[i] = key; // left
+10        a[left] = a[i], a[i] = key; // left
 11        return i;
 12    }
 
@@ -390,11 +405,10 @@ little turing 标程，核心代码。还不能完美处理 duplicate elements�
 12    }
 ```
 
-方式二，Sedgewick 方式，貌似已解决重复元素问题。核心代码见下。
+方式二，Sedgewick 方式，较好解决了重复元素问题。核心代码见下。
 
 ```cpp
     // Sedgewick 'algorithms' 4th ed. p291
-    // 好像已经正确处理了 duplicate elements?
     int partition_3(long a[], int left, int right) {
         long key = a[left];
         int i = left, j = right + 1;
@@ -414,6 +428,38 @@ little turing 标程，核心代码。还不能完美处理 duplicate elements�
 little turing vs. Sedgewick:
 - `i, j` 的初值不同。turing: `i = l, j = r`；Sedgewick: `i = l, j = r+1`
 - 谁先动手的规律：turing 上文已深入分析；Sedgewick: <font color="red">to check later. 猜想：先动手的变了，可能 `i, j` 初值也变</font>
+- Sedgewick 解决了重复元素问题
+
+```cpp
+// Hoare 两段、三段最佳方法的代码对比
+    // 两段最佳，impl 1，来自 wikipedia 和 mit「算法导论」书
+    int partition(long a[], int l, int r) {
+        long key = a[l];
+        int i = l - 1, j = r + 1;
+        while (true) {
+            do { i++; } while (a[i] < key); // 这两句谁在前谁在后都行
+            do { j--; } while (a[j] > key); // 这两句谁在前谁在后都行
+            if (i >= j) {
+                return j;
+            }
+            swap(a[i], a[j]);
+        }
+    }
+
+    // 三段最佳，Sedgewick 'algorithms' 4th ed. p291
+    int partition(long a[], int l, int r) {
+        long key = a[l];
+        int i = l, j = r + 1;
+        while (true) {
+            while (a[++i] < key) { if (i == r) break; } // i 向右找第一个大于等于 k 的。
+            while (a[--j] > key) { if (j == l) break; } // j 向左找第一个小于等于 k 的。
+            if (i >= j) { break; }
+            swap(a[i], a[j]);
+        }
+        a[l] = a[j], a[j] = key; // 相当于 swap(a[l], a[j])
+        return j;
+    }
+```
 
 # 优化
 
@@ -447,15 +493,22 @@ Dijkstra 3-way partition，以 Edsger Dijkstra 命名，因为他提出的「荷
 
 选整个序列的中间值作为 pivot 值，是最优的，可以把序列分成成都大致相等的两部分。
 
-- 选第一个（最左边的）或最后一个（最右边的）。若输入序列是随机的，没问题。若输入序列是已经有序或接近有序的，则 partition 的结果会完全不均衡或接近不均衡，导致耗时退化为 `O(n²)`。对策：排序之前，先 shuffle 一下，随机打乱输入序列。
+- 选第一个（最左边的）或最后一个（最右边的）。若输入序列是随机的，没问题。若输入序列是已经有序或接近有序的，则 partition 的结果会完全不均衡或接近不均衡，导致耗时退化为 `O(n²)`。对策：排序之前，先 shuffle 一下，随机打乱输入序列。尽管 random shuffle 耗时较多，但仍然值得，可防止出现最坏情况，并使运行时间可预计。
 - 随机选 pivot
-- median of three: 选第一个、中间的、最后一个，这三个元素的中间值，作为 pivot 值。希望它尽量接近整个输入序列的中间值。
+- median of three: 选第一个、中间的、最后一个，这三个元素的中间值，作为 pivot 值。希望它尽量接近整个输入序列的中间值。广义地，用一小部分元素的中位数作为 pivot 值。下面的 Tukey's ninther 也是这个思想。据 Sedgewick 算法第四版，取样大小为 3（也就是本方法 median of three），效果最好。还可将被取样的元素放在数组结尾，作为哨兵，可去掉 `partition()` 中的 both array bounds tests 逻辑。<font color=red>吕问：为何是 both？to check later。
 - Tukey's ninther，又称 median-of-three-medians-of-three 或 pseudomedian of nine 或 median of medians: 使用 median of the median of 3 samples, each of 3 entries. 最初想法来自 1978 年论文。不确定现在是否实用。
 - dual-pivot quicksort: 两个 pivot，`p1 < p2`。partitio 结果是分成三部分，分别 `< p1`, `p1 <= && <= p2`, `> p2`。数据少时切换到 insertion sort。时间复杂度：`O(nlog₃n)`，比 single-pivot partition 的 `O(nlog₂n)` 快一些。By Vladimir Yaroslavskiy, 2009。
 
 ## 其他优化
 
-当数据较少时，切换到 insertion sort。（也就是 intro sort）
+当数据较少时，切换到 insertion sort。（也就是 intro sort）M 的最佳值与系统相关，但通常取 5 - 15 之间都是可以令人满意的。
+
+```cpp
+    if (right <= left + M) {
+        insertion_sort(a, left, right);
+        return;
+    }
+```
 
 # 稳定性、时间复杂度
 
@@ -498,18 +551,9 @@ Cache-friendly
 - 平均：`O(n*logn)`，例如 `T(n) = T(n/9) + T(9n/10) + O(n)`
 - 最差：`O(n²)`，每次 pivot 都找到最小的或最大的，`T(n) = T(0) + T(n-1) + O(n)`
 
-# go 语言实现
-
-风格一，`sort()` 和 `partition()` 都用 `(a[], left, right)` 做参数。
-
-[`quick-sort-golang-sol1.go`](code/quick-sort-golang-sol1.go)
-
-风格二，`sort()` 和 `partition()` 都用 `(a[])` 做参数。递归时，要把当前数组切出一块再去调用。
-
-[`quick-sort-golang-sol2.go`](code/quick-sort-golang-sol2.go)
-
-
 # 非完全递归的实现
+
+半递归方式
 
 ```cpp
     void qsort(int a[], int left, int right) {
@@ -517,53 +561,32 @@ Cache-friendly
             return;
         }
         while (left < right) {
-            int pivot = partition(a, left, right);
-            qsort(a, left, pivot - 1); // 左侧：递归
-            left = pivot + 1; // 右侧：不递归
+            int pi = partition(a, left, right);
+            qsort(a, left, pi - 1); // 左侧：递归
+            left = pi + 1; // 右侧：不递归
         }
     }
 ```
 
-# STL `partition()`
+递推方式，完全不递归。[代码](code/quick-sort-iterative.cpp)
 
 ```cpp
-    #include <algorithm>
-    std::partition(first, last, predicate);
-    std::stable_partition(first, last, predicate);
-```
-
-根据 predicate 指定的判断条件，将序列划分为两部分，前一部分 predicate 返回 true，后一部分 predicate 返回 false。
-
-返回值：后一部分的第一个元素（第一个 false）的位置。
-
-例：前一部分都是偶数，后一部分都是奇数。
-
-```cpp
-    std::vector<int> v{6, 7, 8, 9, 0, 1, 2, 3, 4, 5};
-    auto it = std::partition(v.begin(), v.end(), [](int i) {return i % 2 == 0;});
-```
-
-用 `std::partition()` 实现 quick sort。注意，partition 分成三部分，中间一部分是「等于 pivot 值」的。
-
-```cpp
-    template<typename ForwardIt>
-    void quick_sort(ForwardIt first, ForwardIt last) {
-        if (first == last) {
-            return;
+    // 用 stack 记录每对要排序的 left, right。成对压入，成对弹出。
+    void qsort(int a[], int left, int right) {
+        stack<int> s;
+        s.push(left); s.push(right);
+        while (!s.empty()) {
+            right = s.top(); s.pop();
+            left = s.top(); s.pop();
+            int pi = partition(a, left, right);
+            if (pi - 1 > left) {
+                s.push(left); s.push(pi - 1);
+            }
+            if (pi + 1 < right) {
+                s.push(pi + 1); s.push(right);
+            }
         }
-
-        auto pv = *std::next(first, std::distance(first, last) / 2); // pivot 值，尽量取中间元素的值
-        auto p1 = std::partition(first, last, [pv](const auto& em) { return em < pv; }); // p1: 第一个 >= pv 的元素
-        auto p2 = std::partition(p1, last, [pv](const auto& em) { return em <= pv; }); // p2: 第一个 > pv 的元素
-        quick_sort(first, p1); // [first, p1) 左闭右开区间，都是 < pv 的
-        quick_sort(p2, last); // [p2, last) 左闭右开区间，都是 > pv 的
     }
-
-    std::vector<int> v{6, 4, 8, 2, 0, 1, 9, 3, 7, 5};
-    quick_sort(v.begin(), v.end());
-
-    std::forward_list<int> fl {1, 30, -4, 3, 5, -4, 1, 6, -8, 2, -5, 64, 1, 92};
-    quick_sort(std::begin(fl), std::end(fl));
 ```
 
 # 快速选择 quick select
@@ -576,38 +599,68 @@ To find the kᵗʰ smallest element in an unordered list。
 
 k 在 `[0, len-1]` 范围内。如果 `k > len - 1`，则最后 `assert(left <= right)` 会失败。
 
-2024.10.24 吕问：下面 assert 不应该注掉？
+风格：
+- `partition()` 分成两段或三段，对应 `qselect()` 也要两段或三段
+- `qselect()` 递归或非递归
+- `qselect()` 返回 void 或返回 kᵗʰ 值
+- 若求 kᵗʰ largest，则或者从大到小排序，或者 `k = n - k`
+- 输入是否允许 left > right
+
+以 leet 215 kᵗʰ largest 为例。每种方法都有 `qselect()` 有、无返回值，递归、非递归的写法。注意，因为是返回 kᵗʰ largest，所以 `partition()` 时从大到小排序，有些大于号、小于号是反的。
+- [两段法代码](code/leet-215-kth-largest-2p.cpp)
+- [三段法代码](code/leet-215-kth-largest-3p.cpp)
+
+仅以一种方式为例：
 
 ```c++
-    int qselect(int a[], int left, int right, int k) {
-        // assert(left <= right); // 这个 assertion 对 qsort() 不成立
-        if (left == right) {
-            return a[left];
+// 分两段，qselect() 无返回值、非递归
+    // Hoare 两段 [l, p] 和 [p+1, r]
+    // impl 1，来自 wikipedia https://en.wikipedia.org/wiki/Quicksort 和 mit「算法导论」书
+    int partition(vector<int>& a, int l, int r) {
+        long key = a[l];
+        int i = l - 1, j = r + 1;
+        while (true) {
+            do { i++; } while (a[i] > key); // 这两句，谁先谁后都可以
+            do { j--; } while (a[j] < key); // 这两句，谁先谁后都可以
+            if (i >= j) { return j; }
+            swap(a[i], a[j]);
         }
-        int pivot = partition(a, left, right);
-        if (pivot == k) {
-            return a[k];
-        } else if (pivot > k) {
-            return qselect(a, left, pivot - 1, k);
-        } else {
-            return qselect(a, pivot + 1, right, k);
+    }
+    // qselect() 无返回值、非递归
+    void qselect(vector<int>& a, int left, int right, int k) {
+        if (left == right) { return; }
+        while (left < right) {
+            int p = partition(a, left, right);
+            p >= k ? right = p : left = p + 1;
         }
     }
 
-    int a[] = {8, 3, 8, 4, 100, 2, 8, 8, 1, 23, 8, 45, 8, 1, 50, 8};
-    int n = sizeof a / sizeof a[0];
-    int k = 6;
-    int ans = qselect(a, 0, n-1, k); // k 从 0 开始算起。若第二个参数改为 1，则 k 从 1 开始算起。
+    int findKthLargest(vector<int>& nums, int k) {
+        qselect(nums, 0, nums.size() - 1, k-1);
+        return nums[k-1];
+    }
 ```
 
 partition 过程耗时 `O(n)`。若 pivot 选得好，每次砍掉一半，则总次数为 `n + n/2 + n/4 + … + 1 = 2n`。故 qselect 平均耗时 `O(n)`.
 
-也可用 heap。参见 [kth largest 问题](../misc/kth-largest.md)。
+也有其他方法。参见 [kth largest 问题](kth-largest.md)。注意不要跟 top-k 问题搞混；后者用 heap 解决。
+
+# go 语言实现
+
+风格一，`sort()` 和 `partition()` 都用 `(a[], left, right)` 做参数。
+
+[`quick-sort-golang-sol1.go`](code/quick-sort-golang-sol1.go)
+
+风格二，`sort()` 和 `partition()` 都用 `(a[])` 做参数。递归时，要把当前数组切出一块再去调用。
+
+[`quick-sort-golang-sol2.go`](code/quick-sort-golang-sol2.go)
 
 # further reading
 
 - luogu p1177 排序模版 https://www.luogu.com.cn/problem/P1177
+- leetcode 912 排序数组 https://leetcode.cn/problems/sort-an-array
 - leetcode 215 数组中的第 k 大元素 https://leetcode.cn/problems/kth-largest-element-in-an-array
+
 - https://medium.com/@mykoweb/a-deep-dive-into-golangs-quicksort-2d5d68a3cba4
 - https://dracarys.github.io/2019/08/20/Algorithm-club-quicksort/
 - https://codeblab.com/wp-content/uploads/2009/09/DualPivotQuicksort.pdf

@@ -19,13 +19,13 @@ void qselect(int a[], int left, int right, int k) {
     if (left == right) {
         return;
     }
-    int pivot = partition(a, left, right);
-    if (pivot == k) {
+    int pi = partition(a, left, right);
+    if (pi == k) {
         return;
-    } else if (pivot > k) {
-        qselect(a, left, pivot - 1, k);
+    } else if (pi > k) {
+        qselect(a, left, pi - 1, k);
     } else {
-        qselect(a, pivot + 1, right, k);
+        qselect(a, pi + 1, right, k);
     }
 }
 

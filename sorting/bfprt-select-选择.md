@@ -85,6 +85,7 @@ partition() 要调用 bfprt_select()，所以这种 partiton 方法没法直接�
 ```
 
 # references
+
 - https://zhuanlan.zhihu.com/p/291206708
 - https://en.wikipedia.org/wiki/Median_of_medians
-
+- https://leetcode.com/problems/kth-largest-element-in-an-array/solutions/115721/on-bfprt-algorithm-in-c/
