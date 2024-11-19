@@ -18,8 +18,8 @@ int partition(long a[], int left, int right) {
     long key = a[left];
     int i = left, j = right;
     while (i < j) {
-        while (i < j && a[j] >= key) { j--; } // j 先动手，往左找第一个小于 key 的。
-        while (i < j && a[i] <= key) { i++; } // i 随后，往右找第一个大于 key 的。
+        while (i < j && a[j] >= key) { j--; } // j 先动手，往左找第一个 < key 的。
+        while (i < j && a[i] <= key) { i++; } // i 随后，往右找第一个  > key 的。
         // 上面两句里 a[i] >= 或 <= key 不能用 > 或 <
         if (i < j) {
             swap(a[i], a[j]);
@@ -36,8 +36,8 @@ int partition_2(long a[], int left, int right) {
     long key = a[right];
     int i = left, j = right;
     while (i < j) {
-        while (i < j && a[i] <= key) { i++; } // i 随后，往右找第一个大于 key 的。
-        while (i < j && a[j] >= key) { j--; } // j 先动手，往左找第一个小于 key 的。
+        while (i < j && a[i] <= key) { i++; } // i 先动手，往右找第一个 > key 的。
+        while (i < j && a[j] >= key) { j--; } // j 随后，往左找第一个 < key 的。
         // 上面两句里 a[i] >= 或 <= key 不能用 > 或 <
         if (i < j) {
             swap(a[i], a[j]);
@@ -49,13 +49,12 @@ int partition_2(long a[], int left, int right) {
 }
 
 // Sedgewick 'algorithms' 4th ed. p291
-// 好像已经正确处理了 duplicate elements?
 int partition_3(long a[], int left, int right) {
     long key = a[left];
     int i = left, j = right + 1;
     while (true) {
-        while (a[++i] < key) { if (i == right) break; } // i 向右找第一个大于等于 k 的。
-        while (a[--j] > key) { if (j == left) break; } // j 向左找第一个小于等于 k 的。
+        while (a[++i] < key) { if (i == right) break; } // i 向右找第一个 >= k 的
+        while (a[--j] > key) { if (j == left) break; } // j 向左找第一个 <= k 的
         if (i >= j) { break; }
         swap(a[i], a[j]);
     }

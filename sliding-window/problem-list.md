@@ -134,9 +134,11 @@ void slidingWindow(string s, string t) {
 
 - [424. 替换后的最长重复字符](https://leetcode.cn/problems/longest-repeating-character-replacement)：[代码](code/leet-424-longest-repeating-char-after-replacing.cpp)
 
-- [995. K连续位的最小翻转次数](https://leetcode.cn/problems/minimum-number-of-k-consecutive-bit-flips)：[代码](code/leet-995-min-consecutive-flips.cpp) 滑动窗口法、查分数组法
+- [995. K连续位的最小翻转次数](https://leetcode.cn/problems/minimum-number-of-k-consecutive-bit-flips)：[代码](code/leet-995-min-consecutive-flips.cpp) 滑动窗口法、差分数组法
 
 - [1052. 爱生气的书店老板](https://leetcode.cn/problems/grumpy-bookstore-owner) 滑动窗口法：[代码](code)
+
+- [1438. 绝对差不超过限制的最长连续子数组](https://leetcode.cn/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit)
 
 - vip: [727. 最小窗口子序列](https://leetcode.cn/problems/minimum-window-subsequence) 代码: []()
 

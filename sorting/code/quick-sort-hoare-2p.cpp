@@ -1,5 +1,6 @@
 #include <utility> // swap()
 #include <chrono>
+#include <cassert>
 #include <cstdio>
 #include <iostream>
 using namespace std;
@@ -20,9 +21,26 @@ void display(int a[], int n) {
         long key = nums[l];
         int i = l - 1, j = r + 1;
         while (true) {
-            do { i++; } while (nums[i] < key); // wiki: 此句在前
-            do { j--; } while (nums[j] > key); // book: 此句在前
+            do { i++; } while (nums[i] < key); // 找第一个 >= key 的
+            do { j--; } while (nums[j] > key); // 找第一个 <= key 的
             if (i >= j) {
+                return j;
+            }
+            swap(nums[i], nums[j]);
+        }
+    }
+
+    // impl 1 小改动，把 do ... while {} 改成了 while {}。增加了一个 assert 以演示。
+    int partition(long nums[], int l, int r) {
+        long key = nums[r-1];
+        int i = l - 1, j = r + 1;
+        while (true) {
+            while (nums[++i] < key);
+            while (nums[--j] > key);
+            if (i >= j) {
+                assert((i == j && nums[i] == key)
+                        || (i == j + 1 && nums[i] != nums[j] && nums[i] >= key && nums[j] <= key)
+                        || (i == j + 1 && nums[i] == key && nums[j] == key));
                 return j;
             }
             swap(nums[i], nums[j]);

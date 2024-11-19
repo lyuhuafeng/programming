@@ -192,9 +192,23 @@ by Tony Hoare，1959-1961。
 
 `partition()` 分成两段 `[l, p]` 和 `[p+1, r]`，而不是三部分。配套的 `qsort()` 或 `qselect()` 也递归调用 `(l, p)` 和 `(p+1, r)`。
 
-初值 `i = l-1, j = r+1`；循环时先 `i++` 或 `j--` 再判断，需使用 `do ... while` 循环。
+初值 `i = l-1, j = r+1`；循环时先 `i++` 或 `j--` 再判断，使用 `do ... while` 循环。后来发现，恐怕是因为 wiki 和 算法导论书上给出的是伪码，没有 `++i`、`--j` 这样的写法，故用 `do ... while` 循环。用 c/c++ 实现时，其实可以用 `while` 循环，代码更简单些。
 
-完整代码：[`quick-sort-hoare-original.cpp`](code/quick-sort-hoare-original.cpp)。核心部分如下，三种 `partition()` 的实现，两种 `qsort()` 的实现（完全递归的、半递归的）。注意 pivot 左侧调用 `qsort(a, left, pi)` 而不是 `pi-1`。
+注意，`if (i >= j) { return j; }` 这里。此时，有几种情况：
+- `i == j`，此时肯定 `nums[i] == key`。
+- `i == j+1`，此时，若 nums[i] 与 nums[j] 相等，则都等于 key；若不等，则 `nums[i] >= key && nums[j] <= key`。注意，i、j 值有可能是 key（当然不能同时是 key），所以不能是 `nums[i] > key && nums[j] < key`。
+- i、j 最多相差 1。可自己画图验证。to add pic。
+
+以上讨论，可用如下 assertion 表示：
+
+```cpp
+    assert((i == j && nums[i] == key)
+        || (i == j + 1 && nums[i] != nums[j] && nums[i] >= key && nums[j] <= key)
+        || (i == j + 1 && nums[i] == key && nums[j] == key));
+```
+
+
+完整代码：[`quick-sort-hoare-2p.cpp`](code/quick-sort-hoare-2p.cpp)。核心部分如下，最佳 `partition()` 写法及其变种（其实所有写法都差不多），两种 `qsort()` 写法（完全递归的、半递归的）。注意 pivot 左侧调用 `qsort(a, left, pi)` 而不是 `pi-1`。
 
 ```cpp
     // impl 1
@@ -204,47 +218,27 @@ by Tony Hoare，1959-1961。
         long key = nums[l];
         int i = l - 1, j = r + 1;
         while (true) {
-            do { i++; } while (nums[i] < key); // wiki: 此句在前
-            do { j--; } while (nums[j] > key); // book: 此句在前
+            do { i++; } while (nums[i] < key); // 找第一个 >= key 的
+            do { j--; } while (nums[j] > key); // 找第一个 <= key 的
             if (i >= j) {
                 return j;
             }
             swap(nums[i], nums[j]);
         }
     }
-
-    // impl 2
-    // ref: leetcode 215. 数组中的第K个最大元素 官方题解
-    int partition_2(long nums[], int l, int r) {
-        long key = nums[l];
-        int i = l - 1, j = r + 1;
-        while (i < j) {
-            do { i++; } while (nums[i] < key);
-            do { j--; } while (nums[j] > key);
-            if (i < j) {
-                swap(nums[i], nums[j]);
-            }
-        }
-        return j;
-    }
-
-    // impl 3
-    // 对 impl 1 改进了一点，先 i++/j-- 再对 i/j 做循环，从而把 do ... while 循环变成了 while 循环
-    int partition_3(long nums[], int l, int r) {
-        long key = nums[l];
+    // 小改动，把 do ... while {} 改成了 while {}。增加了一个 assert 以演示。
+    int partition(long nums[], int l, int r) {
+        long key = nums[r-1];
         int i = l - 1, j = r + 1;
         while (true) {
-            i++;
-            while (nums[i] < key) { i++; }
-            j--;
-            while (nums[j] > key) { j--; }
+            while (nums[++i] < key); // 这两行小改动
+            while (nums[--j] > key); // 这两行小改动
             if (i >= j) {
                 return j;
             }
             swap(nums[i], nums[j]);
         }
     }
-
     // 递归
     void qsort_recursive(long a[], int left, int right) {
         if (left < right) {
@@ -253,11 +247,10 @@ by Tony Hoare，1959-1961。
             qsort(a, pi + 1, right); // 右侧：不递归
         }
     }
-
     // 半递归
     void qsort(long a[], int left, int right) {
         while (left < right) {
-            int pi = partition_2(a, left, right);
+            int pi = partition(a, left, right);
             qsort(a, left, pi); // 左侧：递归
             left = pi + 1; // 右侧：不递归
         }
@@ -269,13 +262,31 @@ by Tony Hoare，1959-1961。
     qsort(nums, 0, n - 1);
 ```
 
+注意，目标是：左边 `<= k`，右边 `>= k`。直觉上，应该在左边找「第一个 `> k` 的」，在右边找「第一个 `< k` 的」，并交换。但实际上，在左边找「第一个 `>= k` 的」，在右边找「第一个 `<= k` 的」，并交换。导致有些 k 值被交换走了。（k 在哪边都可以，所以交换并不会出错，但毕竟增多了交换次数。）
+
+为何？
+
+- 防止 i、j 指针移动时超出 `[l, r]` 范围。找 `> k` 的，不一定有，但找 `>= k` 的，肯定有。反过来也是。（<font color=red>wiki 上说，首次交换之后，后续判断就不用是 inclusive test 了，感觉似乎有误。</font>）
+- 额外好处：若所有元素都相等，则分界点在中间附近。
+- 产生 non-advancing separation 的风险：这样的分割，只可能出现在 no inversion 的情况下。在这种情况下，在第一次循环中，两个指针就都移动到了 pivot 的位置。此时，判断为二者交汇，无需交换，直接返回。
+
+代码中，pivot 选了最左边的元素。实际上，可选很多位置，只要不是最右边的就行。为何？
+
+返回的 j，其实是「after the final position of the second pointer」。我理解，after the final position 就是「第一个不满足」的位置。例如，对 j 来说，就是「第一个不满足 `a[j] > k`」的位置，也就是「从左往右看，最后一个满足 a[.] <= k」的位置，恰好是想分成的做半段的最后一个。所以，分成两部分 `[l,p]` 和 `[p+1, r]`。
+
+（<font color=red>这句没看明白：所以要避免：pivot 是最后一个元素，其他所有元素都比它小。所以，pivot 不要选最后一个元素。</font>)
+
+更一般地，
+- 若 `return j`：分割为 `[l, p]` 和 `[p+1, r]` 两段。不能选「最右边（r）值」做 pivot 值，其他位置都可以选。若选中间的，得用 floor 方式求中间下标：`(l + r)/ 2`。
+- 若 `return i`：分割为 `[l, p-1]` 和 `[p, r]` 两段。不能选「最做边（l）值」做 pivot 值，其他位置都可以选。若选中间的，得用 ceiling 方式求中间下标：`(l + r + 1)/ 2`。
+
 ## 另一种方式 Hoare 方式
 
 `partition()` 分成三段，这点类似 Lomuto。
 
 （与 pivot 值相等的元素分布在 pivot 两边，这点又与 Lomuto 不同。）
 
-完整代码 [`quick-sort-hoare-turing.cpp`](code/quick-sort-hoare-turing.cpp)，内有两种方式共三种 `partition()` 实现代码，及两种 `qsort()` 实现代码（全递归、半递归）。
+完整代码 [`quick-sort-hoare-3p.cpp`](code/quick-sort-hoare-3p.cpp)，内有两种方式共三种 `partition()` 实现代码，及两种 `qsort()` 实现代码（全递归、半递归）。
 
 方式一：little turing
 
@@ -430,6 +441,8 @@ little turing vs. Sedgewick:
 - 谁先动手的规律：turing 上文已深入分析；Sedgewick: <font color="red">to check later. 猜想：先动手的变了，可能 `i, j` 初值也变</font>
 - Sedgewick 解决了重复元素问题
 
+## Hoare 两段、三段法对比
+
 ```cpp
 // Hoare 两段、三段最佳方法的代码对比
     // 两段最佳，impl 1，来自 wikipedia 和 mit「算法导论」书
@@ -460,6 +473,18 @@ little turing vs. Sedgewick:
         return j;
     }
 ```
+
+都是先把 i/j 移动一位，再判断是否到了「待交换」位置，停下。
+
+初值：两段法，初值 `i=l-1, j=r+1`。三段法，初值 `i=l, j=r+1`。两段法，代码更对称，方便记忆。（三段法为何不对称？因为不能让 pivot 位置上的值交换走，所以选 i 或 j 初值时特意跳过它，也因此无法随意指定 pivot 位置。若指定任意位置，不能方便跳过，则代码里还要特意判断以跳过该位置，麻烦）
+
+i, j 移动：三段法，考虑到最后的交换，要保证 i, j 移动时不能跑到「对方一段」去，也就是不能越过 j 或 i，所以需要判断 `if (i == r)` 或 `if (j == l)`。两段法，不用考虑这些，代码更简单。
+
+while 循环结束后，三段法还需要再交换一次，把 i/j 当前位置的值与最开始确定的 pivot 位置的值交换。两段法，不需要这个交换。（也无法交换，因为最开始的pivot 位置已经被交换走了，不知道去哪儿了，除非是本来有序、从未发生过交换的）
+
+可见，上述三段法的各种麻烦，都是因为最后要交换，保证 j 位置上的值是 pivot 值。
+
+总结，用两段法，代码更简捷、更方便记忆。
 
 # 优化
 
@@ -662,12 +687,9 @@ partition 过程耗时 `O(n)`。若 pivot 选得好，每次砍掉一半，则�
 - leetcode 215 数组中的第 k 大元素 https://leetcode.cn/problems/kth-largest-element-in-an-array
 
 - https://medium.com/@mykoweb/a-deep-dive-into-golangs-quicksort-2d5d68a3cba4
-- https://dracarys.github.io/2019/08/20/Algorithm-club-quicksort/
 - https://codeblab.com/wp-content/uploads/2009/09/DualPivotQuicksort.pdf
 
 - https://stackoverflow.com/questions/63623606/can-someone-explain-hoares-partitioning-scheme-to-me
 - https://stackoverflow.com/questions/12544908/explanation-of-hoare-partitioning-algorithm
 - https://stackoverflow.com/questions/76886724/hoares-partition-original-method
-- https://blog.csdn.net/qq_33919450/article/details/127095084
-- https://juejin.cn/post/7121001188824678430 三处等号不能省
 
