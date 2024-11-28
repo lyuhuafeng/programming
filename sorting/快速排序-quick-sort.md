@@ -693,3 +693,4 @@ partition 过程耗时 `O(n)`。若 pivot 选得好，每次砍掉一半，则�
 - https://stackoverflow.com/questions/12544908/explanation-of-hoare-partitioning-algorithm
 - https://stackoverflow.com/questions/76886724/hoares-partition-original-method
 
+- https://orlp.net/blog/branchless-lomuto-partitioning 其中 loop invariants 图解不错
